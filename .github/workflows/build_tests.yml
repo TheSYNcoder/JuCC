@@ -42,4 +42,9 @@ jobs:
           working-directory: ./build
           run: |
             ninja test
+
+        - name: codecov report
+          working-directory: ./build
+          run: |
+             bash <(curl -s https://codecov.io/bash)
  
