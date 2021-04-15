@@ -1,0 +1,45 @@
+name: Build Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+
+    steps:
+        - uses: actions/checkout@v2
+
+        - name: setup environment
+          run: |
+            export DEBIAN_FRONTEND="noninteractive"
+            mkdir build
+            sudo apt-get -y update
+        
+        - name: installing dependecies
+          run: |
+            echo y | sudo ./script/installation/packages.sh all
+
+        - name: build 
+          working-directory: ./build
+          run: |
+            cmake -GNinja ..
+            ninja -j2
+        
+        - name: check linting & formatting
+          working-directory: ./build
+          run: |
+            ninja check-format
+            ninja check-lint
+            ninja check-clang-tidy
+            
+        - name: run unit-tests
+          working-directory: ./build
+          run: |
+            ninja test
+ 

@@ -1,0 +1,52 @@
+# Don't send any build context to Docker.
+
+# additional
+.gitignore
+Dockerfile
+LICENSE
+README.md
+
+# build dir
+build
+cmake-build-debug/
+
+# configs
+.idea
+.vscode
+
+# pycache
+__pycache__
+*.pyc
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
