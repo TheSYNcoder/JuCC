@@ -73,7 +73,7 @@ The `test/util` folder should have no sub-directories. In most cases, one test u
 
 ### C++ Code Style
 
-See [here](https://github.com/TheSYNcoder/JuCC/tree/master/docs/cpp_guidelines_code_style.md).
+See [here](https://github.com/TheSYNcoder/JuCC/tree/main/docs/cpp_guidelines_code_style.md).
 
 ## Compiler
 
@@ -115,4 +115,4 @@ You should write unit test cases for each class/algorithm that you have added or
 
 ## Documentation
 
-See [here](https://github.com/TheSYNcoder/JuCC/tree/master/docs/cpp_guidelines_code_style.md).
+See [here](https://github.com/TheSYNcoder/JuCC/tree/main/docs/cpp_guidelines_code_style.md).

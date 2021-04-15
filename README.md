@@ -4,7 +4,7 @@
 
 -----------------
 
-![build](https://github.com/TheSYNcoder/JuCC/actions/workflows/build_tests.yml/badge.svg?branch=master)
+![build](https://github.com/TheSYNcoder/JuCC/actions/workflows/build_tests.yml/badge.svg?branch=main)
 (todo: add codecov status)
 
 This is the official Jadavpur University Compiler Compiler repository.
@@ -32,7 +32,7 @@ Additional Notes:
 
 ## For Developers
 
-Please see the [docs](https://github.com/TheSYNcoder/JuCC/tree/master/docs/).  
+Please see the [docs](https://github.com/TheSYNcoder/JuCC/tree/main/docs/).  
 
 ## Contributing
 

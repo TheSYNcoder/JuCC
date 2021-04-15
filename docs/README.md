@@ -23,14 +23,14 @@ Hi! Welcome to JuCC.
 
 You should learn a little about the following:
 
-1. [git](https://github.com/TheSYNcoder/JuCC/tree/master/docs/tech_git.md)
-2. [C++ and how we use it](https://github.com/TheSYNcoder/JuCC/tree/master/docs/cpp_guidelines.md)
+1. [git](https://github.com/TheSYNcoder/JuCC/tree/main/docs/tech_git.md)
+2. [C++ and how we use it](https://github.com/TheSYNcoder/JuCC/tree/main/docs/cpp_guidelines.md)
 
 ## Configuration
 
 ### CMake flags to know
 
-- We try our best to list all available options in [CMakeLists.txt](https://github.com/TheSYNcoder/JuCC/blob/master/CMakeLists.txt). Search for `# HEADER CMake options and global variables.`
+- We try our best to list all available options in [CMakeLists.txt](https://github.com/TheSYNcoder/JuCC/blob/main/CMakeLists.txt). Search for `# HEADER CMake options and global variables.`
 
 ### CMake targets to know
 
@@ -50,8 +50,8 @@ If you run into issues, you may need your default `python` to point to a `python
 ### Workflow
 
 1. Check out the latest version of the JuCC repository.
-   - `git checkout master`
-   - `git pull upstream master`
+   - `git checkout main`
+   - `git pull upstream main`
 2. Create a new branch.
    - `git checkout -b my_new_branch`
 3. Work on your code. Add features, add documentation, add tests, add remove bugs, and so on.
