@@ -5,7 +5,7 @@
 -----------------
 
 ![build](https://github.com/TheSYNcoder/JuCC/actions/workflows/build_tests.yml/badge.svg?branch=main)
-(todo: add codecov status)
+[![codecov](https://codecov.io/gh/TheSYNcoder/JuCC/branch/main/graph/badge.svg?token=1EIRMRKODX)](https://codecov.io/gh/TheSYNcoder/JuCC)
 
 This is the official Jadavpur University Compiler Compiler repository.
 
