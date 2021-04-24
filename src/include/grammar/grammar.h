@@ -94,4 +94,4 @@ class Parser {
 }  // namespace grammar
 }  // namespace jucc
 
-#endif
+#endif // JUCC_GRAMMAR_GRAMMAR_H
