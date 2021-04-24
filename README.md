@@ -33,19 +33,17 @@ $ mkdir build
 $ cd build
 $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 $ ninja
-$ ninja test
-
+$ ./bin/jucc_test
 ```
 
-Before pushing or making a pull request
+Before pushing or making a pull request ( These tests must pass, compulsory !! )
 
 ```
 $ ninja
 $ ninja check-format
 $ ninja check-clang-tidy
 $ ninja check-lint
-$ ninja test ( The tests must pass, compulsory !! )
-
+$ ninja test
 ```
 
 To add a new unit test, make a folder with the same relative path as in the src folder, and define your test. Please refer to [docs](https://github.com/TheSYNcoder/JuCC/tree/main/docs/) for more details about writing tests using the [googletest](https://github.com/google/googletest) framework.
