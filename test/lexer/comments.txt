@@ -1,0 +1,12 @@
+
+
+// This is a test mainly for comments
+
+
+// Another comments
+
+int main(){
+    // Just another comment 
+    // Basically a hello world program, Peace!
+    cout << "Hello";
+}

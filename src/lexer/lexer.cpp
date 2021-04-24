@@ -2,164 +2,191 @@
 
 namespace jucc {
 
-int Lexer::GetToken(FILE *fp) {
-  static int lastChar = ' ';
+int Lexer::GetToken(std::ifstream &is) {
+  static char last_char = ' ';
 
-  while (lastChar != EOF && isspace(lastChar)) lastChar = getc(fp);
+  while (!is.eof() && (isspace(last_char) != 0)) {
+    is.get(last_char);
+  }
 
   // check for identifier and literal tokens
   // RE : [a-zA-Z][0-9a-zA-Z]
-  if (isalpha(lastChar)) {
-    identifier_string_ = lastChar;
-    while (lastChar != EOF && isalnum(lastChar = getc(fp))) identifier_string_ += lastChar;
-    if (identifier_string_ == "int")
-      return TOK_INT;
-    else if (identifier_string_ == "float")
-      return TOK_FLOAT;
-    else if (identifier_string_ == "void")
-      return TOK_VOID;
-
-    // conditionals
-    else if (identifier_string_ == "if")
-      return TOK_IF;
-    else if (identifier_string_ == "else")
-      return TOK_ELSE;
-
-    // cout , cin
-    else if (identifier_string_ == "cout")
-      return TOK_COUT;
-    else if (identifier_string_ == "cin")
-      return TOK_CIN;
-
-    else
-      return TOK_IDENTIFIER;
+  if (isalpha(last_char) != 0) {
+    identifier_string_ = last_char;
+    int ret_token = TOK_IDENTIFIER;
+    while (is.get(last_char) && (isalnum(last_char) != 0)) {
+      identifier_string_ += last_char;
+    }
+    if (identifier_string_ == "int") {
+      ret_token = TOK_INT;
+    } else if (identifier_string_ == "float") {
+      ret_token = TOK_FLOAT;
+    } else if (identifier_string_ == "void") {
+      ret_token = TOK_VOID;
+    } else if (identifier_string_ == "if") {
+      ret_token = TOK_IF;
+    } else if (identifier_string_ == "else") {
+      ret_token = TOK_ELSE;
+    } else if (identifier_string_ == "cout") {
+      ret_token = TOK_COUT;
+    } else if (identifier_string_ == "cin") {
+      ret_token = TOK_CIN;
+    } else {
+      ret_token = TOK_IDENTIFIER;
+    }
+    if (is.eof()) {
+      last_char = ' ';
+    }
+    return ret_token;
   }
 
   // RE : [0-9]+.?[0-9]*
-  if (isdigit(lastChar)) {
-    std::string numString;
-    numString += lastChar;
-    lastChar = getc(fp);
+  if (isdigit(last_char) != 0) {
+    std::string num_string;
+    num_string += last_char;
     // to check if fractional
     int dot_count = 0;
-    while (!feof(fp) && (isdigit(lastChar) || lastChar == '.')) {
-      if (lastChar == '.') dot_count++;
-      numString += lastChar;
-      if (dot_count == 2) {
-        error_string_ = "Wrong fractional number format : " + numString + "\n";
-        return TOK_ERROR;
+    while (is.get(last_char) && ((isdigit(last_char) != 0) || last_char == '.')) {
+      if (last_char == '.') {
+        dot_count++;
       }
-
-      lastChar = getc(fp);
+      num_string += last_char;
     }
-    if (isalpha(lastChar)) {
-      error_string_ = "Wrong fractional number format : " + numString + "\n";
+    if (isalpha(last_char) != 0) {
+      // read till the end of the string
+      // panic mode
+      while (!is.eof() && (isalnum(last_char) != 0)) {
+        num_string += last_char;
+        is.get(last_char);
+      }
+      error_string_ = "Wrong fractional number format : " + num_string + "\n";
       return TOK_ERROR;
     }
 
     // fractional number
-    if (dot_count) {
-      floatval_ = strtod(numString.c_str(), nullptr);
-      return TOK_FRACTIONAL;
+    int ret_token;
+    if (dot_count == 1) {
+      floatval_ = strtod(num_string.c_str(), nullptr);
+      ret_token = TOK_FRACTIONAL;
+    } else if (dot_count == 0) {
+      intval_ = (static_cast<int>(strtod(num_string.c_str(), nullptr)));
+      ret_token = TOK_DECIMAL;
     } else {
-      intval_ = (static_cast<int>(strtod(numString.c_str(), nullptr)));
-      return TOK_DECIMAL;
+      error_string_ = "Wrong fractional number format : " + num_string + "\n";
+      ret_token = TOK_ERROR;
     }
+    if (is.eof()) {
+      last_char = ' ';
+    }
+    return ret_token;
   }
 
   // handle punctuations
-  if (ispunct(lastChar)) {
-    if (lastChar == ';') {
-      lastChar = getc(fp);
-      return TOK_SEMICOLON;
-    } else if (lastChar == ',') {
-      lastChar = getc(fp);
-      return TOK_COMMA;
-    } else if (lastChar == '.') {
-      lastChar = getc(fp);
-      return TOK_DOT;
-    } else if (lastChar == '{') {
-      lastChar = getc(fp);
-      return TOK_CURLY_OPEN;
-    } else if (lastChar == '}') {
-      lastChar = getc(fp);
-      return TOK_CURLY_CLOSE;
-    } else if (lastChar == '(') {
-      lastChar = getc(fp);
-      return TOK_PAREN_OPEN;
-    } else if (lastChar == ')') {
-      lastChar = getc(fp);
-      return TOK_PAREN_CLOSE;
-    } else if (lastChar == '=') {
-      lastChar = getc(fp);
-      if (lastChar == '=') {
-        lastChar = fgetc(fp);
-        return TOK_EQUAL_TO;
+  if (ispunct(last_char) != 0) {
+    int ret_token = TOK_ERROR;
+    if (last_char == ';') {
+      is.get(last_char);
+      ret_token = TOK_SEMICOLON;
+    } else if (last_char == ',') {
+      is.get(last_char);
+      ret_token = TOK_COMMA;
+    } else if (last_char == '.') {
+      is.get(last_char);
+      ret_token = TOK_DOT;
+    } else if (last_char == '{') {
+      is.get(last_char);
+      ret_token = TOK_CURLY_OPEN;
+    } else if (last_char == '}') {
+      is.get(last_char);
+      ret_token = TOK_CURLY_CLOSE;
+    } else if (last_char == '(') {
+      is.get(last_char);
+      ret_token = TOK_PAREN_OPEN;
+    } else if (last_char == ')') {
+      is.get(last_char);
+      ret_token = TOK_PAREN_CLOSE;
+    } else if (last_char == '=') {
+      is.get(last_char);
+      if (last_char == '=') {
+        is.get(last_char);
+        ret_token = TOK_EQUAL_TO;
       } else {
-        return TOK_ASSIGNMENT;
+        ret_token = TOK_ASSIGNMENT;
       }
-    } else if (lastChar == '<') {
-      lastChar = getc(fp);
-      if (lastChar == '<') {
-        lastChar = fgetc(fp);
-        return TOK_LEFT_SHIFT;
+    } else if (last_char == '<') {
+      is.get(last_char);
+      if (last_char == '<') {
+        is.get(last_char);
+        ret_token = TOK_LEFT_SHIFT;
       } else {
-        return TOK_LESS_THAN;
+        ret_token = TOK_LESS_THAN;
       }
-    } else if (lastChar == '>') {
-      lastChar = getc(fp);
-      if (lastChar == '>') {
-        lastChar = getc(fp);
-        return TOK_RIGHT_SHIFT;
+    } else if (last_char == '>') {
+      is.get(last_char);
+      if (last_char == '>') {
+        is.get(last_char);
+        ret_token = TOK_RIGHT_SHIFT;
       } else {
-        return TOK_GREATER_THAN;
+        ret_token = TOK_GREATER_THAN;
       }
-    } else if (lastChar == '"') {
+    } else if (last_char == '"') {
       literal_string_ = "";
       do {
-        lastChar = getc(fp);
-        literal_string_ += lastChar;
-      } while (lastChar != EOF && lastChar != '"');
-      if (lastChar == EOF) {
+        is.get(last_char);
+        literal_string_ += last_char;
+      } while (!is.eof() && last_char != '"');
+      if (is.eof()) {
         error_string_ = "Wrong literal format\n";
         return TOK_ERROR;
       }
       // eliminating the " at the end
       literal_string_ = literal_string_.substr(0, literal_string_.length() - 1);
-      if (lastChar != EOF) lastChar = getc(fp);
-      return TOK_LITERAL;
+      is.get(last_char);
+      ret_token = TOK_LITERAL;
 
-    } else if (lastChar == '\'') {
+    } else if (last_char == '\'') {
       literal_string_ = "";
-      lastChar = fgetc(fp);
-      literal_string_ += lastChar;
-      if (lastChar == EOF) {
+      is.get(last_char);
+      literal_string_ += last_char;
+      if (is.eof()) {
         error_string_ = "Wrong literal format\n";
         return TOK_ERROR;
       }
-      lastChar = getc(fp);
-      if (lastChar == '\'') {
-        if (lastChar != EOF) lastChar = fgetc(fp);
-        return TOK_CHARACTER;
+      is.get(last_char);
+      if (last_char == '\'') {
+        is.get(last_char);
+        ret_token = TOK_CHARACTER;
+      } else {
+        // read till the end of the string
+        // panic mode
+        while (!is.eof() && (isalnum(last_char) == 0)) {
+          is.get(last_char);
+        }
+        error_string_ = "Wrong literal format\n";
+        return TOK_ERROR;
       }
-      error_string_ = "Wrong literal format\n";
-      return TOK_ERROR;
 
-    } else if (lastChar == '/') {
-      lastChar = fgetc(fp);
-
-      if (lastChar == '/') {
+    } else if (last_char == '/') {
+      is.get(last_char);
+      if (last_char == '/') {
         // commented out line
         do {
-          lastChar = getc(fp);
-        } while (lastChar != EOF && lastChar != '\n' && lastChar != '\r');
-
-        if (lastChar != EOF) lastChar = fgetc(fp);
-        return TOK_COMMENT;
+          is.get(last_char);
+        } while (!is.eof() && last_char != '\n' && last_char != '\r');
+        is.get(last_char);
+        ret_token = TOK_COMMENT;
       }
+    } else {
+      error_string_ = "Unexpected Token\n";
+      ret_token = TOK_ERROR;
     }
+    if (is.eof()) {
+      last_char = ' ';
+    }
+    return ret_token;
   }
 
+  last_char = ' ';
   error_string_ = "Unexpected Token\n";
   return TOK_ERROR;
 }

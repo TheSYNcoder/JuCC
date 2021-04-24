@@ -3,6 +3,7 @@
 
 #include <cctype>
 #include <cstdio>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -52,18 +53,38 @@ enum Token {
 
 class Lexer {
  public:
+  /**
+   * used to store a identifier token
+   */
   std::string identifier_string_;
+  /**
+   * used to store a corresponding error token
+   * suppose a numerical token 16.3ere which is
+   * neither a numerical token or a identifier
+   */
   std::string error_string_;
+  /**
+   * used to store a literal string
+   * literal strings are of type "a string"
+   */
   std::string literal_string_;
+  /**
+   * used to store the value of the integer token
+   * during tokenization.
+   */
   int intval_;
+  /**
+   * used to store the value of the float token
+   * during tokenization.
+   */
   double floatval_;
 
   /**
-   * Takes a file pointer as input and gets the next character
-   * from the file and returns the appropriate token
+   * Takes a ifstream object as input and gets the next character
+   * from the input file and returns the appropriate token.
    */
-  int GetToken(FILE *fp);
-};
+  int GetToken(std::ifstream &is);
+};  // class Lexer
 
 }  // namespace jucc
 
