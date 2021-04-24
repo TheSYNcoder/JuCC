@@ -29,6 +29,6 @@ using jucc::Hello;
  */
 auto main() -> int {
   // print a hello world message
-  Hello();
+  std::cout << Hello();
   return 0;
 }

@@ -2,12 +2,13 @@
 #define JUCC_JUCC_H
 
 #include <iostream>
+#include <string>
 
 namespace jucc {
 /**
  * Dummy function to test setup clang and build config
  */
-void Hello();
+std::string Hello();
 
 /**
  * Dummy function increments computes x + y the retarded way
