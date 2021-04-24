@@ -1,37 +1,96 @@
-#ifndef JUCC_GRAMMAR_H
-#define JUCC_GRAMMAR_H
+#ifndef JUCC_GRAMMAR_GRAMMAR_H
+#define JUCC_GRAMMAR_GRAMMAR_H
 
+#include <fstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace jucc {
 namespace grammar {
-const char *EPSILON = "epsilon";
+const char EPSILON[] = "EPSILON";
 
 class Rule {
-  std::vector<std::string> entities;
+  /**
+   * An entity is a single terminal or non terminal in the right hand side
+   * of a production.
+   * Example:
+   * For production: E : F + E => { "F", "+", "E" } is a rule.
+   */
+  std::vector<std::string> entities_;
 
  public:
   Rule() = default;
-  explicit Rule(std::vector<std::string> entities) : entities(std::move(entities)) {}
-  [[nodiscard]] const std::vector<std::string> &getEntities() const { return entities; }
-  void setEntities(const std::vector<std::string> &entities) { Rule::entities = entities; }
+  explicit Rule(std::vector<std::string> entities) : entities_(std::move(entities)) {}
+  [[nodiscard]] const std::vector<std::string> &GetEntities() const { return entities_; }
+  void SetEntities(const std::vector<std::string> &entities) { Rule::entities_ = entities; }
 };
 
 class Production {
-  std::string parent;
-  std::vector<Rule> rules;
+  /**
+   * class Parser returns a list of Productions.
+   * Example:
+   * For productions: E : F + E
+   *                  E : EPSILON
+   * parent = "E"
+   * rules = { Rule1, Rule2 }
+   */
+  std::string parent_;
+  std::vector<Rule> rules_;
 
  public:
   Production() = default;
-  [[nodiscard]] const std::string &getParent() const { return parent; }
-  [[nodiscard]] const std::vector<Rule> &getRules() const { return rules; }
-  void setParent(const std::string &parent) { Production::parent = parent; }
-  void setRules(const std::vector<Rule> &rules) { Production::rules = rules; }
+  [[nodiscard]] const std::string &GetParent() const { return parent_; }
+  [[nodiscard]] const std::vector<Rule> &GetRules() const { return rules_; }
+  void SetParent(const std::string &parent) { Production::parent_ = parent; }
+  void SetRules(const std::vector<Rule> &rules) { Production::rules_ = rules; }
 };
 
 typedef std::vector<Production> Productions;
 
+class Parser {
+  std::ifstream file_;
+  std::vector<std::string> terminals_;      // Terminals defined in grammar file
+  std::vector<std::string> non_terminals_;  // Non terminals defined in grammar file
+  std::string start_symbol_;                // Start symbol for the grammar
+  Productions grammar_;                     // Production rules
+  std::string error_;                       // parser error message
+
+  /**
+   * Splits input string via spaces.
+   */
+  static std::vector<std::string> FastTokenize(const std::string &s);
+
+ public:
+  /**
+   * Constructor
+   * @param filepath : opens std::ifstream file_
+   */
+  explicit Parser(const char *filepath);
+
+  /**
+   * Destructor
+   * closes std::ifstream file_
+   */
+  ~Parser();
+
+  /**
+   * Parses the input file and populates private variables.
+   * Returns true if successful.
+   */
+  bool Parse();
+
+  /**
+   * Getters for each private variable.
+   */
+  std::vector<std::string> GetTerminals() { return terminals_; }
+  std::vector<std::string> GetNonTerminals() { return non_terminals_; }
+  std::string GetStartSymbol() { return start_symbol_; }
+  Productions GetProductions() { return grammar_; }
+  std::string GetError() { return error_; }
+};
+
 }  // namespace grammar
 }  // namespace jucc
-#endif  // JUCC_GRAMMAR_H
+
+#endif
