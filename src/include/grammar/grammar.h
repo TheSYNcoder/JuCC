@@ -1,11 +1,11 @@
 #ifndef JUCC_GRAMMAR_H
 #define JUCC_GRAMMAR_H
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace jucc {
 namespace grammar {
-const char EPSILON[] = "epsilon";
+const char *EPSILON = "epsilon";
 
 class Rule {
   std::vector<std::string> entities;
