@@ -6,6 +6,15 @@
 
 namespace jucc::grammar {
 
+std::string Rule::ToString() {
+  std::stringstream ss;
+  for (auto &entity : entities_) {
+    ss << entity;
+  }
+  return ss.str();
+}
+
+
 Parser::Parser(const char *filepath) { file_ = std::ifstream(filepath); }
 
 Parser::~Parser() {
@@ -251,3 +260,4 @@ bool Parser::Parse() {
   return false;
 }
 }  // namespace jucc::grammar
+

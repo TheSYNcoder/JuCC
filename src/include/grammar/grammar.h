@@ -24,6 +24,7 @@ class Rule {
   explicit Rule(std::vector<std::string> entities) : entities_(std::move(entities)) {}
   [[nodiscard]] const std::vector<std::string> &GetEntities() const { return entities_; }
   void SetEntities(const std::vector<std::string> &entities) { Rule::entities_ = entities; }
+  std::string ToString();
 };
 
 class Production {
@@ -94,4 +95,4 @@ class Parser {
 }  // namespace grammar
 }  // namespace jucc
 
-#endif // JUCC_GRAMMAR_GRAMMAR_H
+#endif  // JUCC_GRAMMAR_GRAMMAR_H
