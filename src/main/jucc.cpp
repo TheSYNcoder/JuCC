@@ -1,7 +1,7 @@
 #include "main/jucc.h"
 using std::cout;
 
-void jucc::Hello() { cout << "Hello World.\n"; }
+std::string jucc::Hello() { return "Hello World.\n"; }
 
 /**
  * Benchmark testing function do not use.

@@ -20,15 +20,15 @@
  *-------------------------------------------------------------------------
  */
 
+#include "lexer/lexer.h"
 #include "main/jucc.h"
 using jucc::Hello;
-using std::cout;
 
 /*
  * jucc begins execution here.
  */
 auto main() -> int {
   // print a hello world message
-  Hello();
+  std::cout << Hello();
   return 0;
 }

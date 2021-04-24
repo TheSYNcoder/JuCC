@@ -22,14 +22,14 @@ Stash is very useful. For example, you will use it before/after (push/pop) merge
 * view content of your stash: git stash show -p `stash@\{0\}`
 
 ### Rebase or how to screw the history
-**Never** rebase commits that were pushed remotely. Rebase can be used to improve your current patch set, or to fast-forward-merge after a fetch. For better software engineering we **never** directly merge the upstream master when doing local development. When accepting a PR, we expect you to fetch the upstream master to your local repository, and rebase all the changes in your local branch on top of the upstream master.
-* The rebase command: git rebase -i `<upstream master branch>`
+**Never** rebase commits that were pushed remotely. Rebase can be used to improve your current patch set, or to fast-forward-merge after a fetch. For better software engineering we **never** directly merge the upstream main when doing local development. When accepting a PR, we expect you to fetch the upstream main to your local repository, and rebase all the changes in your local branch on top of the upstream main.
+* The rebase command: git rebase -i `<upstream main branch>`
 * Cancel it : git rebase --abort
 * Resolve conflict: git mergetool `<file>`
 * Continue rebase: git rebase --continue
 
 ### Branch or how to separate your work by feature
-Please note that master is actually the default branch
+Please note that main is actually the default branch
 * List branches: git branch -v
 * Switch to another branch: git checkout `<branch>`
 * Creates: git branch `<branch>`
@@ -39,11 +39,11 @@ Please note that master is actually the default branch
 # Git use case example
 
 ### Branch management
-Let's say you want to rebase your current branch topic-v1 to topic-v2 with new additions. Note: topic-v1 could also be master too.
+Let's say you want to rebase your current branch topic-v1 to topic-v2 with new additions. Note: topic-v1 could also be main too.
 * Go to current branch: git checkout topic-v1
 * Create a new one: git branch topic-v2
 * Go into the new branch: git checkout topic-v2
-* Set the reference: git branch --set-upstream-to=origin/master topic-v2 
+* Set the reference: git branch --set-upstream-to=origin/main topic-v2 
 * Rebase: git rebase -i
 * ...
 
