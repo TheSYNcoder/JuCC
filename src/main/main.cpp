@@ -30,20 +30,5 @@ using jucc::Hello;
 auto main() -> int {
   // print a hello world message
   Hello();
-  std::string filename("/Users/shuvayan/Desktop/local/test/post/JuCC/test/lexer/input.txt");
-  FILE *fp = fopen(filename.c_str(), "r");
-  int token;
-  token = jucc::GetToken(fp);
-  std::cout << "\n" << token << "\n" << jucc::TOK_INT << "\n";
-  token = jucc::GetToken(fp);
-  std::cout << "\n" << token << "\n" << jucc::TOK_INT << "\n";
-  token = jucc::GetToken(fp);
-  std::cout << "\n" << token << "\n" << jucc::TOK_INT << "\n";
-  token = jucc::GetToken(fp);
-  std::cout << "\n" << token << "\n" << jucc::TOK_INT << "\n";
-  token = jucc::GetToken(fp);
-  std::cout << "\n" << token << "\n" << jucc::TOK_INT << "\n";
-  token = jucc::GetToken(fp);
-  std::cout << "\n" << token << "\n" << jucc::TOK_INT << "\n";
   return 0;
 }

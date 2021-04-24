@@ -50,17 +50,20 @@ enum Token {
   TOK_CIN = -28,   // cin
 };
 
-static std::string identifier_string;
-static std::string error_string;
-static std::string literal_string;
-static int intval;
-static double floatval;
+class Lexer {
+ public:
+  std::string identifier_string_;
+  std::string error_string_;
+  std::string literal_string_;
+  int intval_;
+  double floatval_;
 
-/**
- * Takes a file pointer as input and gets the next character
- * from the file and returns the appropriate token
- */
-int GetToken(FILE *fp);
+  /**
+   * Takes a file pointer as input and gets the next character
+   * from the file and returns the appropriate token
+   */
+  int GetToken(FILE *fp);
+};
 
 }  // namespace jucc
 

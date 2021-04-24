@@ -111,7 +111,7 @@ If you need to do complex debugging, you may want to check out the following lin
 
 Unit tests are critical for ensuring the correct functionality of your modules and reduce time spent on debugging. It can help prevent regressions. We use [googletest](https://github.com/google/googletest), a nice unit-testing framework for C++ projects. 
 
-You should write unit test cases for each class/algorithm that you have added or modified. See the testing section for detail. Try to come up with test cases that make sure that the module exhibits the desired behavior. Some developers even suggest writing the unit tests before implementing the code. Make sure that you include corner cases, and try to find off-by-one errors. 
+You should write unit test cases for each class/algorithm that you have added or modified. See the testing section for detail. Try to come up with test cases that make sure that the module exhibits the desired behavior. Some developers even suggest writing the unit tests before implementing the code. Make sure that you include corner cases, and try to find off-by-one errors.
 
 ## Documentation
 

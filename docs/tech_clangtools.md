@@ -66,7 +66,7 @@ Check the [official documentation](https://clang.llvm.org/docs/ClangFormat.html)
 
 **Gotchas**
 
-1. We use the [run_clang_format.py](https://github.com/TheSYNcoder/JuCC/blob/master/build_support/run_clang_format.py) to automate the workflow.
+1. We use the [run_clang_format.py](https://github.com/TheSYNcoder/JuCC/blob/main/build_support/run_clang_format.py) to automate the workflow.
 
 ## Summary
 
