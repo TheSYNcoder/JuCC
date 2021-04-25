@@ -77,6 +77,7 @@ class Parser {
   /**
    * Parses the input file and populates private variables.
    * Returns true if successful.
+   * On error returns false and sets error_.
    */
   bool Parse();
 

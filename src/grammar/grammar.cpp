@@ -24,11 +24,20 @@ std::vector<std::string> Parser::FastTokenize(const std::string &s) {
   return res;
 }
 
+/**
+ * This is based on a basic state machine that implicitly uses a grammar to parse.
+ * The parse states represent a block of a .g grammar file.
+ * Eg. ParseState TERMINALS imples we have seen a %terminals token and yet to see
+ * a % block closing token.
+ * RuleState keeps track of additonal states required to parse a rule inside of a
+ * %rule block.
+ */
 bool Parser::Parse() {
   // Parser State
   enum ParseState { BASIC, TERMINALS, NON_TERMINALS, START, RULES };
 
   // Parser State while parsing productions
+  // only valid when Parser State is RULES
   enum RuleState { LEFT, COLON, ENTITY };
 
   const std::string terminals_start = "%terminals";
@@ -45,9 +54,8 @@ bool Parser::Parse() {
     // ugh...
     std::unordered_map<std::string, std::vector<std::vector<std::string>>> grammar;
 
-    // iterate over each line
     while (getline(file_, line)) {
-      // variables for rule parsing
+      // states for rule parsing
       RuleState curr_rule_state = LEFT;
       std::string production_parent;
       std::vector<std::string> rule_entities;
@@ -99,6 +107,10 @@ bool Parser::Parse() {
       }
 
       // iterate over tokens
+      // add tokens to different lists as a function of Parser State
+      // for Parser State RULES parse the production following implicit grammar:
+      // "LEFT : ENTITY_LIST"
+      // "ENTITY_LIST: ENTITY ENTITY_LIST | ENTITY"
       for (const auto &token : tokens) {
         switch (curr_parse_state) {
           case BASIC:
@@ -143,7 +155,7 @@ bool Parser::Parse() {
 
               case COLON:
                 if (token != ":") {
-                  error_ = "grammar parsing error: rules syntax error ':' expected";
+                  error_ = "grammar parsing error: rules syntax error ':' expected: " + token;
                   return false;
                 }
                 curr_rule_state = ENTITY;
@@ -203,6 +215,7 @@ bool Parser::Parse() {
       return false;
     }
 
+    // convert std::unordered_map to Production object with checks
     for (const auto &production : grammar) {
       Production prod;
       if (non_terminals.find(production.first) == non_terminals.end()) {
@@ -226,6 +239,9 @@ bool Parser::Parse() {
       }
 
       prod.SetRules(rules);
+
+      // add Production object created to list of valid productions
+      grammar_.push_back(prod);
     }
 
     return true;

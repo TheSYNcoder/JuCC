@@ -22,8 +22,10 @@ identifier integer_constant float_constant
 
 ## Grammar for the language
 %rules
-<primary_expression> : identifier <constant>
+<bruh> : identifier
+<primary_expression> : identifier
 <primary_expression> : <constant>
 <primary_expression> : EPSILON
 <constant> : integer_constant
+<constant> : float_constant
 %
