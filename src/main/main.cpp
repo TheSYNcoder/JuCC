@@ -20,7 +20,6 @@
  *-------------------------------------------------------------------------
  */
 
-#include "lexer/lexer.h"
 #include "main/jucc.h"
 using jucc::Hello;
 
