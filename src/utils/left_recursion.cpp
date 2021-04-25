@@ -1,4 +1,5 @@
 #include "utils/left_recursion.h"
+
 #include <algorithm>
 namespace jucc::utils {
 
@@ -37,7 +38,7 @@ bool IsRecursive(const grammar::Production &prod) {
   const auto &rules = prod.GetRules();
 
   return static_cast<bool>(std::any_of(rules.begin(), rules.end(),
-                                       [&](const auto &rule){return prod.GetParent() == rule.GetEntities()[0]; }));
+                                       [&](const auto &rule) { return prod.GetParent() == rule.GetEntities()[0]; }));
 }
 
 }  // namespace jucc::utils

@@ -30,19 +30,19 @@ class TrieManager {
    * A higher order abstration to manager a complete Trie.
    * Takes care of unwanted memory leaking through a custom garbage collector.
    */
-  Trie *master_;            // Current head of the trie.
+  Trie *master_;  // Current head of the trie.
 
   std::vector<Trie *> gc_;  // The garbage collector which stores any newly created trie node.
 
  public:
   /**
-   * Constructor
+   * Constructor.
    */
   TrieManager();
 
   /**
    * Customised no-param constructor.
-   */    
+   */
   Trie *NewTrieNode();
 
   /**
@@ -52,7 +52,7 @@ class TrieManager {
 
   /**
    * Insert a particular grammar Entity into the master_.
-   * @param grammar::Entity & 
+   * @param grammar::Entity &
    */
   void Insert(const grammar::Entity & /*entities*/);
 
@@ -65,7 +65,7 @@ class TrieManager {
    * Makes a preorder traversal efficiently of the master_ node of the Trie and
    * returns the most common prefix of the Production Rules formed by individual
    * Rule entities.
-   */ 
+   */
   // NOLINTNEXTLINE
   static void GreedyPreorder(Trie * /*head*/, int & /*len*/, grammar::Entity & /*max_str*/, bool /*is_prime_head*/);
 
