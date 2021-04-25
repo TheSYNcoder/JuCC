@@ -15,7 +15,7 @@ std::string Rule::ToString() const {
 }
 
 bool Rule::HasPrefix(const Entity &prefix) const {
-  // not considering epsilon, handled by parent scope
+  // Takes care of even EPSILON too.
   if (prefix.size() > entities_.size()) {
     return false;
   }

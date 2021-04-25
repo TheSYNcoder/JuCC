@@ -26,7 +26,7 @@ bool IsRecursive(const grammar::Production & /*prod*/);
 
 /**
  * TODO!! (If required)
- * Removes Indirect Productions.
+ * Removes Indirect Left Recursion.
  * A -> B
  * B -> C
  * C -> A | B | EPSILON
