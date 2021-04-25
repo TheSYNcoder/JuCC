@@ -9,6 +9,7 @@
 namespace jucc {
 namespace grammar {
 const char EPSILON[] = "EPSILON";
+using Entity = std::vector<std::string>;
 
 class Rule {
   /**
@@ -17,14 +18,24 @@ class Rule {
    * Example:
    * For production: E : F + E => { "F", "+", "E" } is a rule.
    */
-  std::vector<std::string> entities_;
+  Entity entities_;
 
  public:
   Rule() = default;
-  explicit Rule(std::vector<std::string> entities) : entities_(std::move(entities)) {}
-  [[nodiscard]] const std::vector<std::string> &GetEntities() const { return entities_; }
-  void SetEntities(const std::vector<std::string> &entities) { Rule::entities_ = entities; }
+  explicit Rule(Entity entities) : entities_(std::move(entities)) {}
+  [[nodiscard]] const Entity &GetEntities() const { return entities_; }
+  void SetEntities(const Entity &entities) { Rule::entities_ = entities; }
+  [[nodiscard]] std::string ToString() const;
+
+  /**
+   * Takes an Entity and checks if the entries of the Entity is a perfect
+   * prefix of the this->entities_ or not.
+   * @return a boolean after checking if param is actually a prefix or not.
+   */
+  [[nodiscard]] bool HasPrefix(const Entity & /*prefix*/) const;
 };
+
+using Rules = std::vector<grammar::Rule>;
 
 class Production {
   /**
@@ -40,6 +51,8 @@ class Production {
 
  public:
   Production() = default;
+  Production(std::string parent, std::vector<Rule> rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
+
   [[nodiscard]] const std::string &GetParent() const { return parent_; }
   [[nodiscard]] const std::vector<Rule> &GetRules() const { return rules_; }
   void SetParent(const std::string &parent) { Production::parent_ = parent; }
@@ -94,4 +107,4 @@ class Parser {
 }  // namespace grammar
 }  // namespace jucc
 
-#endif
+#endif  // JUCC_GRAMMAR_GRAMMAR_H
