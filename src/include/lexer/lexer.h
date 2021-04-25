@@ -1,5 +1,5 @@
-#ifndef JUCC_LEXER_LEXER_H
-#define JUCC_LEXER_LEXER_H
+#ifndef JUCC_LEXER_H
+#define JUCC_LEXER_H
 
 #include <cctype>
 #include <cstdio>
