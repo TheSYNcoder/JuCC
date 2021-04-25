@@ -206,6 +206,7 @@ bool Parser::Parse() {
     }
 
     // sanity checks
+    // check for undefined tokens and duplicates
     if (curr_parse_state != BASIC) {
       error_ = "grammar parsing error: block is incomplete '%' expected";
       return false;
@@ -219,7 +220,7 @@ bool Parser::Parse() {
     }
 
     if (terminals.size() != terminals_.size()) {
-      error_ = "grammar parsing error: inconsistent terminals";
+      error_ = "grammar parsing error: inconsistent or duplicate terminals";
       return false;
     }
 
@@ -232,7 +233,7 @@ bool Parser::Parse() {
     }
 
     if (non_terminals.size() != non_terminals_.size()) {
-      error_ = "grammar parsing error: inconsistent non_terminals";
+      error_ = "grammar parsing error: inconsistent or duplicate non_terminals";
       return false;
     }
 
