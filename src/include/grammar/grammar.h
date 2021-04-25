@@ -46,7 +46,7 @@ class Production {
  public:
   Production() = default;
   Production(std::string parent, std::vector<Rule> rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
-  
+
   [[nodiscard]] const std::string &GetParent() const { return parent_; }
   [[nodiscard]] const std::vector<Rule> &GetRules() const { return rules_; }
   void SetParent(const std::string &parent) { Production::parent_ = parent; }
