@@ -46,7 +46,7 @@ class Production {
   void SetRules(const std::vector<Rule> &rules) { Production::rules_ = rules; }
 };
 
-typedef std::vector<Production> Productions;
+using Productions = std::vector<Production>;
 
 class Parser {
   std::ifstream file_;

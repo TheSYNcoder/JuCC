@@ -13,11 +13,12 @@
 
 LINUX_BUILD_PACKAGES=(\
   "build-essential" \
-  "clang" \
-  "clang-format" \
-  "clang-tidy" \
+  "clang-11" \
+  "clang-format-11" \
+  "clang-tidy-11" \
   "cmake" \
   "git" \
+  "llvm-11" \
   "pkg-config" \
   "python3-pip" \
   "python-is-python3" \
