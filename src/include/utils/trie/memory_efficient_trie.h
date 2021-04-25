@@ -1,5 +1,5 @@
-#ifndef JUCC_UTILS_MEMORYEFFICIENTTRIE_H
-#define JUCC_UTILS_MEMORYEFFICIENTTRIE_H
+#ifndef JUCC_UTILS_MEMORY_EFFICIENT_TRIE_H
+#define JUCC_UTILS_MEMORY_EFFICIENT_TRIE_H
 #include <sstream>
 #include <string>
 #include <unordered_map>
