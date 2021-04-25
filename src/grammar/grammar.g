@@ -29,6 +29,7 @@ identifier integer_constant float_constant
 
 ## Grammar for the language
 %rules
+## Expressions
 <primary_expression> : identifier
 <primary_expression> : <constant>
 <primary_expression> : ( <expression> )
