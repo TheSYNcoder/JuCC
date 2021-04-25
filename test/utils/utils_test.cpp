@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
-#include "utils/leftFactoring.h"
-#include "utils/leftRecursion.h"
+#include "utils/left_factoring.h"
+#include "utils/left_recursion.h"
 
 namespace grammar = jucc::grammar;
 
-TEST(utils, directLeftRecursion) {
+TEST(utils, DirectLeftRecursion) {
   // E -> E + T | T | epsilon
   grammar::Production prod;
   prod.SetParent("E");
@@ -34,7 +34,7 @@ TEST(utils, directLeftRecursion) {
   ASSERT_EQ(rules_e[1].ToString(), std::string(grammar::EPSILON) + "E" + std::string(jucc::utils::DASH));
 }
 
-TEST(jucc, MaxLenPrefixTest0) {
+TEST(jucc, MaxLenPrefix0) {
   // E -> ieStSt | a | b | ie | ieS | ieStP
   grammar::Production p;
   p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
@@ -43,7 +43,7 @@ TEST(jucc, MaxLenPrefixTest0) {
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "ie");
 }
 
-TEST(jucc, MaxLenPrefixTest1) {
+TEST(jucc, MaxLenPrefix1) {
   // E -> ieStSt | a | b | ieStS
   grammar::Production p;
   p.SetRules({
@@ -56,14 +56,14 @@ TEST(jucc, MaxLenPrefixTest1) {
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "ieStS");
 }
 
-TEST(jucc, MaxLenPrefixTest2) {
+TEST(jucc, MaxLenPrefix2) {
   // no rule
   grammar::Production p;
   auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "");
 }
 
-TEST(jucc, MaxLenPrefixTest3) {
+TEST(jucc, MaxLenPrefix3) {
   // E -> a | b | C | EPSILON
   grammar::Production p;
   p.SetRules({
@@ -127,7 +127,7 @@ TEST(jucc, LeftFactoring1) {
   ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "b");
 }
 
-TEST(jucc, LeftFactoringComplex) {
+TEST(jucc, LeftFactoringRecursive0) {
   // E -> a | ab | abc | e | f
   grammar::Production p;
   p.SetParent("E");

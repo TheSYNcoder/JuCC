@@ -1,13 +1,13 @@
-#include "utils/leftFactoring.h"
+#include "utils/left_factoring.h"
 
 #include <sstream>
 
-#include "trie/memoryEfficientTrie.h"
-#include "utils/leftRecursion.h"
+#include "utils/left_recursion.h"
+#include "utils/trie/memory_efficient_trie.h"
 
-namespace jucc {
+namespace jucc::utils {
 
-grammar::Productions jucc::utils::RemoveLeftFactors(const grammar::Production &prod) {
+grammar::Productions RemoveLeftFactors(const grammar::Production &prod) {
   grammar::Productions prods;
 
   bool state_not_updated = false;
@@ -57,8 +57,8 @@ grammar::Productions jucc::utils::RemoveLeftFactors(const grammar::Production &p
   return prods;
 }
 
-grammar::Entity jucc::utils::LongestCommonPrefix(const grammar::Production &prod) {
-  jucc::TrieManager trie_manager;
+grammar::Entity LongestCommonPrefix(const grammar::Production &prod) {
+  TrieManager trie_manager;
   trie_manager.InsertAll(prod);
   grammar::Entity common_prefixes;
   int len = 1;
@@ -66,4 +66,5 @@ grammar::Entity jucc::utils::LongestCommonPrefix(const grammar::Production &prod
 
   return common_prefixes;
 }
-}  // namespace jucc
+
+}  // namespace jucc::utils

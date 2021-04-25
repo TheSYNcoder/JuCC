@@ -1,7 +1,8 @@
-#include "utils/leftRecursion.h"
-namespace grammar = jucc::grammar;
+#include "utils/left_recursion.h"
+#include <algorithm>
+namespace jucc::utils {
 
-grammar::Productions jucc::utils::RemoveDirectLeftRecursion(const grammar::Production &prod) {
+grammar::Productions RemoveDirectLeftRecursion(const grammar::Production &prod) {
   if (!IsRecursive(prod)) {
     return grammar::Productions{prod};
   }
@@ -32,11 +33,11 @@ grammar::Productions jucc::utils::RemoveDirectLeftRecursion(const grammar::Produ
   return prods;
 }
 
-bool jucc::utils::IsRecursive(const grammar::Production &prod) {
-  for (const auto &rule : prod.GetRules()) {
-    if (prod.GetParent() == rule.GetEntities()[0]) {
-      return true;
-    }
-  }
-  return false;
+bool IsRecursive(const grammar::Production &prod) {
+  const auto &rules = prod.GetRules();
+
+  return static_cast<bool>(std::any_of(rules.begin(), rules.end(),
+                                       [&](const auto &rule){return prod.GetParent() == rule.GetEntities()[0]; }));
 }
+
+}  // namespace jucc::utils

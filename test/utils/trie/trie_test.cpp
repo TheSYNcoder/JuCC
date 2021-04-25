@@ -1,9 +1,9 @@
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
-#include "trie/memoryEfficientTrie.h"
+#include "utils/trie/memory_efficient_trie.h"
 namespace grammar = jucc::grammar;
 
-TEST(trie, TRIETest1) {
+TEST(trie, trie1) {
   // E -> ieStSt | a | b ieS | ieStS
   grammar::Production p;
   p.SetRules({
@@ -14,12 +14,12 @@ TEST(trie, TRIETest1) {
       grammar::Rule({"i", "e", "S", "t", "S"}),
   });
 
-  jucc::TrieManager tm;
+  jucc::utils::TrieManager tm;
   tm.InsertAll(p);
 
   grammar::Entity ent;
   int len = 1;
-  jucc::TrieManager::GreedyPreorder(tm.GetMaster(), len, ent, true);
+  jucc::utils::TrieManager::GreedyPreorder(tm.GetMaster(), len, ent, true);
   auto rule1 = grammar::Rule(ent);
   ASSERT_EQ(rule1.ToString(), "ieS");
 }

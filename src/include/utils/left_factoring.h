@@ -1,5 +1,5 @@
-#ifndef JUCC_LEFTFACTORING_H
-#define JUCC_LEFTFACTORING_H
+#ifndef JUCC_LEFT_FACTORING_H
+#define JUCC_LEFT_FACTORING_H
 #include "grammar/grammar.h"
 namespace grammar = jucc::grammar;
 
@@ -10,4 +10,4 @@ grammar::Entity LongestCommonPrefix(const grammar::Production & /*prod*/);
 
 }  // namespace jucc::utils
 
-#endif  // JUCC_LEFTFACTORING_H
+#endif  // JUCC_LEFT_FACTORING_H

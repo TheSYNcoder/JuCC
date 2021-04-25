@@ -1,6 +1,7 @@
-#include "trie/memoryEfficientTrie.h"
+#include "utils/trie/memory_efficient_trie.h"
 
-namespace jucc {
+namespace jucc::utils {
+
 Trie::Trie() { count_ = 0; }
 
 TrieManager::TrieManager() { master_ = NewTrieNode(); }
@@ -59,4 +60,4 @@ TrieManager::~TrieManager() {
 
 Trie *TrieManager::GetMaster() const { return master_; }
 
-}  // namespace jucc
+}  // namespace jucc::utils
