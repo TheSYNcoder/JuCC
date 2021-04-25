@@ -11,28 +11,29 @@ namespace jucc {
 
 class Trie {
  public:
-  // std::vector<Trie *> children;
-  std::unordered_map<std::string, Trie *> nodes;
-  grammar::Entity keys_list;
-  int count;
+  std::unordered_map<std::string, Trie *> nodes_;
+  grammar::Entity keys_list_;
+  int count_;
+
   Trie();
 };
 
 class TrieManager {
-  Trie *master;
+  Trie *master_;
 
   // garbage collector
-  std::vector<Trie *> gc;
+  std::vector<Trie *> gc_;
 
  public:
   TrieManager();
   [[nodiscard]] Trie *GetMaster() const;
 
-  void Insert(const grammar::Entity &);
+  void Insert(const grammar::Entity & /*entities*/);
 
-  void InsertAll(const grammar::Production &);
+  void InsertAll(const grammar::Production & /*prod*/);
 
-  static void GreedyPreorder(Trie *, int &, grammar::Entity &, bool);
+  // NOLINTNEXTLINE
+  static void GreedyPreorder(Trie * /*head*/, int & /*len*/, grammar::Entity & /*max_str*/, bool /*is_prime_head*/);
 
   Trie *NewTrieNode();
 

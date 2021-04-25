@@ -8,7 +8,7 @@ namespace jucc::grammar {
 
 std::string Rule::ToString() const {
   std::stringstream ss;
-  for (auto &entity : entities_) {
+  for (const auto &entity : entities_) {
     ss << entity;
   }
   return ss.str();

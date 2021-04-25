@@ -37,50 +37,50 @@ TEST(utils, directLeftRecursion) {
 TEST(jucc, MaxLenPrefixTest0) {
   // E -> ieStSt | a | b | ie | ieS | ieStP
   grammar::Production p;
-  p.setRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
+  p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
               grammar::Rule({"i", "e"}), grammar::Rule({"i", "e", "S"}), grammar::Rule({"i", "e", "S", "t", "P"})});
   auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
-  ASSERT_EQ(grammar::Rule(max_len_entity).toString(), "ie");
+  ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "ie");
 }
 
 TEST(jucc, MaxLenPrefixTest1) {
   // E -> ieStSt | a | b | ieStS
   grammar::Production p;
-  p.setRules({
+  p.SetRules({
       grammar::Rule({"i", "e", "S", "t", "S", "t"}),
       grammar::Rule({"a"}),
       grammar::Rule({"b"}),
       grammar::Rule({"i", "e", "S", "t", "S"}),
   });
   auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
-  ASSERT_EQ(grammar::Rule(max_len_entity).toString(), "ieStS");
+  ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "ieStS");
 }
 
 TEST(jucc, MaxLenPrefixTest2) {
   // no rule
   grammar::Production p;
   auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
-  ASSERT_EQ(grammar::Rule(max_len_entity).toString(), "");
+  ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "");
 }
 
 TEST(jucc, MaxLenPrefixTest3) {
   // E -> a | b | C | EPSILON
   grammar::Production p;
-  p.setRules({
+  p.SetRules({
       grammar::Rule({"a"}),
       grammar::Rule({"b"}),
       grammar::Rule({"c"}),
       grammar::Rule({std::string(grammar::EPSILON)}),
   });
   auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
-  ASSERT_EQ(grammar::Rule(max_len_entity).toString(), "");
+  ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "");
 }
 
 TEST(jucc, LeftFactoring0) {
   // E -> ieStSt | a | b | ieStP
   grammar::Production p;
-  p.setParent("E");
-  p.setRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
+  p.SetParent("E");
+  p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
               grammar::Rule({"i", "e", "S", "t", "P"})});
 
   auto lf_removed = jucc::utils::RemoveLeftFactors(p);
@@ -89,26 +89,26 @@ TEST(jucc, LeftFactoring0) {
   // output
   //  E -> ieStE' | a | b |
   //  E' -> St | P | epsilon
-  ASSERT_EQ(lf_removed[0].getParent(), "E");
-  ASSERT_EQ(lf_removed[1].getParent(), "E" + std::string(jucc::utils::DASH));
+  ASSERT_EQ(lf_removed[0].GetParent(), "E");
+  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(jucc::utils::DASH));
 
-  ASSERT_EQ(lf_removed[0].getRules().size(), 3);
-  ASSERT_EQ(lf_removed[1].getRules().size(), 3);
+  ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
+  ASSERT_EQ(lf_removed[1].GetRules().size(), 3);
 
-  ASSERT_EQ(lf_removed[0].getRules()[0].toString(), "ieStE'");
-  ASSERT_EQ(lf_removed[0].getRules()[1].toString(), "a");
-  ASSERT_EQ(lf_removed[0].getRules()[2].toString(), "b");
+  ASSERT_EQ(lf_removed[0].GetRules()[0].ToString(), "ieStE'");
+  ASSERT_EQ(lf_removed[0].GetRules()[1].ToString(), "a");
+  ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "b");
 
-  ASSERT_EQ(lf_removed[1].getRules()[0].toString(), "St");
-  ASSERT_EQ(lf_removed[1].getRules()[1].toString(), "P");
-  ASSERT_EQ(lf_removed[1].getRules()[2].toString(), std::string(jucc::grammar::EPSILON));
+  ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "St");
+  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), "P");
+  ASSERT_EQ(lf_removed[1].GetRules()[2].ToString(), std::string(jucc::grammar::EPSILON));
 }
 
 TEST(jucc, LeftFactoring1) {
   // E -> ieStSt | a | b
   grammar::Production p;
-  p.setParent("E");
-  p.setRules({
+  p.SetParent("E");
+  p.SetRules({
       grammar::Rule({"i", "e", "S", "t", "S", "t"}),
       grammar::Rule({"a"}),
       grammar::Rule({"b"}),
@@ -118,20 +118,20 @@ TEST(jucc, LeftFactoring1) {
   // output E -> ieStSt | a | b
 
   ASSERT_EQ(lf_removed.size(), 1);
-  ASSERT_EQ(lf_removed[0].getParent(), "E");
+  ASSERT_EQ(lf_removed[0].GetParent(), "E");
 
-  ASSERT_EQ(lf_removed[0].getRules().size(), 3);
+  ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
 
-  ASSERT_EQ(lf_removed[0].getRules()[0].toString(), "ieStSt");
-  ASSERT_EQ(lf_removed[0].getRules()[1].toString(), "a");
-  ASSERT_EQ(lf_removed[0].getRules()[2].toString(), "b");
+  ASSERT_EQ(lf_removed[0].GetRules()[0].ToString(), "ieStSt");
+  ASSERT_EQ(lf_removed[0].GetRules()[1].ToString(), "a");
+  ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "b");
 }
 
 TEST(jucc, LeftFactoringComplex) {
   // E -> a | ab | abc | e | f
   grammar::Production p;
-  p.setParent("E");
-  p.setRules({grammar::Rule({"a"}), grammar::Rule({"a", "b"}), grammar::Rule({"a", "b", "c"}), grammar::Rule({"e"}),
+  p.SetParent("E");
+  p.SetRules({grammar::Rule({"a"}), grammar::Rule({"a", "b"}), grammar::Rule({"a", "b", "c"}), grammar::Rule({"e"}),
               grammar::Rule({"f"})});
 
   auto lf_removed = jucc::utils::RemoveLeftFactors(p);
@@ -142,21 +142,21 @@ TEST(jucc, LeftFactoringComplex) {
 
   ASSERT_EQ(lf_removed.size(), 3);
 
-  ASSERT_EQ(lf_removed[0].getParent(), "E");
-  ASSERT_EQ(lf_removed[1].getParent(), "E" + std::string(jucc::utils::DASH));
-  ASSERT_EQ(lf_removed[2].getParent(), "E" + std::string(jucc::utils::DASH) + std::string(jucc::utils::DASH));
+  ASSERT_EQ(lf_removed[0].GetParent(), "E");
+  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(jucc::utils::DASH));
+  ASSERT_EQ(lf_removed[2].GetParent(), "E" + std::string(jucc::utils::DASH) + std::string(jucc::utils::DASH));
 
-  ASSERT_EQ(lf_removed[0].getRules().size(), 3);
-  ASSERT_EQ(lf_removed[1].getRules().size(), 2);
-  ASSERT_EQ(lf_removed[1].getRules().size(), 2);
+  ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
+  ASSERT_EQ(lf_removed[1].GetRules().size(), 2);
+  ASSERT_EQ(lf_removed[1].GetRules().size(), 2);
 
-  ASSERT_EQ(lf_removed[0].getRules()[0].toString(), "aE'");
-  ASSERT_EQ(lf_removed[0].getRules()[1].toString(), "e");
-  ASSERT_EQ(lf_removed[0].getRules()[2].toString(), "f");
+  ASSERT_EQ(lf_removed[0].GetRules()[0].ToString(), "aE'");
+  ASSERT_EQ(lf_removed[0].GetRules()[1].ToString(), "e");
+  ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "f");
 
-  ASSERT_EQ(lf_removed[1].getRules()[0].toString(), "bE''");
-  ASSERT_EQ(lf_removed[1].getRules()[1].toString(), std::string(jucc::grammar::EPSILON));
+  ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "bE''");
+  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), std::string(jucc::grammar::EPSILON));
 
-  ASSERT_EQ(lf_removed[2].getRules()[0].toString(), std::string(jucc::grammar::EPSILON));
-  ASSERT_EQ(lf_removed[2].getRules()[1].toString(), "c");
+  ASSERT_EQ(lf_removed[2].GetRules()[0].ToString(), std::string(jucc::grammar::EPSILON));
+  ASSERT_EQ(lf_removed[2].GetRules()[1].ToString(), "c");
 }

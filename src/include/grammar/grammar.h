@@ -26,7 +26,7 @@ class Rule {
   [[nodiscard]] const Entity &GetEntities() const { return entities_; }
   void SetEntities(const Entity &entities) { Rule::entities_ = entities; }
   [[nodiscard]] std::string ToString() const;
-  [[nodiscard]] bool HasPrefix(const Entity &) const;
+  [[nodiscard]] bool HasPrefix(const Entity & /*prefix*/) const;
 };
 
 using Rules = std::vector<grammar::Rule>;

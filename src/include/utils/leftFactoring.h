@@ -4,9 +4,9 @@
 namespace grammar = jucc::grammar;
 
 namespace jucc::utils {
-grammar::Productions RemoveLeftFactors(const grammar::Production &);
+grammar::Productions RemoveLeftFactors(const grammar::Production & /*prod*/);
 
-grammar::Entity LongestCommonPrefix(const grammar::Production &prod);
+grammar::Entity LongestCommonPrefix(const grammar::Production & /*prod*/);
 
 }  // namespace jucc::utils
 

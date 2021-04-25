@@ -1,58 +1,62 @@
 #include "trie/memoryEfficientTrie.h"
 
-jucc::Trie::Trie() { count = 0; }
+namespace jucc {
+Trie::Trie() { count_ = 0; }
 
-jucc::TrieManager::TrieManager() { master = NewTrieNode(); }
+TrieManager::TrieManager() { master_ = NewTrieNode(); }
 
-void jucc::TrieManager::Insert(const grammar::Entity &entities) {
-  auto *head = master;
-  grammar::Entity tillKeys;
-  for (auto &entity : entities) {
-    tillKeys.push_back(entity);
-    if (head->nodes.find(entity) == head->nodes.end()) {
-      head->nodes[entity] = NewTrieNode();
-      head->nodes[entity]->keys_list = tillKeys;
+void TrieManager::Insert(const grammar::Entity &entities) {
+  auto *head = master_;
+  grammar::Entity till_keys;
+  for (const auto &entity : entities) {
+    till_keys.push_back(entity);
+    if (head->nodes_.find(entity) == head->nodes_.end()) {
+      head->nodes_[entity] = NewTrieNode();
+      head->nodes_[entity]->keys_list_ = till_keys;
     }
-    head = head->nodes[entity];
-    head->count++;
+    head = head->nodes_[entity];
+    head->count_++;
   }
 }
 
-void jucc::TrieManager::InsertAll(const grammar::Production &prod) {
-  for (const auto &rule : prod.getRules()) {
-    Insert(rule.getEntities());
+void TrieManager::InsertAll(const grammar::Production &prod) {
+  for (const auto &rule : prod.GetRules()) {
+    Insert(rule.GetEntities());
   }
 }
 
-void jucc::TrieManager::GreedyPreorder(Trie *head, int &len, grammar::Entity &max_str, bool is_prime_head) {
+void TrieManager::GreedyPreorder(Trie *head, int &len, grammar::Entity &max_str, bool is_prime_head) {
   if (head == nullptr) {
     return;
   }
   bool state_changed = false;
   // Get the node with max count
-  if (head->count >= len && head->count != 1) {
-    len = head->count;
+  if (head->count_ >= len && head->count_ != 1) {
+    len = head->count_;
     state_changed = true;
-    max_str = head->keys_list;
+    max_str = head->keys_list_;
   }
 
   if (state_changed || is_prime_head) {
-    for (const auto &node : head->nodes) {
+    for (const auto &node : head->nodes_) {
       GreedyPreorder(node.second, len, max_str, false);
     }
   }
 }
 
-jucc::Trie *jucc::TrieManager::NewTrieNode() {
+Trie *TrieManager::NewTrieNode() {
   Trie *t = new Trie;
-  this->gc.push_back(t);
+  this->gc_.push_back(t);
   return t;
 }
 
-jucc::TrieManager::~TrieManager() {
+TrieManager::~TrieManager() {
   // flushing
-  for (auto &node : gc) {
+  for (auto &node : gc_) {
     delete node;
   }
 }
-jucc::Trie *jucc::TrieManager::GetMaster() const { return master; }
+
+Trie *TrieManager::GetMaster() const { return master_; }
+
+}  // namespace jucc
