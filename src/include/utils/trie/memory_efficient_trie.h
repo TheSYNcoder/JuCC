@@ -28,7 +28,6 @@ class Trie {
 class TrieManager {
   /**
    * A higher order abstration to manager a complete Trie.
-   * 
    * Takes care of unwanted memory leaking through a custom garbage collector.
    */
   Trie *master_;            // Current head of the trie.

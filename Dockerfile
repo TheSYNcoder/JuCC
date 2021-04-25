@@ -13,6 +13,6 @@ WORKDIR /JuCC
 RUN echo y | ./script/installation/packages.sh  all
 RUN mkdir build
 WORKDIR /JuCC/build
-#RUN cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
+RUN cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 
 WORKDIR /JuCC
