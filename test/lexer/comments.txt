@@ -5,7 +5,7 @@
 
 // Another comments
 
-int main(){
+int main() {
     // Just another comment 
     // Basically a hello world program, Peace!
     cout << "Hello";

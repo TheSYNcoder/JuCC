@@ -1,12 +1,17 @@
 #include "lexer/lexer.h"
 
-namespace jucc {
+namespace jucc::lexer {
 
 int Lexer::GetToken(std::ifstream &is) {
   static char last_char = ' ';
 
   while (!is.eof() && (isspace(last_char) != 0)) {
     is.get(last_char);
+  }
+
+  // return TOK_EOF if end of file is reached.
+  if (is.eof()) {
+    return TOK_EOF;
   }
 
   // check for identifier and literal tokens
@@ -190,4 +195,4 @@ int Lexer::GetToken(std::ifstream &is) {
   error_string_ = "Unexpected Token\n";
   return TOK_ERROR;
 }
-}  // namespace jucc
+}  // namespace jucc::lexer

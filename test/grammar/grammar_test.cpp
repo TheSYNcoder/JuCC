@@ -137,13 +137,13 @@ TEST(grammar, parser12) {
 TEST(grammar, parser13) {
   Parser parser = Parser("../test/grammar/grammar_test_13.g");
   ASSERT_EQ(false, parser.Parse());
-  ASSERT_EQ("grammar parsing error: inconsistent terminals", parser.GetError());
+  ASSERT_EQ("grammar parsing error: inconsistent or duplicate terminals", parser.GetError());
 }
 
 TEST(grammar, parser14) {
   Parser parser = Parser("../test/grammar/grammar_test_14.g");
   ASSERT_EQ(false, parser.Parse());
-  ASSERT_EQ("grammar parsing error: inconsistent non_terminals", parser.GetError());
+  ASSERT_EQ("grammar parsing error: inconsistent or duplicate non_terminals", parser.GetError());
 }
 
 TEST(grammar, parser15) {

@@ -1,13 +1,11 @@
 #ifndef JUCC_LEXER_LEXER_H
 #define JUCC_LEXER_LEXER_H
 
-#include <cctype>
-#include <cstdio>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 namespace jucc {
+namespace lexer {
 
 enum Token {
   TOK_EOF = -1,
@@ -86,6 +84,7 @@ class Lexer {
   int GetToken(std::ifstream &is);
 };  // class Lexer
 
+}  // namespace lexer
 }  // namespace jucc
 
 #endif

@@ -1,9 +1,9 @@
 
 
-
-
 int main(){
     int a = 5;
     int b = 5.6d;
-    cout << b;
+    cin >> b;
+    if (5 <4.2) {
+        cout << 4; }
 }
