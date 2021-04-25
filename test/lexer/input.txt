@@ -1,6 +1,6 @@
 
-
-
-int main(){
+int main() {
+    int x, y = 5;
+    float f = 5.8;
     cout << "Hello";
 }
