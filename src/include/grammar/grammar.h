@@ -9,6 +9,7 @@
 namespace jucc {
 namespace grammar {
 const char EPSILON[] = "EPSILON";
+using Entity = std::vector<std::string>;
 
 class Rule {
   /**
@@ -17,15 +18,18 @@ class Rule {
    * Example:
    * For production: E : F + E => { "F", "+", "E" } is a rule.
    */
-  std::vector<std::string> entities_;
+  Entity entities_;
 
  public:
   Rule() = default;
-  explicit Rule(std::vector<std::string> entities) : entities_(std::move(entities)) {}
-  [[nodiscard]] const std::vector<std::string> &GetEntities() const { return entities_; }
-  void SetEntities(const std::vector<std::string> &entities) { Rule::entities_ = entities; }
-  std::string ToString();
+  explicit Rule(Entity entities) : entities_(std::move(entities)) {}
+  [[nodiscard]] const Entity &GetEntities() const { return entities_; }
+  void SetEntities(const Entity &entities) { Rule::entities_ = entities; }
+  [[nodiscard]] std::string ToString() const;
+  [[nodiscard]] bool HasPrefix(const Entity &) const;
 };
+
+using Rules = std::vector<grammar::Rule>;
 
 class Production {
   /**
@@ -41,6 +45,8 @@ class Production {
 
  public:
   Production() = default;
+  Production(std::string parent, std::vector<Rule> rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
+  
   [[nodiscard]] const std::string &GetParent() const { return parent_; }
   [[nodiscard]] const std::vector<Rule> &GetRules() const { return rules_; }
   void SetParent(const std::string &parent) { Production::parent_ = parent; }
