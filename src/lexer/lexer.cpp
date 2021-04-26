@@ -23,21 +23,42 @@ int Lexer::GetToken(std::ifstream &is) {
       identifier_string_ += last_char;
     }
     if (identifier_string_ == "int") {
+      current_datatype_ = identifier_string_;
       ret_token = TOK_INT;
     } else if (identifier_string_ == "float") {
+      current_datatype_ = identifier_string_;
       ret_token = TOK_FLOAT;
     } else if (identifier_string_ == "void") {
+      current_datatype_ = identifier_string_;
       ret_token = TOK_VOID;
     } else if (identifier_string_ == "if") {
+      current_datatype_ = "";
       ret_token = TOK_IF;
     } else if (identifier_string_ == "else") {
+      current_datatype_ = "";
       ret_token = TOK_ELSE;
     } else if (identifier_string_ == "cout") {
+      current_datatype_ = "";
       ret_token = TOK_COUT;
     } else if (identifier_string_ == "cin") {
+      current_datatype_ = "";
       ret_token = TOK_CIN;
     } else {
       ret_token = TOK_IDENTIFIER;
+
+      /**
+       *  if identifier insert into symbol_table
+       */
+      auto *node = new symbol_table::Node(identifier_string_, current_datatype_, current_nesting_level_);
+      symbol_table_.CheckAndAddEntry(node);
+      delete node;
+      if (!symbol_table_.GetDuplicateSymbols().empty()) {
+        duplicate_symbol_errors_ = symbol_table_.GetDuplicateSymbols();
+      }
+      if (!symbol_table_.GetUndeclaredSymbols().empty()) {
+        undeclared_symbol_errors_ = symbol_table_.GetUndeclaredSymbols();
+      }
+      current_datatype_ = "";
     }
     if (is.eof()) {
       last_char = ' ';
@@ -83,6 +104,7 @@ int Lexer::GetToken(std::ifstream &is) {
     if (is.eof()) {
       last_char = ' ';
     }
+    current_datatype_ = "";
     return ret_token;
   }
 
@@ -99,9 +121,12 @@ int Lexer::GetToken(std::ifstream &is) {
       is.get(last_char);
       ret_token = TOK_DOT;
     } else if (last_char == '{') {
+      current_nesting_level_++;
       is.get(last_char);
       ret_token = TOK_CURLY_OPEN;
     } else if (last_char == '}') {
+      symbol_table_.RemoveNodesOnScopeEnd(current_nesting_level_);
+      current_nesting_level_--;
       is.get(last_char);
       ret_token = TOK_CURLY_CLOSE;
     } else if (last_char == '(') {
@@ -164,7 +189,7 @@ int Lexer::GetToken(std::ifstream &is) {
       } else {
         // read till the end of the string
         // panic mode
-        while (!is.eof() && (isalnum(last_char) == 0)) {
+        while (!is.eof() && (isalnum(last_char) != 0)) {
           is.get(last_char);
         }
         error_string_ = "Wrong literal format\n";
@@ -188,6 +213,7 @@ int Lexer::GetToken(std::ifstream &is) {
     if (is.eof()) {
       last_char = ' ';
     }
+    current_datatype_ = "";
     return ret_token;
   }
 
@@ -195,4 +221,13 @@ int Lexer::GetToken(std::ifstream &is) {
   error_string_ = "Unexpected Token\n";
   return TOK_ERROR;
 }
+
+std::string Lexer::GetCurrentDatatype() { return current_datatype_; }
+
+std::vector<std::string> Lexer::GetDuplicateSymbolErrors() { return duplicate_symbol_errors_; }
+
+std::vector<std::string> Lexer::GetUndeclaredSymbolErrors() { return undeclared_symbol_errors_; }
+
+[[nodiscard]] int Lexer::GetCurrentNestingLevel() const { return current_nesting_level_; }
+
 }  // namespace jucc::lexer

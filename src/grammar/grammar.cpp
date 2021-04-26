@@ -6,27 +6,6 @@
 
 namespace jucc::grammar {
 
-std::string Rule::ToString() const {
-  std::stringstream ss;
-  for (const auto &entity : entities_) {
-    ss << entity;
-  }
-  return ss.str();
-}
-
-bool Rule::HasPrefix(const Entity &prefix) const {
-  // Takes care of even EPSILON too.
-  if (prefix.size() > entities_.size()) {
-    return false;
-  }
-  for (int i = 0; i < static_cast<int>(prefix.size()); i++) {
-    if (entities_[i] != prefix[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
 Parser::Parser(const char *filepath) { file_ = std::ifstream(filepath); }
 
 Parser::~Parser() {
@@ -272,4 +251,26 @@ bool Parser::Parse() {
   error_ = "grammar parsing error: file not found";
   return false;
 }
+
+std::string Rule::ToString() const {
+  std::stringstream ss;
+  for (const auto &entity : entities_) {
+    ss << entity;
+  }
+  return ss.str();
+}
+
+bool Rule::HasPrefix(const Entity &prefix) const {
+  // Takes care of even EPSILON too.
+  if (prefix.size() > entities_.size()) {
+    return false;
+  }
+  for (int i = 0; i < static_cast<int>(prefix.size()); i++) {
+    if (entities_[i] != prefix[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 }  // namespace jucc::grammar
