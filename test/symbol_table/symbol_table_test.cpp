@@ -67,5 +67,7 @@ TEST(symbolTable, test4) {
   ASSERT_EQ(true, "x" == dups[0]);
   smb.RemoveNodesOnScopeEnd(1);
   smb.RemoveNodesOnScopeEnd(0);
+  smb.RemoveNodesOnScopeEnd(2);
+
   ASSERT_EQ(0, smb.CheckOccurrencesOfId("x"));
 }
