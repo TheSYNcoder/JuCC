@@ -46,28 +46,32 @@ TEST(symbolTable, test4) {
    * Check Deletion
    */
   SymbolTable smb = SymbolTable();
+
   Node *node = new Node("x", "int", 0);
   smb.CheckAndAddEntry(node);
   delete node;
   Node *head = smb.GetLinkedListById("x");
   ASSERT_EQ(std::string("int"), head->data_type_);
   ASSERT_EQ(0, head->nesting_level_);
+
   Node *node1 = new Node("x", "int", 1);
   smb.CheckAndAddEntry(node1);
   delete node1;
   head = smb.GetLinkedListById("x");
   ASSERT_EQ(std::string("int"), head->data_type_);
   ASSERT_EQ(1, head->nesting_level_);
+
   Node *node2 = new Node("x", "int", 1);
   smb.CheckAndAddEntry(node2);
   delete node2;
+
   std::vector<std::string> dups = smb.GetDuplicateSymbols();
   int sz = static_cast<int>(dups.size());
   ASSERT_EQ(sz, 1);
   ASSERT_EQ(true, "x" == dups[0]);
+
   smb.RemoveNodesOnScopeEnd(1);
   smb.RemoveNodesOnScopeEnd(0);
   smb.RemoveNodesOnScopeEnd(2);
-
   ASSERT_EQ(0, smb.CheckOccurrencesOfId("x"));
 }
