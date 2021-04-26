@@ -44,12 +44,13 @@ void SymbolTable::CheckAndAddEntry(Node *node_) {
 }
 
 void SymbolTable::InsertIntoDuplicateSymbols(const std::string &identifier_) {
+  // Further improvement on this will be storing line numbers and file details
   duplicate_symbols_.push_back(identifier_);
 }
 
 void SymbolTable::RemoveNodesOnScopeEnd(int level_) {
   for (auto &id_nodes : hash_table_) {
-    if (id_nodes.second.GetHead()->nesting_level_ == level_) {
+    if (!id_nodes.second.IsEmpty() && id_nodes.second.GetHead()->nesting_level_ == level_) {
       hash_table_[id_nodes.first].DeleteStartingNode();
       if (hash_table_[id_nodes.first].IsEmpty()) {
         // delete the entry
