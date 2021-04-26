@@ -1,11 +1,14 @@
-#ifndef JUCC_SYMBOL_TABLE_SYMBOL_TABLE_H
-#define JUCC_SYMBOL_TABLE_SYMBOL_TABLE_H
+#ifndef JUCC_SYMBOL_TABLE_H
+#define JUCC_SYMBOL_TABLE_H
 
-#include <iostream>
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
+#include <utility>
+
 namespace jucc {
+
+namespace symbol_table {
 
 struct Node {
   /**
@@ -24,11 +27,11 @@ struct Node {
    *
    *      ...
    *      int a0_;
-   *      if ( condition ){
+   *      if ( condition ) {
    *          int a1_;
-   *          if ( second_condition ){
+   *          if ( second_condition ) {
    *              int a2_;
-   *              if ( third_condition){
+   *              if ( third_condition) {
    *                      int a3_;
    *                     ...
    *              }
@@ -37,25 +40,36 @@ struct Node {
    *      ...
    *      a0_ has 0 level , a1_ has 1 level and so on ...
    */
-  std::string nesting_level_;
+  int nesting_level_;
   /**
-   * Constructir for node class
+   * The pointer to the next node.
    */
-  Node(std::string it_, std::string dt_, std::string nt_) : identifier_(it_), data_type_(dt_), nesting_level_(nt_) {}
+  Node *next_;
+  /**
+   * Constructor for node class
+   */
+  Node(std::string it_, std::string dt_, int nt_)
+      : identifier_(std::move(it_)), data_type_(std::move(dt_)), nesting_level_(nt_), next_(nullptr) {}
 };
 
-typedef struct Node Node;
+using Node = struct Node;
 
-class Linked_list {
- public:
+class LinkedList {
   /**
-   * The head of the linked list
+   * The head_ of the linked list
    */
-  Node *head_;
+  Node *head_{nullptr};
+
+ public:
+  LinkedList() = default;
+  /**
+   * Allocates memory for a new Node and returns it after initializing.
+   */
+  static Node *CreateNewNode(std::string it_, std::string dt_, int nt_);
   /**
    * Adds a new node at the starting of the linked list
    */
-  void AddNewNode(Node *node_);
+  void AddNewNode(std::string it_, std::string dt_, int nt_);
   /**
    * Deletes the first node of the linked list
    */
@@ -63,38 +77,49 @@ class Linked_list {
   /**
    * Returns true if linked list is empty or vice-versa
    */
-  bool isEmpty();
+  bool IsEmpty();
+  /**
+   * returns head_
+   */
+  Node *GetHead();
 };
 
-class Symbol_table {
- public:
+class SymbolTable {
   /**
    * Store the identfier mappings with respect to their presence
    * in different nesting levels in the program
    */
-  std::map<std::string, Linked_list> hash_table_;
+  std::unordered_map<std::string, LinkedList> hash_table_;
   /**
    * A vector to store different duplicate symbols found in the input
    */
-  std::vector<std::string> duplicate_symbols;
+  std::vector<std::string> duplicate_symbols_;
   /**
    * Checks if the current identifier is present in the same nesting level
    * int the hash_table. If present reports a duplicate symbol error, that is,
    * inserts into the duplicate_symbols vector.
    */
+ public:
   void CheckAndAddEntry(Node *node_);
-
   /**
    * On scope end  - sc_
    * Removes the nodes of all the variables in the hash_table which have nesting_level_ = sc_
    */
-  void RemoveNodesOnScopeEnd();
+  void RemoveNodesOnScopeEnd(int level_);
 
   /**
    * Inserts symbols into duplicate symbols array
    */
-  void InsertIntoDuplicateSymbols(std::string identifier_);
+  void InsertIntoDuplicateSymbols(const std::string &identifier_);
+
+  Node *GetLinkedListById(const std::string &id_);
+
+  std::vector<std::string> GetDuplicateSymbols();
+
+  int CheckOccurrencesOfId(const std::string &id_);
 };
+
+}  // namespace symbol_table
 
 }  // namespace jucc
 
