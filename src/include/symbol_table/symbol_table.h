@@ -95,6 +95,11 @@ class SymbolTable {
    */
   std::vector<std::string> duplicate_symbols_;
 
+  /**
+   * A vector to store the undeclared symbols in the input file.
+   */
+  std::vector<std::string> undeclared_symbols_;
+
  public:
   /**
    * Checks if the current identifier is present in the same nesting level
@@ -116,6 +121,8 @@ class SymbolTable {
   Node *GetLinkedListById(const std::string &id_);
 
   std::vector<std::string> GetDuplicateSymbols();
+
+  std::vector<std::string> GetUndeclaredSymbols();
 
   /**
    * Checks if the identifier is present in hash_table_

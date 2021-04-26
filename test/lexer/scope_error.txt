@@ -1,0 +1,18 @@
+
+
+
+
+
+
+
+int main(){
+    int a;
+    if ( a ){
+        int b = 45;
+        int b = 34;
+        if ( b ){
+            c = 45;
+        }
+    }
+    cout << b;
+}

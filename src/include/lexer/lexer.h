@@ -3,6 +3,9 @@
 
 #include <fstream>
 #include <string>
+#include <vector>
+
+#include "symbol_table/symbol_table.h"
 
 namespace jucc {
 namespace lexer {
@@ -51,6 +54,7 @@ enum Token {
 
 class Lexer {
  public:
+  Lexer() = default;
   /**
    * used to store a identifier token
    */
@@ -76,6 +80,23 @@ class Lexer {
    * during tokenization.
    */
   double floatval_;
+  /**
+   * The current nesting level as parsed by the lexer in
+   * the input file.
+   */
+  int current_nesting_level_{0};
+  /**
+   * vector to store duplicate symbol errors.
+   */
+  std::vector<std::string> duplicate_symbol_errors_;
+  /**
+   * vector to store undeclared symbol errors.
+   */
+  std::vector<std::string> undeclared_symbol_errors_;
+
+  std::string current_datatype_;
+
+  symbol_table::SymbolTable symbol_table_;
 
   /**
    * Takes a ifstream object as input and gets the next character

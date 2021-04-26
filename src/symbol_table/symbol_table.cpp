@@ -29,6 +29,11 @@ Node *LinkedList::GetHead() { return this->head_; }
 void SymbolTable::CheckAndAddEntry(Node *node_) {
   // if present check if in common scope
   if (hash_table_.count(node_->identifier_) != 0U) {
+    // check if using a previously declared variable.
+    if (node_->data_type_.empty()) {
+      return;
+    }
+    // declaring a variable
     if (hash_table_[node_->identifier_].GetHead()->nesting_level_ == node_->nesting_level_) {
       // error duplicate symbol
       SymbolTable::InsertIntoDuplicateSymbols(node_->identifier_);
@@ -40,7 +45,12 @@ void SymbolTable::CheckAndAddEntry(Node *node_) {
   }
 
   // if not present in common scope just insert it in hash table
-  hash_table_[node_->identifier_].AddNewNode(node_->identifier_, node_->data_type_, node_->nesting_level_);
+  if (!node_->data_type_.empty()) {
+    hash_table_[node_->identifier_].AddNewNode(node_->identifier_, node_->data_type_, node_->nesting_level_);
+  } else {
+    // insert into undeclared
+    undeclared_symbols_.push_back(node_->identifier_);
+  }
 }
 
 void SymbolTable::InsertIntoDuplicateSymbols(const std::string &identifier_) {
@@ -69,6 +79,8 @@ void SymbolTable::RemoveNodesOnScopeEnd(int level_) {
 Node *SymbolTable::GetLinkedListById(const std::string &id_) { return hash_table_[id_].GetHead(); }
 
 std::vector<std::string> SymbolTable::GetDuplicateSymbols() { return duplicate_symbols_; }
+
+std::vector<std::string> SymbolTable::GetUndeclaredSymbols() { return undeclared_symbols_; }
 
 int SymbolTable::CheckOccurrencesOfId(const std::string &id_) { return hash_table_.count(id_); }
 }  // namespace jucc::symbol_table
