@@ -1,5 +1,5 @@
-#ifndef JUCC_SYMBOL_TABLE_H
-#define JUCC_SYMBOL_TABLE_H
+#ifndef JUCC_SYMBOL_TABLE_SYMBOL_TABLE_H
+#define JUCC_SYMBOL_TABLE_SYMBOL_TABLE_H
 
 #include <string>
 #include <unordered_map>
@@ -51,8 +51,6 @@ struct Node {
   Node(std::string it_, std::string dt_, int nt_)
       : identifier_(std::move(it_)), data_type_(std::move(dt_)), nesting_level_(nt_), next_(nullptr) {}
 };
-
-using Node = struct Node;
 
 class LinkedList {
   /**
@@ -107,6 +105,7 @@ class SymbolTable {
    * inserts into the duplicate_symbols vector.
    */
   void CheckAndAddEntry(Node *node_);
+
   /**
    * On scope end - sc_
    * Removes the nodes of all the variables in the hash_table which have nesting_level_ = sc_
@@ -118,10 +117,20 @@ class SymbolTable {
    */
   void InsertIntoDuplicateSymbols(const std::string &identifier_);
 
+  /**
+   * Returns the linked list or list of nodes associated with an
+   *  identifier.
+   */
   Node *GetLinkedListById(const std::string &id_);
 
+  /**
+   * Getter method for duplicated symbols.
+   */
   std::vector<std::string> GetDuplicateSymbols();
 
+  /**
+   * Getter method for undeclared variables.
+   */
   std::vector<std::string> GetUndeclaredSymbols();
 
   /**

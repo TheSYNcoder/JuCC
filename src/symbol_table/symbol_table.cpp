@@ -70,8 +70,9 @@ void SymbolTable::RemoveNodesOnScopeEnd(int level_) {
     }
   }
   for (const auto &id : delete_queue) {
-    if (hash_table_.find(id) != hash_table_.end()) {
-      hash_table_.erase(hash_table_.find(id));
+    auto iterator = hash_table_.find(id);
+    if (iterator != hash_table_.end()) {
+      hash_table_.erase(iterator);
     }
   }
 }

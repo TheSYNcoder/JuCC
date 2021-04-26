@@ -23,13 +23,13 @@ int Lexer::GetToken(std::ifstream &is) {
       identifier_string_ += last_char;
     }
     if (identifier_string_ == "int") {
-      current_datatype_ = "int";
+      current_datatype_ = identifier_string_;
       ret_token = TOK_INT;
     } else if (identifier_string_ == "float") {
-      current_datatype_ = "float";
+      current_datatype_ = identifier_string_;
       ret_token = TOK_FLOAT;
     } else if (identifier_string_ == "void") {
-      current_datatype_ = "void";
+      current_datatype_ = identifier_string_;
       ret_token = TOK_VOID;
     } else if (identifier_string_ == "if") {
       current_datatype_ = "";
@@ -221,4 +221,13 @@ int Lexer::GetToken(std::ifstream &is) {
   error_string_ = "Unexpected Token\n";
   return TOK_ERROR;
 }
+
+std::string Lexer::GetCurrentDatatype() { return current_datatype_; }
+
+std::vector<std::string> Lexer::GetDuplicateSymbolErrors() { return duplicate_symbol_errors_; }
+
+std::vector<std::string> Lexer::GetUndeclaredSymbolErrors() { return undeclared_symbol_errors_; }
+
+[[nodiscard]] int Lexer::GetCurrentNestingLevel() const { return current_nesting_level_; }
+
 }  // namespace jucc::lexer

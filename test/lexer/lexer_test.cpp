@@ -222,7 +222,7 @@ TEST(lexer, lexer5) {
   int token;
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
-  ASSERT_EQ(lex.current_datatype_, "int");
+  ASSERT_EQ(lex.GetCurrentDatatype(), "int");
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
@@ -239,7 +239,7 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
 
   // assert nesting level
-  ASSERT_EQ(lex.current_nesting_level_, 1);
+  ASSERT_EQ(lex.GetCurrentNestingLevel(), 1);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IF, token);
   token = lex.GetToken(is);
@@ -262,10 +262,10 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
-  ASSERT_EQ(lex.duplicate_symbol_errors_.size(), 0);
+  ASSERT_EQ(lex.GetDuplicateSymbolErrors().size(), 0);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
-  ASSERT_EQ(lex.duplicate_symbol_errors_.size(), 1);
+  ASSERT_EQ(lex.GetDuplicateSymbolErrors().size(), 1);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_ASSIGNMENT, token);
   token = lex.GetToken(is);
@@ -282,7 +282,7 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(jucc::lexer::TOK_PAREN_CLOSE, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_CURLY_OPEN, token);
-  ASSERT_EQ(lex.undeclared_symbol_errors_.size(), 0);
+  ASSERT_EQ(lex.GetUndeclaredSymbolErrors().size(), 0);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
@@ -291,7 +291,7 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(jucc::lexer::TOK_DECIMAL, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
-  ASSERT_EQ(lex.undeclared_symbol_errors_.size(), 1);
+  ASSERT_EQ(lex.GetUndeclaredSymbolErrors().size(), 1);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_CURLY_CLOSE, token);
   token = lex.GetToken(is);
@@ -304,7 +304,7 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
-  ASSERT_EQ(lex.undeclared_symbol_errors_.size(), 2);
+  ASSERT_EQ(lex.GetUndeclaredSymbolErrors().size(), 2);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_CURLY_CLOSE, token);
 }
