@@ -94,15 +94,16 @@ class SymbolTable {
    * A vector to store different duplicate symbols found in the input
    */
   std::vector<std::string> duplicate_symbols_;
+
+ public:
   /**
    * Checks if the current identifier is present in the same nesting level
    * int the hash_table. If present reports a duplicate symbol error, that is,
    * inserts into the duplicate_symbols vector.
    */
- public:
   void CheckAndAddEntry(Node *node_);
   /**
-   * On scope end  - sc_
+   * On scope end - sc_
    * Removes the nodes of all the variables in the hash_table which have nesting_level_ = sc_
    */
   void RemoveNodesOnScopeEnd(int level_);
@@ -116,6 +117,10 @@ class SymbolTable {
 
   std::vector<std::string> GetDuplicateSymbols();
 
+  /**
+   * Checks if the identifier is present in hash_table_
+   * Utility function for testing
+   */
   int CheckOccurrencesOfId(const std::string &id_);
 };
 

@@ -48,13 +48,19 @@ void SymbolTable::InsertIntoDuplicateSymbols(const std::string &identifier_) {
 }
 
 void SymbolTable::RemoveNodesOnScopeEnd(int level_) {
+  std::vector<std::string> delete_queue;
   for (auto &id_nodes : hash_table_) {
     if (id_nodes.second.GetHead()->nesting_level_ == level_) {
       hash_table_[id_nodes.first].DeleteStartingNode();
       if (hash_table_[id_nodes.first].IsEmpty()) {
         // delete the entry
-        hash_table_.erase(hash_table_.find(id_nodes.first));
+        delete_queue.push_back(id_nodes.first);
       }
+    }
+  }
+  for (const auto &id : delete_queue) {
+    if (hash_table_.find(id) != hash_table_.end()) {
+      hash_table_.erase(hash_table_.find(id));
     }
   }
 }
