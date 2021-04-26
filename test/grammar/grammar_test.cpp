@@ -86,7 +86,7 @@ TEST(grammar, parser4) {
   ASSERT_EQ("grammar parsing error: invalid token %", parser.GetError());
 }
 
-TEST(grammar, parserTest5) {
+TEST(grammar, parser5) {
   Parser parser = Parser("../test/grammar/grammar_test_5.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token outside block: bruh", parser.GetError());
