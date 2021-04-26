@@ -207,6 +207,8 @@ TEST(lexer, lexer4) {
   ASSERT_EQ(jucc::lexer::TOK_CURLY_CLOSE, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_COMMENT, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_EOF, token);
   is.close();
 }
 
@@ -307,4 +309,6 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(lex.GetUndeclaredSymbolErrors().size(), 2);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_CURLY_CLOSE, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_EOF, token);
 }
