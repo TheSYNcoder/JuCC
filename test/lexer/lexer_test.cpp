@@ -387,11 +387,15 @@ TEST(lexer, lexer6) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_ASSIGNMENT, token);
   token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
+  token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_MULTIPLY, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_DECIMAL, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PAREN_CLOSE, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PLUS, token);
   token = lex.GetToken(is);

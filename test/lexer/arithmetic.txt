@@ -5,11 +5,11 @@
 int main(){
     int a = 5;
     if ( a > 45){
-        cout << a;
+        cout <<a;
     }
     else{
-        if ( a != 10 ){
-            a = a * 5 + 4 - 6;
+        if (a !=10 ){
+            a = (a*5) + 4 - 6;
             // ooops , error not captured by lexer.
             a = a / 0;
         }
