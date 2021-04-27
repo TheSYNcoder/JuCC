@@ -19,8 +19,8 @@ class Trie {
   // Creates a trie for set of Rules where each entity is used as a key.
   std::unordered_map<std::string, Trie *> nodes_;
 
-  grammar::Entity keys_list_;  // Stores the prefix list of entities upto the current entity.
-  int count_;                  // Number of occurrences of the current entity after insertion of a set of Rules.
+  std::vector<std::string> keys_list_;  // Stores the prefix list of entities upto the current entity.
+  int count_;  // Number of occurrences of the current entity after insertion of a set of Rules.
 
   Trie();
 };
@@ -51,10 +51,10 @@ class TrieManager {
   [[nodiscard]] Trie *GetMaster() const;
 
   /**
-   * Insert a particular grammar Entity into the master_.
-   * @param grammar::Entity &
+   * Insert a particular grammar Rule into the master_.
+   * @param grammar::Rule &
    */
-  void Insert(const grammar::Entity & /*entities*/);
+  void Insert(const grammar::Rule & /*rule*/);
 
   /**
    * Insert a whole production into the trie node master_.
@@ -67,7 +67,7 @@ class TrieManager {
    * Rule entities.
    */
   // NOLINTNEXTLINE
-  static void GreedyPreorder(Trie * /*head*/, int & /*len*/, grammar::Entity & /*max_str*/, bool /*is_prime_head*/);
+  static void GreedyPreorder(Trie * /*head*/, int & /*len*/, grammar::Rule & /*max_str*/, bool /*is_prime_head*/);
 
   /**
    * Virtual Destructor performs garbage collection where created memory gets released.

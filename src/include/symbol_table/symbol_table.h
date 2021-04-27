@@ -16,11 +16,13 @@ struct Node {
    * obtained during tokenization
    */
   std::string identifier_;
+
   /**
    * Used to store the data type of the identifier
    * One of int or float
    */
   std::string data_type_;
+
   /**
    * Used to store the nesting level of scoping
    * Deeper the nesting, higher the scope
@@ -41,10 +43,12 @@ struct Node {
    *      a0_ has 0 level , a1_ has 1 level and so on ...
    */
   int nesting_level_;
+
   /**
    * The pointer to the next node.
    */
   Node *next_;
+
   /**
    * Constructor for node class
    */
@@ -60,22 +64,27 @@ class LinkedList {
 
  public:
   LinkedList() = default;
+
   /**
    * Allocates memory for a new Node and returns it after initializing.
    */
   static Node *CreateNewNode(std::string it_, std::string dt_, int nt_);
+
   /**
    * Adds a new node at the starting of the linked list
    */
   void AddNewNode(std::string it_, std::string dt_, int nt_);
+
   /**
    * Deletes the first node of the linked list
    */
   void DeleteStartingNode();
+
   /**
    * Returns true if linked list is empty or vice-versa
    */
   bool IsEmpty();
+
   /**
    * returns head_
    */
@@ -88,6 +97,7 @@ class SymbolTable {
    * in different nesting levels in the program
    */
   std::unordered_map<std::string, LinkedList> hash_table_;
+
   /**
    * A vector to store different duplicate symbols found in the input
    */

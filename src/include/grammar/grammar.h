@@ -9,7 +9,6 @@
 namespace jucc {
 namespace grammar {
 const char EPSILON[] = "EPSILON";
-using Entity = std::vector<std::string>;
 
 class Rule {
   /**
@@ -18,21 +17,21 @@ class Rule {
    * Example:
    * For production: E : F + E => { "F", "+", "E" } is a rule.
    */
-  Entity entities_;
+  std::vector<std::string> entities_;
 
  public:
   Rule() = default;
-  explicit Rule(Entity entities) : entities_(std::move(entities)) {}
-  [[nodiscard]] const Entity &GetEntities() const { return entities_; }
-  void SetEntities(const Entity &entities) { Rule::entities_ = entities; }
+  explicit Rule(std::vector<std::string> entities) : entities_(std::move(entities)) {}
+  [[nodiscard]] const std::vector<std::string> &GetEntities() const { return entities_; }
+  void SetEntities(const std::vector<std::string> &entities) { Rule::entities_ = entities; }
   [[nodiscard]] std::string ToString() const;
 
   /**
-   * Takes an Entity and checks if the entries of the Entity is a perfect
+   * Takes an Rule and checks if the entries of the Rule is a perfect
    * prefix of the this->entities_ or not.
    * @return a boolean after checking if param is actually a prefix or not.
    */
-  [[nodiscard]] bool HasPrefix(const Entity & /*prefix*/) const;
+  [[nodiscard]] bool HasPrefix(const Rule & /*prefix*/) const;
 };
 
 using Rules = std::vector<grammar::Rule>;
