@@ -7,7 +7,7 @@
 else float if int void
 ( ) { } * + - / % ,
 << >> < > <= >= = == != ;
-identifier integer_constant float_constant
+identifier integer_constant float_constant main
 %
 
 ## Non Terminals
@@ -93,5 +93,5 @@ identifier integer_constant float_constant
 <selection_statement> : if ( <expression> ) <statement> else <statement>
 
 ## Main
-<program> : <type_specifier> identifier ( ) <compound_statement>
+<program> : <type_specifier> main ( ) <compound_statement>
 %
