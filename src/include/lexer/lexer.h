@@ -46,6 +46,21 @@ enum Token {
   TOK_LITERAL = -25,       // "c++"
   TOK_CHARACTER = -26,     // 'c'
 
+  // arithmetic tokens
+
+  TOK_PLUS = -29,      // +
+  TOK_MINUS = -30,     // -
+  TOK_MULTIPLY = -31,  // *
+  TOK_DIVIDE = -32,    // /
+  TOK_MODULUS = -33,   // %
+
+  // RELATIONAL
+
+  TOK_GREATER_THAN_OR_EQUALS = -34,  // >=
+  TOK_LESS_THAN_OR_EQUALS = -35,     // <=
+  TOK_NOT = -36,                     // !
+  TOK_NOT_EQUAL_TO = -37,            // !=
+
   // cout, cin
 
   TOK_COUT = -27,  // cout
