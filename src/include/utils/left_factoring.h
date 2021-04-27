@@ -12,9 +12,9 @@ grammar::Productions RemoveLeftFactors(const grammar::Production & /*prod*/);
 
 /**
  * Finds longest prefix which is most common to the rules of the productions.
- * @return a grammar Entity which can be used as a core of grammar::Rule.
+ * @return a grammar Rule which can be used as a core of grammar::Rule.
  */
-grammar::Entity LongestCommonPrefix(const grammar::Production & /*prod*/);
+grammar::Rule LongestCommonPrefix(const grammar::Production & /*prod*/);
 
 }  // namespace jucc::utils
 

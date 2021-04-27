@@ -260,16 +260,18 @@ std::string Rule::ToString() const {
   return ss.str();
 }
 
-bool Rule::HasPrefix(const Entity &prefix) const {
+bool Rule::HasPrefix(const Rule &prefix) const {
   // Takes care of even EPSILON too.
-  if (prefix.size() > entities_.size()) {
+  if (prefix.GetEntities().size() > entities_.size()) {
     return false;
   }
-  for (int i = 0; i < static_cast<int>(prefix.size()); i++) {
-    if (entities_[i] != prefix[i]) {
+
+  for (int i = 0; i < static_cast<int>(prefix.GetEntities().size()); i++) {
+    if (entities_[i] != prefix.GetEntities()[i]) {
       return false;
     }
   }
+
   return true;
 }
 

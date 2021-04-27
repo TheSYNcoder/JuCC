@@ -17,9 +17,8 @@ TEST(trie, trie1) {
   jucc::utils::TrieManager tm;
   tm.InsertAll(p);
 
-  grammar::Entity ent;
+  grammar::Rule rule;
   int len = 1;
-  jucc::utils::TrieManager::GreedyPreorder(tm.GetMaster(), len, ent, true);
-  auto rule1 = grammar::Rule(ent);
-  ASSERT_EQ(rule1.ToString(), "ieS");
+  jucc::utils::TrieManager::GreedyPreorder(tm.GetMaster(), len, rule, true);
+  ASSERT_EQ(rule.ToString(), "ieS");
 }
