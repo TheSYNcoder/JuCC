@@ -9,6 +9,7 @@ else float if int void
 << >> < > <= >= = == != ;
 identifier integer_constant float_constant
 %
+%
 
 ## Non Terminals
 %non_terminals
@@ -19,8 +20,6 @@ identifier integer_constant float_constant
 %start
 <primary_expression>
 %
-
-bruh moment
 
 ## Grammar for the language
 %rules

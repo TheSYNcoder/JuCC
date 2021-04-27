@@ -7,7 +7,7 @@
 else float if int void
 ( ) { } * + - / %
 << >> < > <= >= = == != ;
-identifier integer_constant float_constant
+identifier integer_constant float_constant <constant>
 %
 
 ## Non Terminals
@@ -22,7 +22,6 @@ identifier integer_constant float_constant
 
 ## Grammar for the language
 %rules
-<bruh> : identifier
 <primary_expression> : identifier
 <primary_expression> : <constant>
 <primary_expression> : EPSILON

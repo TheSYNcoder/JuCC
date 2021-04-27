@@ -5,8 +5,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <unordered_map>
-
 
 namespace jucc {
 namespace grammar {
@@ -61,6 +59,19 @@ class Production {
 };
 
 using Productions = std::vector<Production>;
+
+/**
+ * Search if a production exists for a given parent
+ * utility function
+ * @return if parent symbol is present in productions
+ */
+bool SearchParent(const grammar::Productions & /*productions*/, const std::string & /*parent*/);
+
+/**
+ * Given a parent finds all rules for it in the set of productions
+ * @returns a vector of rules for the given parent
+ */
+Rules GetRulesForParent(const grammar::Productions & /*productions*/, const std::string & /*parent*/);
 
 class Parser {
   std::ifstream file_;

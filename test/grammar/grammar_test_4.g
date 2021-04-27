@@ -9,13 +9,13 @@ else float if int void
 << >> < > <= >= = == != ;
 identifier integer_constant float_constant
 %
-%
 
 ## Non Terminals
 %non_terminals
 <primary_expression> <constant>
 %
 
+%start
 ## Start Symbol
 %start
 <primary_expression>

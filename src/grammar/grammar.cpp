@@ -1,10 +1,29 @@
 #include "grammar/grammar.h"
 
+#include <algorithm>
 #include <sstream>
 #include <unordered_map>
 #include <unordered_set>
 
 namespace jucc::grammar {
+
+bool SearchParent(const grammar::Productions &productions, const std::string &parent) {
+  return std::any_of(productions.begin(), productions.end(),
+                     [&](const grammar::Production &prod) { return prod.GetParent() == parent; });
+}
+
+grammar::Rules GetRulesForParent(const grammar::Productions &productions, const std::string &parent) {
+  grammar::Rules rules;
+  for (const auto &production : productions) {
+    if (production.GetParent() == parent) {
+      for (const auto &rule : production.GetRules()) {
+        rules.push_back(rule);
+      }
+      break;
+    }
+  }
+  return rules;
+}
 
 Parser::Parser(const char *filepath) { file_ = std::ifstream(filepath); }
 
