@@ -120,6 +120,18 @@ int Lexer::GetToken(std::ifstream &is) {
     } else if (last_char == '.') {
       is.get(last_char);
       ret_token = TOK_DOT;
+    } else if (last_char == '+') {
+      is.get(last_char);
+      ret_token = TOK_PLUS;
+    } else if (last_char == '-') {
+      is.get(last_char);
+      ret_token = TOK_MINUS;
+    } else if (last_char == '*') {
+      is.get(last_char);
+      ret_token = TOK_MULTIPLY;
+    } else if (last_char == '%') {
+      is.get(last_char);
+      ret_token = TOK_MODULUS;
     } else if (last_char == '{') {
       current_nesting_level_++;
       is.get(last_char);
@@ -143,11 +155,22 @@ int Lexer::GetToken(std::ifstream &is) {
       } else {
         ret_token = TOK_ASSIGNMENT;
       }
+    } else if (last_char == '!') {
+      is.get(last_char);
+      if (last_char == '=') {
+        is.get(last_char);
+        ret_token = TOK_NOT_EQUAL_TO;
+      } else {
+        ret_token = TOK_NOT;
+      }
     } else if (last_char == '<') {
       is.get(last_char);
       if (last_char == '<') {
         is.get(last_char);
         ret_token = TOK_LEFT_SHIFT;
+      } else if (last_char == '=') {
+        is.get(last_char);
+        ret_token = TOK_LESS_THAN_OR_EQUALS;
       } else {
         ret_token = TOK_LESS_THAN;
       }
@@ -156,6 +179,9 @@ int Lexer::GetToken(std::ifstream &is) {
       if (last_char == '>') {
         is.get(last_char);
         ret_token = TOK_RIGHT_SHIFT;
+      } else if (last_char == '=') {
+        is.get(last_char);
+        ret_token = TOK_GREATER_THAN_OR_EQUALS;
       } else {
         ret_token = TOK_GREATER_THAN;
       }
@@ -205,6 +231,8 @@ int Lexer::GetToken(std::ifstream &is) {
         } while (!is.eof() && last_char != '\n' && last_char != '\r');
         is.get(last_char);
         ret_token = TOK_COMMENT;
+      } else {
+        ret_token = TOK_DIVIDE;
       }
     } else {
       error_string_ = "Unexpected Token\n";
