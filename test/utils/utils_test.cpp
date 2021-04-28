@@ -473,3 +473,87 @@ TEST(utils, CalcFollows0) {
   ASSERT_EQ(res.at("E"), std::vector<std::string>({"f", "h"}));
   ASSERT_EQ(res.at("F"), std::vector<std::string>({"h"}));
 }
+
+TEST(utils, CalcFollow1) {
+  /**
+   * Test: Context Free Grammar
+   * S : A
+   * A : a B A'
+   * A' : d A' | EPSILON
+   * B : b
+   * C : g
+   *
+   * Follow(S) = { $ }
+   * Follow(A) = { $ }
+   * Follow(A') = { $ }
+   * Follow(B) = { d , $ }
+   * Follow(C) = { }
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a", "B", "A'"})});
+  grammar::Production p3;
+  p3.SetParent("A'");
+  p3.SetRules({grammar::Rule({"d", "A'"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p4;
+  p4.SetParent("B");
+  p4.SetRules({grammar::Rule({"b"})});
+  grammar::Production p5;
+  p5.SetParent("C");
+  p5.SetRules({grammar::Rule({"g"})});
+  grammar::Productions grammar = {p1, p2, p3, p4, p5};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFollows(grammar, utils::CalcNullables(grammar), "S");
+  ASSERT_EQ(5, res.size());
+  ASSERT_EQ(res.at("S"), std::vector<std::string>({utils::STRING_ENDMARKER}));
+  ASSERT_EQ(res.at("A"), std::vector<std::string>({utils::STRING_ENDMARKER}));
+  ASSERT_EQ(res.at("A'"), std::vector<std::string>({utils::STRING_ENDMARKER}));
+  ASSERT_EQ(res.at("B"), std::vector<std::string>({utils::STRING_ENDMARKER, "d"}));
+  ASSERT_EQ(res.at("C"), std::vector<std::string>({}));
+}
+
+TEST(utils, CalcFollows2) {
+  /**
+   * Test: Context Free Grammar
+   * E : T E'
+   * E' : + T E' | EPSILON
+   * T : F T'
+   * T' : * F T' | EPSILON
+   * F : ( E ) | id
+   *
+   * Follow(E) = { $ , ) }
+   * Follow(E') = { $ , ) }
+   * Follow(T) = { + , $ , ) }
+   * Follow(T') = { + , $ , ) }
+   * Follow(F) = { * , + , $ , ) }
+   */
+  grammar::Production p1;
+  p1.SetParent("E");
+  p1.SetRules({grammar::Rule({"T", "E'"})});
+  grammar::Production p2;
+  p2.SetParent("E'");
+  p2.SetRules({grammar::Rule({"+", "T", "E'"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p3;
+  p3.SetParent("T");
+  p3.SetRules({grammar::Rule({"F", "T'"})});
+  grammar::Production p4;
+  p4.SetParent("T'");
+  p4.SetRules({grammar::Rule({"*", "F", "T'"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p5;
+  p5.SetParent("F");
+  p5.SetRules({grammar::Rule({"(", "E", ")"}), grammar::Rule({"id"})});
+  grammar::Productions grammar = {p1, p2, p3, p4, p5};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFollows(grammar, utils::CalcNullables(grammar), "E");
+  ASSERT_EQ(5, res.size());
+  ASSERT_EQ(res.at("E"), std::vector<std::string>({utils::STRING_ENDMARKER, ")"}));
+  ASSERT_EQ(res.at("E'"), std::vector<std::string>({utils::STRING_ENDMARKER, ")"}));
+  ASSERT_EQ(res.at("T"), std::vector<std::string>({utils::STRING_ENDMARKER, ")", "+"}));
+  ASSERT_EQ(res.at("T'"), std::vector<std::string>({utils::STRING_ENDMARKER, ")", "+"}));
+  ASSERT_EQ(res.at("F"), std::vector<std::string>({utils::STRING_ENDMARKER, ")", "*", "+"}));
+}
