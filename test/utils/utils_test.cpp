@@ -170,6 +170,7 @@ TEST(utils, CalcNullables0) {
    * A -> a A | EPSILON
    * B -> b B | EPSILON
    * C -> c
+   *
    * nullables: A, B
    */
   grammar::Production p1;
@@ -205,6 +206,7 @@ TEST(utils, CalcNullables1) {
    * S -> A B
    * A -> a A A | EPSILON
    * B -> b B B | EPSILON
+   *
    * nullables: S, A, B
    */
   grammar::Production p1;
@@ -235,6 +237,7 @@ TEST(utils, CalcNullables2) {
    * S : A S A | a B | b
    * A : B
    * B : b | EPSILON
+   *
    * nullables: A, B
    */
   grammar::Production p1;
@@ -257,4 +260,137 @@ TEST(utils, CalcNullables2) {
   ASSERT_FALSE(res.at("S"));
   ASSERT_TRUE(res.at("A"));
   ASSERT_TRUE(res.at("B"));
+}
+
+TEST(utils, CalcFirsts0) {
+  /**
+   * Test: Context Free Grammar
+   * S : a B D h
+   * B : c C
+   * C : b C | EPSILON
+   * D : E F
+   * E : g | EPSILON
+   * F : f | EPSILON
+   *
+   * First(S) = { a }
+   * First(B) = { c }
+   * First(C) = { b , EPSILON }
+   * First(D) = { g , f , EPSILON }
+   * First(E) = { g , EPSILON }
+   * First(F) = { f , EPSILON }
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"a", "B", "D", "h"})});
+  grammar::Production p2;
+  p2.SetParent("B");
+  p2.SetRules({grammar::Rule({"c", "C"})});
+  grammar::Production p3;
+  p3.SetParent("C");
+  p3.SetRules({grammar::Rule({"b", "C"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p4;
+  p4.SetParent("D");
+  p4.SetRules({grammar::Rule({"E", "F"})});
+  grammar::Production p5;
+  p5.SetParent("E");
+  p5.SetRules({grammar::Rule({"g"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p6;
+  p6.SetParent("F");
+  p6.SetRules({grammar::Rule({"f"}), grammar::Rule({grammar::EPSILON})});
+
+  grammar::Productions grammar = {p1, p2, p3, p4, p5, p6};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  ASSERT_EQ(13, res.size());
+  ASSERT_EQ(res.at("S"), std::vector<std::string>({"a"}));
+  ASSERT_EQ(res.at("B"), std::vector<std::string>({"c"}));
+  ASSERT_EQ(res.at("C"), std::vector<std::string>({grammar::EPSILON, "b"}));
+  ASSERT_EQ(res.at("D"), std::vector<std::string>({grammar::EPSILON, "f", "g"}));
+  ASSERT_EQ(res.at("E"), std::vector<std::string>({grammar::EPSILON, "g"}));
+  ASSERT_EQ(res.at("F"), std::vector<std::string>({grammar::EPSILON, "f"}));
+}
+
+TEST(utils, CalcFirsts1) {
+  /**
+   * Test: Context Free Grammar
+   * S : A
+   * A : a B A'
+   * A' : d A' | EPSILON
+   * B : b
+   * C : g
+   *
+   * First(S) = { a }
+   * First(A) = { a }
+   * First(A') = { d , EPSILON }
+   * First(B) = { b }
+   * First(C) = { g }
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a", "B", "A'"})});
+  grammar::Production p3;
+  p3.SetParent("A'");
+  p3.SetRules({grammar::Rule({"d", "A'"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p4;
+  p4.SetParent("B");
+  p4.SetRules({grammar::Rule({"b"})});
+  grammar::Production p5;
+  p5.SetParent("C");
+  p5.SetRules({grammar::Rule({"g"})});
+  grammar::Productions grammar = {p1, p2, p3, p4, p5};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  ASSERT_EQ(10, res.size());
+  ASSERT_EQ(res.at("S"), std::vector<std::string>({"a"}));
+  ASSERT_EQ(res.at("A"), std::vector<std::string>({"a"}));
+  ASSERT_EQ(res.at("A'"), std::vector<std::string>({grammar::EPSILON, "d"}));
+  ASSERT_EQ(res.at("B"), std::vector<std::string>({"b"}));
+  ASSERT_EQ(res.at("C"), std::vector<std::string>({"g"}));
+}
+
+TEST(utils, CalcFirsts2) {
+  /**
+   * Test: Context Free Grammar
+   * E → T E'
+   * E' → + T E' | EPSILON
+   * T → F T'
+   * T' → * F T' | EPSILON
+   * F → ( E ) | id
+   *
+   * First(E) = { ( , id }
+   * First(E') = { + , EPSILON }
+   * First(T) = { ( , id }
+   * First(T') = { * , EPSILON }
+   * First(F) = { ( , id }
+   */
+  grammar::Production p1;
+  p1.SetParent("E");
+  p1.SetRules({grammar::Rule({"T", "E'"})});
+  grammar::Production p2;
+  p2.SetParent("E'");
+  p2.SetRules({grammar::Rule({"+", "T", "E'"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p3;
+  p3.SetParent("T");
+  p3.SetRules({grammar::Rule({"F", "T'"})});
+  grammar::Production p4;
+  p4.SetParent("T'");
+  p4.SetRules({grammar::Rule({"*", "F", "T'"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p5;
+  p5.SetParent("F");
+  p5.SetRules({grammar::Rule({"(", "E", ")"}), grammar::Rule({"id"})});
+  grammar::Productions grammar = {p1, p2, p3, p4, p5};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  ASSERT_EQ(11, res.size());
+  ASSERT_EQ(res.at("E"), std::vector<std::string>({"(", "id"}));
+  ASSERT_EQ(res.at("E'"), std::vector<std::string>({"+", grammar::EPSILON}));
+  ASSERT_EQ(res.at("T"), std::vector<std::string>({"(", "id"}));
+  ASSERT_EQ(res.at("T'"), std::vector<std::string>({"*", grammar::EPSILON}));
+  ASSERT_EQ(res.at("F"), std::vector<std::string>({"(", "id"}));
 }

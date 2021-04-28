@@ -5,19 +5,7 @@
 #include "utils/left_factoring.h"
 #include "utils/left_recursion.h"
 
-// grammar::Productions getModifiedGrammar(const grammar::Productions &prods) {
-//   grammar::Productions cache;
-//   for (const auto &prod : prods) {
-//     for (const auto &nag : jucc::utils::RemoveDirectLeftRecursion(prod)) {
-//       auto micro_nag = jucc::utils::RemoveLeftFactors(nag);
-//       cache.insert(cache.end(), micro_nag.begin(), micro_nag.end());
-//     }
-//   }
-//   return cache;
-// }
-
 namespace jucc::utils {
-
 std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &augmented_grammar) {
   std::unordered_map<std::string, bool> nullables;
   // set all terminals to non - nullable
@@ -39,12 +27,16 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
 
   // recursively compute for all non terminals
   std::function<bool(const std::string &, std::vector<std::string> &)> calc_recursive;
+  // lambda function that returns boolean value
   calc_recursive = [&](const std::string &key, std::vector<std::string> &path) {
     if (find(path.begin(), path.end(), key) != path.end()) {
       return false;
     }
 
+    // marking current symbol as visited
     path.push_back(key);
+
+    // registering non-terminal in FOLLOW map if encountered for the first time
     if (nullables.find(key) != nullables.end()) {
       path.pop_back();
       return nullables[key];
@@ -53,11 +45,13 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
     for (const auto &rule : GetRulesForParent(augmented_grammar, key)) {
       std::vector<std::string>::const_iterator symbol_itr;
       for (symbol_itr = rule.GetEntities().begin(); symbol_itr != rule.GetEntities().end(); symbol_itr++) {
+        // exit loop if non-nullable symbol is encountered
         if (!calc_recursive(*symbol_itr, path)) {
           break;
         }
       }
 
+      // for production A -> X Y Z, A is nullable iff X, Y, Z all are nullable
       if (symbol_itr == rule.GetEntities().end()) {
         nullables[key] = true;
         path.pop_back();
@@ -65,20 +59,22 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
       }
     }
 
+    // by default, a symbol is considered non-nullable
     nullables[key] = false;
     path.pop_back();
     return false;
   };
 
   for (const auto &production : augmented_grammar) {
-    std::vector<std::string> path = std::vector<std::string>(0);
+    auto path = std::vector<std::string>(0);
     calc_recursive(production.GetParent(), path);
   }
 
   return nullables;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const grammar::Productions &augmented_grammar, const std::unordered_map<std::string, bool> &nullables) {
+std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
+    const grammar::Productions &augmented_grammar, const std::unordered_map<std::string, bool> &nullables) {
   std::unordered_map<std::string, std::vector<std::string>> firsts;
   // finished -> used to check if any new symbols are added to any FIRST(non-terminal) in a particular iteration
   // useful in case of cycles in productions
@@ -96,11 +92,11 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const gramm
   }
 
   /* at this point, map of FIRST only contains terminal -> {terminal} mappings */
-
-  std::function<std::vector<std::string>(const std::string &, std::vector<std::string>)> calc_recursive;
+  std::function<std::vector<std::string>(const std::string &, std::vector<std::string> &)> calc_recursive;
   // key  -> current symbol being explored
   // path -> list of all the symbols visited uptil reaching key
-  calc_recursive = [&](const std::string &key, std::vector<std::string> path) {
+  // lambda function that returns vector<string>
+  calc_recursive = [&](const std::string &key, std::vector<std::string> &path) {
     // FIRST(terminal) = {terminal}
     if (!SearchParent(augmented_grammar, key)) {
       return firsts[key];
@@ -131,20 +127,17 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const gramm
       for (symbol_itr = rules.GetEntities().begin(); symbol_itr != rules.GetEntities().end(); symbol_itr++) {
         // deriving FIRST(current symbol)
         std::vector<std::string> first = calc_recursive(*symbol_itr, path);
+        // der -> each terminal or EPSILON in FIRST(current symbol)
         for (const auto &der : first) {
-<<<<<<< HEAD
-          if (der != std::string(grammar::EPSILON) && find(firsts[key].begin(), firsts[key].end(), der) == firsts[key].end()) {
-            // include all terminals except EPSILON
-=======
           if (der != std::string(grammar::EPSILON) &&
               find(firsts[key].begin(), firsts[key].end(), der) == firsts[key].end()) {
->>>>>>> f938ede... Added: const char[] '$'
+            // include all terminals except EPSILON
             firsts[key].push_back(der);
             finished = false;
           }
         }
 
-        // non-symbol symbol encountered, so no need of deriving succeeding symbols
+        // non-nullable symbol encountered, so no need of deriving succeeding symbols
         if (!nullables.at(*symbol_itr)) {
           break;
         }
@@ -157,6 +150,7 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const gramm
       }
     }
 
+    path.pop_back();
     return firsts[key];
   };
 
@@ -172,7 +166,8 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const gramm
   while (!finished) {
     finished = true;
     for (const auto &production : augmented_grammar) {
-      calc_recursive(production.GetParent(), std::vector<std::string>(0));
+      auto path = std::vector<std::string>(0);
+      calc_recursive(production.GetParent(), path);
     }
   }
 
@@ -185,29 +180,40 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const gramm
 }
 
 std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
-    const grammar::Productions &augmented_grammar, const std::unordered_map<std::string, bool> nullables,
+    const grammar::Productions &augmented_grammar, const std::unordered_map<std::string, bool> &nullables,
     const std::string &start_symbol) {
   std::unordered_map<std::string, std::vector<std::string>> follows;
+
+  // calculate nullables and firsts as prerequisites
   std::unordered_map<std::string, std::vector<std::string>> firsts = CalcFirsts(augmented_grammar, nullables);
   bool finished = false;
+
   for (const auto &production : augmented_grammar) {
     if (production.GetParent() == start_symbol) {
-      follows.insert(make_pair(production.GetParent(), std::vector<std::string>(1, std::string(STRING_ENDMARKER))));
+      // if production head / parent is the start_symbol, then FOLLOW(head) = {$}
+      // $ -> input endmarker
+      follows.insert(make_pair(production.GetParent(), std::vector<std::string>(1, STRING_ENDMARKER)));
     } else {
       follows.insert(make_pair(production.GetParent(), std::vector<std::string>(0)));
     }
   }
 
-  std::function<void(const std::string &, const std::vector<std::string> &)> calc_recursive;
-  calc_recursive = [&](const std::string &key, const std::vector<std::string> &path) {
+  std::function<void(const std::string &)> calc_recursive;
+  // lambda function that returns nothing
+  calc_recursive = [&](const std::string &key) {
     for (const auto &rule : GetRulesForParent(augmented_grammar, key)) {
       std::vector<std::string>::const_iterator symbol_itr;
       std::vector<std::string>::const_iterator next_itr;
       for (symbol_itr = rule.GetEntities().begin(); symbol_itr != rule.GetEntities().end(); symbol_itr++) {
         std::string mid = *symbol_itr;
+        // if A -> alpha B beta is a production, where B -> non-terminal & alpha, beta -> set of symbols
+        // then FOLLOW(B) contains {FIRST(beta) - EPSILON}
+        // if mid aka current symbol is terminal, then ignore
         if (SearchParent(augmented_grammar, mid)) {
           for (next_itr = symbol_itr + 1; next_itr != rule.GetEntities().end(); next_itr++) {
+            // next_itr -> iterates through every symbol in beta
             for (const auto &der : firsts[*next_itr]) {
+              // discarding EPSILON
               if (der != std::string(grammar::EPSILON) &&
                   find(follows[mid].begin(), follows[mid].end(), der) == follows[mid].end()) {
                 follows[mid].push_back(der);
@@ -215,11 +221,16 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
               }
             }
 
+            // non-nullable symbol encountered, so no need of deriving succeeding symbols
             if (!nullables.at(*next_itr)) {
               break;
             }
           }
 
+          /* if execution has reached this point, then beta => EPSILON */
+
+          // if A -> alpha B / A -> alpha B beta & beta => EPSILON, then
+          // FOLLOW(B) includes FOLLOW(A)
           if (next_itr == rule.GetEntities().end()) {
             for (const auto &der : follows[key]) {
               if (find(follows[mid].begin(), follows[mid].end(), der) == follows[mid].end()) {
@@ -233,16 +244,19 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
     }
   };
 
+  // boolean variable finished used for same purpose as in CalcFirsts
   while (!finished) {
     finished = true;
-    calc_recursive(start_symbol, std::vector<std::string>(0));
+    calc_recursive(start_symbol);
     for (const auto &production : augmented_grammar) {
+      // FOLLOW(start_symbol) remains unchanged, and is always {$}
       if (production.GetParent() != start_symbol) {
-        calc_recursive(production.GetParent(), std::vector<std::string>(0));
+        calc_recursive(production.GetParent());
       }
     }
   }
 
+  // sorting FOLLOW mappings for convenience in presentation
   for (const auto &production : augmented_grammar) {
     sort(follows[production.GetParent()].begin(), follows[production.GetParent()].end());
   }
