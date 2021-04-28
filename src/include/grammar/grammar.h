@@ -65,7 +65,7 @@ using Productions = std::vector<Production>;
  * utility function
  * @return if parent symbol is present in productions
  */
-bool SearchParent(const grammar::Productions & /*productions*/, const std::string & /*parent*/);
+bool HasParent(const grammar::Productions & /*productions*/, const std::string & /*parent*/);
 
 /**
  * Given a parent finds all rules for it in the set of productions

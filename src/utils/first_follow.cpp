@@ -13,17 +13,15 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
     for (const auto &rule : production.GetRules()) {
       for (const auto &symbol : rule.GetEntities()) {
         // if symbol is not present as a parent in grammar, then it is a terminal
-        if (!SearchParent(augmented_grammar, symbol)) {
+        if (!HasParent(augmented_grammar, symbol)) {
           nullables[symbol] = false;
         }
       }
     }
   }
 
-  // EPSILON is nullable by defination
-  if (nullables.find(std::string(grammar::EPSILON)) != nullables.end()) {
-    nullables[std::string(grammar::EPSILON)] = true;
-  }
+  // EPSILON is nullable by definition
+  nullables[std::string(grammar::EPSILON)] = true;
 
   // recursively compute for all non terminals
   std::function<bool(const std::string &, std::vector<std::string> &)> calc_recursive;
@@ -66,26 +64,26 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
   };
 
   for (const auto &production : augmented_grammar) {
-    auto path = std::vector<std::string>(0);
+    std::vector<std::string> path;
     calc_recursive(production.GetParent(), path);
   }
 
   return nullables;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
-    const grammar::Productions &augmented_grammar, const std::unordered_map<std::string, bool> &nullables) {
-  std::unordered_map<std::string, std::vector<std::string>> firsts;
+SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
+                      const std::unordered_map<std::string, bool> &nullables) {
+  SymbolsMap firsts;
   // finished -> used to check if any new symbols are added to any FIRST(non-terminal) in a particular iteration
   // useful in case of cycles in productions
   bool finished = false;
   for (const auto &production : augmented_grammar) {
     for (const auto &rules : production.GetRules()) {
       for (const auto &symbol : rules.GetEntities()) {
-        if (!SearchParent(augmented_grammar, symbol)) {
+        if (!HasParent(augmented_grammar, symbol)) {
           // if symbol is not present as a parent in grammar, then it is a terminal
           // if X is a terminal, then FIRST(X) = {X}
-          firsts.insert(make_pair(symbol, std::vector<std::string>(1, symbol)));
+          firsts[symbol] = {symbol};
         }
       }
     }
@@ -98,7 +96,7 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
   // lambda function that returns vector<string>
   calc_recursive = [&](const std::string &key, std::vector<std::string> &path) {
     // FIRST(terminal) = {terminal}
-    if (!SearchParent(augmented_grammar, key)) {
+    if (!HasParent(augmented_grammar, key)) {
       return firsts[key];
     }
 
@@ -114,7 +112,7 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
 
     // registering non-terminal in FIRST map if encountered for the first time
     if (firsts.find(key) == firsts.end()) {
-      firsts.insert(make_pair(key, std::vector<std::string>(0)));
+      firsts[key] = {};
       finished = false;
     }
 
@@ -166,35 +164,26 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
   while (!finished) {
     finished = true;
     for (const auto &production : augmented_grammar) {
-      auto path = std::vector<std::string>(0);
+      std::vector<std::string> path;
       calc_recursive(production.GetParent(), path);
     }
-  }
-
-  // sorting FIRST mappings for convenience in presentation
-  for (const auto &production : augmented_grammar) {
-    sort(firsts[production.GetParent()].begin(), firsts[production.GetParent()].end());
   }
 
   return firsts;
 }
 
-std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
-    const grammar::Productions &augmented_grammar, const std::unordered_map<std::string, bool> &nullables,
-    const std::string &start_symbol) {
-  std::unordered_map<std::string, std::vector<std::string>> follows;
-
-  // calculate nullables and firsts as prerequisites
-  std::unordered_map<std::string, std::vector<std::string>> firsts = CalcFirsts(augmented_grammar, nullables);
+SymbolsMap CalcFollows(const grammar::Productions &augmented_grammar, const SymbolsMap &firsts,
+                       const std::unordered_map<std::string, bool> &nullables, const std::string &start_symbol) {
+  SymbolsMap follows;
   bool finished = false;
 
   for (const auto &production : augmented_grammar) {
     if (production.GetParent() == start_symbol) {
       // if production head / parent is the start_symbol, then FOLLOW(head) = {$}
       // $ -> input endmarker
-      follows.insert(make_pair(production.GetParent(), std::vector<std::string>(1, STRING_ENDMARKER)));
+      follows[production.GetParent()] = {STRING_ENDMARKER};
     } else {
-      follows.insert(make_pair(production.GetParent(), std::vector<std::string>(0)));
+      follows[production.GetParent()] = {};
     }
   }
 
@@ -209,10 +198,10 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
         // if A -> alpha B beta is a production, where B -> non-terminal & alpha, beta -> set of symbols
         // then FOLLOW(B) contains {FIRST(beta) - EPSILON}
         // if mid aka current symbol is terminal, then ignore
-        if (SearchParent(augmented_grammar, mid)) {
+        if (HasParent(augmented_grammar, mid)) {
           for (next_itr = symbol_itr + 1; next_itr != rule.GetEntities().end(); next_itr++) {
             // next_itr -> iterates through every symbol in beta
-            for (const auto &der : firsts[*next_itr]) {
+            for (const auto &der : firsts.at(*next_itr)) {
               // discarding EPSILON
               if (der != std::string(grammar::EPSILON) &&
                   find(follows[mid].begin(), follows[mid].end(), der) == follows[mid].end()) {
@@ -254,11 +243,6 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
         calc_recursive(production.GetParent());
       }
     }
-  }
-
-  // sorting FOLLOW mappings for convenience in presentation
-  for (const auto &production : augmented_grammar) {
-    sort(follows[production.GetParent()].begin(), follows[production.GetParent()].end());
   }
 
   return follows;

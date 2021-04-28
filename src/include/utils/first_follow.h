@@ -21,20 +21,22 @@ const char STRING_ENDMARKER[] = "$";
  */
 std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions & /*augmented_grammar*/);
 
+using SymbolsMap = std::unordered_map<std::string, std::vector<std::string>>;
+
 /**
  * For each non terminal in given set of productions computes Firsts
  * @returns an unordered_map keyed by non terminals in the grammar of a vector of terminals
  */
-std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
-    const grammar::Productions & /*augmented_grammar*/, const std::unordered_map<std::string, bool> & /*nullables*/);
+SymbolsMap CalcFirsts(const grammar::Productions & /*augmented_grammar*/,
+                      const std::unordered_map<std::string, bool> & /*nullables*/);
 
 /**
  * For each non terminal in given set of productions computes Follows
  * @returns an unordered_map keyed by non terminals in the grammar of a vector of terminals
  */
-std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
-    const grammar::Productions & /*augmented_grammar*/, const std::unordered_map<std::string, bool> & /*nullables*/,
-    const std::string & /*start_symbol*/);
+SymbolsMap CalcFollows(const grammar::Productions & /*augmented_grammar*/, const SymbolsMap & /*firsts*/,
+                       const std::unordered_map<std::string, bool> & /*nullables*/,
+                       const std::string & /*start_symbol*/);
 
 }  // namespace jucc::utils
 

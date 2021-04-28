@@ -300,8 +300,11 @@ TEST(utils, CalcFirsts0) {
 
   grammar::Productions grammar = {p1, p2, p3, p4, p5, p6};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  utils::SymbolsMap res = utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
+
   ASSERT_EQ(13, res.size());
   ASSERT_EQ(res.at("S"), std::vector<std::string>({"a"}));
   ASSERT_EQ(res.at("B"), std::vector<std::string>({"c"}));
@@ -343,8 +346,11 @@ TEST(utils, CalcFirsts1) {
   p5.SetRules({grammar::Rule({"g"})});
   grammar::Productions grammar = {p1, p2, p3, p4, p5};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  utils::SymbolsMap res = utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
+
   ASSERT_EQ(10, res.size());
   ASSERT_EQ(res.at("S"), std::vector<std::string>({"a"}));
   ASSERT_EQ(res.at("A"), std::vector<std::string>({"a"}));
@@ -385,8 +391,11 @@ TEST(utils, CalcFirsts2) {
   p5.SetRules({grammar::Rule({"(", "E", ")"}), grammar::Rule({"id"})});
   grammar::Productions grammar = {p1, p2, p3, p4, p5};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  utils::SymbolsMap res = utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
+
   ASSERT_EQ(11, res.size());
   ASSERT_EQ(res.at("E"), std::vector<std::string>({"(", "id"}));
   ASSERT_EQ(res.at("E'"), std::vector<std::string>({"+", grammar::EPSILON}));
@@ -416,8 +425,11 @@ TEST(utils, CalcFirsts3) {
   p3.SetRules({grammar::Rule({"B", "c"}), grammar::Rule({grammar::EPSILON})});
   grammar::Productions grammar = {p1, p2, p3};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  utils::SymbolsMap res = utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
+
   ASSERT_EQ(7, res.size());
   ASSERT_EQ(res.at("A"), std::vector<std::string>({"a", "b"}));
   ASSERT_EQ(res.at("B"), std::vector<std::string>({"b"}));
@@ -462,8 +474,12 @@ TEST(utils, CalcFollows0) {
 
   grammar::Productions grammar = {p1, p2, p3, p4, p5, p6};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFollows(grammar, utils::CalcNullables(grammar), "S");
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  utils::SymbolsMap res = utils::CalcFollows(grammar, firsts, nullables, "S");
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
 
   ASSERT_EQ(6, res.size());
   ASSERT_EQ(res.at("S"), std::vector<std::string>({utils::STRING_ENDMARKER}));
@@ -506,8 +522,13 @@ TEST(utils, CalcFollow1) {
   p5.SetRules({grammar::Rule({"g"})});
   grammar::Productions grammar = {p1, p2, p3, p4, p5};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFollows(grammar, utils::CalcNullables(grammar), "S");
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  utils::SymbolsMap res = utils::CalcFollows(grammar, firsts, nullables, "S");
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
+
   ASSERT_EQ(5, res.size());
   ASSERT_EQ(res.at("S"), std::vector<std::string>({utils::STRING_ENDMARKER}));
   ASSERT_EQ(res.at("A"), std::vector<std::string>({utils::STRING_ENDMARKER}));
@@ -548,8 +569,13 @@ TEST(utils, CalcFollows2) {
   p5.SetRules({grammar::Rule({"(", "E", ")"}), grammar::Rule({"id"})});
   grammar::Productions grammar = {p1, p2, p3, p4, p5};
 
-  std::unordered_map<std::string, std::vector<std::string>> res =
-      utils::CalcFollows(grammar, utils::CalcNullables(grammar), "E");
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  utils::SymbolsMap res = utils::CalcFollows(grammar, firsts, nullables, "E");
+  for (auto &elem : res) {
+    sort(elem.second.begin(), elem.second.end());
+  }
+
   ASSERT_EQ(5, res.size());
   ASSERT_EQ(res.at("E"), std::vector<std::string>({utils::STRING_ENDMARKER, ")"}));
   ASSERT_EQ(res.at("E'"), std::vector<std::string>({utils::STRING_ENDMARKER, ")"}));
