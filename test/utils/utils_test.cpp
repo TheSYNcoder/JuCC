@@ -103,7 +103,7 @@ TEST(utils, LeftFactoring0) {
 
   ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "St");
   ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), "P");
-  ASSERT_EQ(lf_removed[1].GetRules()[2].ToString(), std::string(jucc::grammar::EPSILON));
+  ASSERT_EQ(lf_removed[1].GetRules()[2].ToString(), std::string(grammar::EPSILON));
 }
 
 TEST(utils, LeftFactoring1) {
@@ -157,9 +157,9 @@ TEST(utils, LeftFactoringRecursive0) {
   ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "f");
 
   ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "bE''");
-  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), std::string(jucc::grammar::EPSILON));
+  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), std::string(grammar::EPSILON));
 
-  ASSERT_EQ(lf_removed[2].GetRules()[0].ToString(), std::string(jucc::grammar::EPSILON));
+  ASSERT_EQ(lf_removed[2].GetRules()[0].ToString(), std::string(grammar::EPSILON));
   ASSERT_EQ(lf_removed[2].GetRules()[1].ToString(), "c");
 }
 
@@ -356,11 +356,11 @@ TEST(utils, CalcFirsts1) {
 TEST(utils, CalcFirsts2) {
   /**
    * Test: Context Free Grammar
-   * E → T E'
-   * E' → + T E' | EPSILON
-   * T → F T'
-   * T' → * F T' | EPSILON
-   * F → ( E ) | id
+   * E : T E'
+   * E' : + T E' | EPSILON
+   * T : F T'
+   * T' : * F T' | EPSILON
+   * F : ( E ) | id
    *
    * First(E) = { ( , id }
    * First(E') = { + , EPSILON }
@@ -393,4 +393,83 @@ TEST(utils, CalcFirsts2) {
   ASSERT_EQ(res.at("T"), std::vector<std::string>({"(", "id"}));
   ASSERT_EQ(res.at("T'"), std::vector<std::string>({"*", grammar::EPSILON}));
   ASSERT_EQ(res.at("F"), std::vector<std::string>({"(", "id"}));
+}
+
+TEST(utils, CalcFirsts3) {
+  /**
+   * A -> C a
+   * B -> C b
+   * C -> B c | EPSILON
+   *
+   * First(A) = { a , b }
+   * First(B) = { b }
+   * First(C) = { EPSILON , b}
+   */
+  grammar::Production p1;
+  p1.SetParent("A");
+  p1.SetRules({grammar::Rule({"C", "a"})});
+  grammar::Production p2;
+  p2.SetParent("B");
+  p2.SetRules({grammar::Rule({"C", "b"})});
+  grammar::Production p3;
+  p3.SetParent("C");
+  p3.SetRules({grammar::Rule({"B", "c"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Productions grammar = {p1, p2, p3};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFirsts(grammar, utils::CalcNullables(grammar));
+  ASSERT_EQ(7, res.size());
+  ASSERT_EQ(res.at("A"), std::vector<std::string>({"a", "b"}));
+  ASSERT_EQ(res.at("B"), std::vector<std::string>({"b"}));
+  ASSERT_EQ(res.at("C"), std::vector<std::string>({grammar::EPSILON, "b"}));
+}
+
+TEST(utils, CalcFollows0) {
+  /**
+   * Test: Context Free Grammar
+   * S : a B D h
+   * B : c C
+   * C : b C | EPSILON
+   * D : E F
+   * E : g | EPSILON
+   * F : f | EPSILON
+   *
+   * Follow(S) = { $ }
+   * Follow(B) = { g , f , h }
+   * Follow(C) = { g , f , h }
+   * Follow(D) = { h }
+   * Follow(E) = { f , h }
+   * Follow(F) = { h }
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"a", "B", "D", "h"})});
+  grammar::Production p2;
+  p2.SetParent("B");
+  p2.SetRules({grammar::Rule({"c", "C"})});
+  grammar::Production p3;
+  p3.SetParent("C");
+  p3.SetRules({grammar::Rule({"b", "C"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p4;
+  p4.SetParent("D");
+  p4.SetRules({grammar::Rule({"E", "F"})});
+  grammar::Production p5;
+  p5.SetParent("E");
+  p5.SetRules({grammar::Rule({"g"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p6;
+  p6.SetParent("F");
+  p6.SetRules({grammar::Rule({"f"}), grammar::Rule({grammar::EPSILON})});
+
+  grammar::Productions grammar = {p1, p2, p3, p4, p5, p6};
+
+  std::unordered_map<std::string, std::vector<std::string>> res =
+      utils::CalcFollows(grammar, utils::CalcNullables(grammar), "S");
+
+  ASSERT_EQ(6, res.size());
+  ASSERT_EQ(res.at("S"), std::vector<std::string>({utils::STRING_ENDMARKER}));
+  ASSERT_EQ(res.at("B"), std::vector<std::string>({"f", "g", "h"}));
+  ASSERT_EQ(res.at("C"), std::vector<std::string>({"f", "g", "h"}));
+  ASSERT_EQ(res.at("D"), std::vector<std::string>({"h"}));
+  ASSERT_EQ(res.at("E"), std::vector<std::string>({"f", "h"}));
+  ASSERT_EQ(res.at("F"), std::vector<std::string>({"h"}));
 }
