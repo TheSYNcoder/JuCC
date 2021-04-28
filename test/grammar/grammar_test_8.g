@@ -7,9 +7,8 @@
 else float if int void
 ( ) { } * + - / %
 << >> < > <= >= = == != ;
-identifier integer_constant float_constant
+identifier integer_constant float_constant EPSILON
 %
-
 ## Non Terminals
 %non_terminals
 <primary_expression> <constant>
@@ -17,7 +16,7 @@ identifier integer_constant float_constant
 
 ## Start Symbol
 %start
-<primary_expression> <constant>
+<primary_expression>
 %
 
 ## Grammar for the language

@@ -7,7 +7,7 @@
 else float if int void
 ( ) { } * + - / %
 << >> < > <= >= = == != ;
-identifier integer_constant float_constant ;
+identifier integer_constant float_constant
 %
 
 ## Non Terminals
@@ -27,4 +27,4 @@ identifier integer_constant float_constant ;
 <primary_expression> : EPSILON
 <constant> : integer_constant
 <constant> : float_constant
-%
+

@@ -25,6 +25,6 @@ identifier integer_constant float_constant
 <primary_expression> : identifier
 <primary_expression> : <constant>
 <primary_expression> : EPSILON
-<constant>
+<constant> bruh : integer_constant
 <constant> : float_constant
 %

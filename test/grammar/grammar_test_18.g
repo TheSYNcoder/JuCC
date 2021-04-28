@@ -15,7 +15,6 @@ identifier integer_constant float_constant
 <primary_expression> <constant>
 %
 
-%start
 ## Start Symbol
 %start
 <primary_expression>
@@ -27,5 +26,5 @@ identifier integer_constant float_constant
 <primary_expression> : <constant>
 <primary_expression> : EPSILON
 <constant> : integer_constant
-<constant> : float_constant
+<constant> : float_constant bruh
 %

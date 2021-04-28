@@ -17,7 +17,7 @@ identifier integer_constant float_constant
 
 ## Start Symbol
 %start
-<primary_expression>
+<primary_expression> <constant>
 %
 
 ## Grammar for the language
@@ -25,6 +25,6 @@ identifier integer_constant float_constant
 <primary_expression> : identifier
 <primary_expression> : <constant>
 <primary_expression> : EPSILON
-EPSILON : integer_constant
+<constant> : integer_constant
 <constant> : float_constant
 %

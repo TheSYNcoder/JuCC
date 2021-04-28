@@ -7,12 +7,12 @@
 else float if int void
 ( ) { } * + - / %
 << >> < > <= >= = == != ;
-identifier integer_constant float_constant <constant>
+identifier integer_constant float_constant
 %
 
 ## Non Terminals
 %non_terminals
-<primary_expression> <constant>
+<primary_expression> <constant> <constant>
 %
 
 ## Start Symbol
