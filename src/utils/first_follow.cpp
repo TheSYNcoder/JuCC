@@ -106,7 +106,7 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(
       for (symbol_itr = rules.GetEntities().begin(); symbol_itr != rules.GetEntities().end(); symbol_itr++) {
         std::vector<std::string> first = calc_recursive(*symbol_itr, path);
         for (const auto &der : first) {
-          if (der != "E" && find(firsts[key].begin(), firsts[key].end(), der) == firsts[key].end()) {
+          if (der != std::string(grammar::EPSILON) && find(firsts[key].begin(), firsts[key].end(), der) == firsts[key].end()) {
             firsts[key].push_back(der);
             finished = false;
           }
@@ -191,7 +191,7 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
 
   while (!finished) {
     finished = true;
-    calc_recursive("S", std::vector<std::string>(0));
+    calc_recursive(start_symbol, std::vector<std::string>(0));
     for (const auto &production : augmented_grammar) {
       if (production.GetParent() != start_symbol) {
         calc_recursive(production.GetParent(), std::vector<std::string>(0));
