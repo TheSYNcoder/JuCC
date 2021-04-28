@@ -8,6 +8,9 @@
 #include "grammar/grammar.h"
 
 namespace jucc::utils {
+// Standard practice to mark input end
+const char STRING_ENDMARKER[] = "$";
+
 // grammar::Productions getModifiedGrammar(const grammar::Productions &);
 
 /**

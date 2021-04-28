@@ -19,9 +19,11 @@ grammar::Rules GetRulesForParent(const grammar::Productions &productions, const 
       for (const auto &rule : production.GetRules()) {
         rules.push_back(rule);
       }
+
       break;
     }
   }
+
   return rules;
 }
 

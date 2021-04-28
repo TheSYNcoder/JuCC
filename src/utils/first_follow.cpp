@@ -132,8 +132,13 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFirsts(const gramm
         // deriving FIRST(current symbol)
         std::vector<std::string> first = calc_recursive(*symbol_itr, path);
         for (const auto &der : first) {
+<<<<<<< HEAD
           if (der != std::string(grammar::EPSILON) && find(firsts[key].begin(), firsts[key].end(), der) == firsts[key].end()) {
             // include all terminals except EPSILON
+=======
+          if (der != std::string(grammar::EPSILON) &&
+              find(firsts[key].begin(), firsts[key].end(), der) == firsts[key].end()) {
+>>>>>>> f938ede... Added: const char[] '$'
             firsts[key].push_back(der);
             finished = false;
           }
@@ -187,7 +192,7 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
   bool finished = false;
   for (const auto &production : augmented_grammar) {
     if (production.GetParent() == start_symbol) {
-      follows.insert(make_pair(production.GetParent(), std::vector<std::string>(1, "$")));
+      follows.insert(make_pair(production.GetParent(), std::vector<std::string>(1, std::string(STRING_ENDMARKER))));
     } else {
       follows.insert(make_pair(production.GetParent(), std::vector<std::string>(0)));
     }
