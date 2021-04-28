@@ -1,8 +1,10 @@
 #include "gtest/gtest.h"
+#include "utils/first_follow.h"
 #include "utils/left_factoring.h"
 #include "utils/left_recursion.h"
 
 namespace grammar = jucc::grammar;
+namespace utils = jucc::utils;
 
 TEST(utils, DirectLeftRecursion) {
   // E -> E + T | T | epsilon
@@ -15,10 +17,10 @@ TEST(utils, DirectLeftRecursion) {
 
   prod.SetRules({rule1, rule2, rule3});
 
-  auto prods = jucc::utils::RemoveDirectLeftRecursion(prod);
+  auto prods = utils::RemoveDirectLeftRecursion(prod);
   // output E' -> +TE' | epsilon
   // E ->   TE' | epsilonE'
-  ASSERT_EQ(prods[0].GetParent(), "E" + std::string(jucc::utils::DASH));
+  ASSERT_EQ(prods[0].GetParent(), "E" + std::string(utils::DASH));
   ASSERT_EQ(prods[1].GetParent(), "E");
 
   auto rules_e = prods[1].GetRules();
@@ -27,11 +29,11 @@ TEST(utils, DirectLeftRecursion) {
   ASSERT_EQ(rules_e.size(), 2);
   ASSERT_EQ(rules_e_dash.size(), 2);
 
-  ASSERT_EQ(rules_e_dash[0].ToString(), "+TE" + std::string(jucc::utils::DASH));
+  ASSERT_EQ(rules_e_dash[0].ToString(), "+TE" + std::string(utils::DASH));
   ASSERT_EQ(rules_e_dash[1].ToString(), std::string(grammar::EPSILON));
 
-  ASSERT_EQ(rules_e[0].ToString(), "TE" + std::string(jucc::utils::DASH));
-  ASSERT_EQ(rules_e[1].ToString(), std::string(grammar::EPSILON) + "E" + std::string(jucc::utils::DASH));
+  ASSERT_EQ(rules_e[0].ToString(), "TE" + std::string(utils::DASH));
+  ASSERT_EQ(rules_e[1].ToString(), std::string(grammar::EPSILON) + "E" + std::string(utils::DASH));
 }
 
 TEST(utils, MaxLenPrefix0) {
@@ -39,7 +41,7 @@ TEST(utils, MaxLenPrefix0) {
   grammar::Production p;
   p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
               grammar::Rule({"i", "e"}), grammar::Rule({"i", "e", "S"}), grammar::Rule({"i", "e", "S", "t", "P"})});
-  auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
+  auto max_len_entity = utils::LongestCommonPrefix(p);
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "ie");
 }
 
@@ -52,14 +54,14 @@ TEST(utils, MaxLenPrefix1) {
       grammar::Rule({"b"}),
       grammar::Rule({"i", "e", "S", "t", "S"}),
   });
-  auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
+  auto max_len_entity = utils::LongestCommonPrefix(p);
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "ieStS");
 }
 
 TEST(utils, MaxLenPrefix2) {
   // no rule
   grammar::Production p;
-  auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
+  auto max_len_entity = utils::LongestCommonPrefix(p);
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "");
 }
 
@@ -72,7 +74,7 @@ TEST(utils, MaxLenPrefix3) {
       grammar::Rule({"c"}),
       grammar::Rule({std::string(grammar::EPSILON)}),
   });
-  auto max_len_entity = jucc::utils::LongestCommonPrefix(p);
+  auto max_len_entity = utils::LongestCommonPrefix(p);
   ASSERT_EQ(grammar::Rule(max_len_entity).ToString(), "");
 }
 
@@ -83,14 +85,14 @@ TEST(utils, LeftFactoring0) {
   p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
               grammar::Rule({"i", "e", "S", "t", "P"})});
 
-  auto lf_removed = jucc::utils::RemoveLeftFactors(p);
+  auto lf_removed = utils::RemoveLeftFactors(p);
 
   ASSERT_EQ(lf_removed.size(), 2);
   // output
   //  E -> ieStE' | a | b |
   //  E' -> St | P | epsilon
   ASSERT_EQ(lf_removed[0].GetParent(), "E");
-  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(jucc::utils::DASH));
+  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(utils::DASH));
 
   ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
   ASSERT_EQ(lf_removed[1].GetRules().size(), 3);
@@ -114,7 +116,7 @@ TEST(utils, LeftFactoring1) {
       grammar::Rule({"b"}),
   });
 
-  auto lf_removed = jucc::utils::RemoveLeftFactors(p);
+  auto lf_removed = utils::RemoveLeftFactors(p);
   // output E -> ieStSt | a | b
 
   ASSERT_EQ(lf_removed.size(), 1);
@@ -134,7 +136,7 @@ TEST(utils, LeftFactoringRecursive0) {
   p.SetRules({grammar::Rule({"a"}), grammar::Rule({"a", "b"}), grammar::Rule({"a", "b", "c"}), grammar::Rule({"e"}),
               grammar::Rule({"f"})});
 
-  auto lf_removed = jucc::utils::RemoveLeftFactors(p);
+  auto lf_removed = utils::RemoveLeftFactors(p);
   // output
   //  E ->   aE' | e | f
   //  E' ->  bE'' | epsilon  //from E' -> b | bc | epsilon
@@ -143,8 +145,8 @@ TEST(utils, LeftFactoringRecursive0) {
   ASSERT_EQ(lf_removed.size(), 3);
 
   ASSERT_EQ(lf_removed[0].GetParent(), "E");
-  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(jucc::utils::DASH));
-  ASSERT_EQ(lf_removed[2].GetParent(), "E" + std::string(jucc::utils::DASH) + std::string(jucc::utils::DASH));
+  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(utils::DASH));
+  ASSERT_EQ(lf_removed[2].GetParent(), "E" + std::string(utils::DASH) + std::string(utils::DASH));
 
   ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
   ASSERT_EQ(lf_removed[1].GetRules().size(), 2);
@@ -159,4 +161,100 @@ TEST(utils, LeftFactoringRecursive0) {
 
   ASSERT_EQ(lf_removed[2].GetRules()[0].ToString(), std::string(jucc::grammar::EPSILON));
   ASSERT_EQ(lf_removed[2].GetRules()[1].ToString(), "c");
+}
+
+TEST(utils, CalcNullables0) {
+  /**
+   * Test: Context Free Grammar
+   * S -> A B A C
+   * A -> a A | EPSILON
+   * B -> b B | EPSILON
+   * C -> c
+   * nullables: A, B
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A", "B", "A", "C"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a", "A"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p3;
+  p3.SetParent("B");
+  p3.SetRules({grammar::Rule({"b", "B"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p4;
+  p4.SetParent("C");
+  p4.SetRules({grammar::Rule({"c"})});
+
+  grammar::Productions grammar = {p1, p2, p3, p4};
+
+  std::unordered_map<std::string, bool> res = utils::CalcNullables(grammar);
+  ASSERT_EQ(8, res.size());
+  ASSERT_FALSE(res.at("a"));
+  ASSERT_FALSE(res.at("b"));
+  ASSERT_FALSE(res.at("c"));
+  ASSERT_TRUE(res.at(grammar::EPSILON));
+  ASSERT_FALSE(res.at("S"));
+  ASSERT_TRUE(res.at("A"));
+  ASSERT_TRUE(res.at("B"));
+  ASSERT_FALSE(res.at("C"));
+}
+
+TEST(utils, CalcNullables1) {
+  /**
+   * Test: Context Free Grammar
+   * S -> A B
+   * A -> a A A | EPSILON
+   * B -> b B B | EPSILON
+   * nullables: S, A, B
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A", "B"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a", "A", "A"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p3;
+  p3.SetParent("B");
+  p3.SetRules({grammar::Rule({"b", "B", "B"}), grammar::Rule({grammar::EPSILON})});
+
+  grammar::Productions grammar = {p1, p2, p3};
+
+  std::unordered_map<std::string, bool> res = utils::CalcNullables(grammar);
+  ASSERT_EQ(6, res.size());
+  ASSERT_FALSE(res.at("a"));
+  ASSERT_FALSE(res.at("b"));
+  ASSERT_TRUE(res.at(grammar::EPSILON));
+  ASSERT_TRUE(res.at("S"));
+  ASSERT_TRUE(res.at("A"));
+  ASSERT_TRUE(res.at("B"));
+}
+
+TEST(utils, CalcNullables2) {
+  /**
+   * Test: Context Free Grammar
+   * S : A S A | a B | b
+   * A : B
+   * B : b | EPSILON
+   * nullables: A, B
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A", "S", "A"}), grammar::Rule({"a", "B"}), grammar::Rule({"b"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"B"})});
+  grammar::Production p3;
+  p3.SetParent("B");
+  p3.SetRules({grammar::Rule({"b"}), grammar::Rule({grammar::EPSILON})});
+
+  grammar::Productions grammar = {p1, p2, p3};
+
+  std::unordered_map<std::string, bool> res = utils::CalcNullables(grammar);
+  ASSERT_EQ(6, res.size());
+  ASSERT_FALSE(res.at("a"));
+  ASSERT_FALSE(res.at("b"));
+  ASSERT_TRUE(res.at(grammar::EPSILON));
+  ASSERT_FALSE(res.at("S"));
+  ASSERT_TRUE(res.at("A"));
+  ASSERT_TRUE(res.at("B"));
 }

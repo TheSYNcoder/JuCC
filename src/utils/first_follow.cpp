@@ -16,6 +16,8 @@
 //   return cache;
 // }
 
+namespace jucc::utils {
+
 std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &augmented_grammar) {
   std::unordered_map<std::string, bool> nullables;
   // set all terminals to non - nullable
@@ -36,14 +38,15 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
   }
 
   // recursively compute for all non terminals
-  std::function<bool(const std::string &, std::vector<std::string>)> calc_recursive;
-  calc_recursive = [&](const std::string &key, std::vector<std::string> path) {
+  std::function<bool(const std::string &, std::vector<std::string> &)> calc_recursive;
+  calc_recursive = [&](const std::string &key, std::vector<std::string> &path) {
     if (find(path.begin(), path.end(), key) != path.end()) {
       return false;
     }
 
     path.push_back(key);
     if (nullables.find(key) != nullables.end()) {
+      path.pop_back();
       return nullables[key];
     }
 
@@ -57,16 +60,19 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
 
       if (symbol_itr == rule.GetEntities().end()) {
         nullables[key] = true;
+        path.pop_back();
         return true;
       }
     }
 
     nullables[key] = false;
+    path.pop_back();
     return false;
   };
 
   for (const auto &production : augmented_grammar) {
-    calc_recursive(production.GetParent(), std::vector<std::string>(0));
+    std::vector<std::string> path = std::vector<std::string>(0);
+    calc_recursive(production.GetParent(), path);
   }
 
   return nullables;
@@ -238,3 +244,5 @@ std::unordered_map<std::string, std::vector<std::string>> CalcFollows(
 
   return follows;
 }
+
+}  // namespace jucc::utils
