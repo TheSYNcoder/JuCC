@@ -11,7 +11,7 @@ namespace jucc::utils {
 // grammar::Productions getModifiedGrammar(const grammar::Productions &);
 
 /**
- * For each terminal and non terminal in the grammar compute if symbol is nullable
+ * For each terminal and non terminal in the grammar compute if symbol is / derives to nullable
  * Terminals except EPSILON are defaulted to non nullable
  * @returns an unordered_map keyed by each symbol in the grammar of booleans
  * true if symbol is nullable, false otherwise
