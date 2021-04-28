@@ -24,7 +24,8 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
 using SymbolsMap = std::unordered_map<std::string, std::vector<std::string>>;
 
 /**
- * For each non terminal in given set of productions computes Firsts
+ * For each non terminal in given set of productions computes Firsts, and in case of terminals
+ * it returns the same.
  * @returns an unordered_map keyed by non terminals in the grammar of a vector of terminals
  */
 SymbolsMap CalcFirsts(const grammar::Productions & /*augmented_grammar*/,

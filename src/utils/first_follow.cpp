@@ -3,7 +3,6 @@
 #include <functional>
 
 #include "utils/left_factoring.h"
-#include "utils/left_recursion.h"
 
 namespace jucc::utils {
 std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &augmented_grammar) {
@@ -41,16 +40,17 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
     }
 
     for (const auto &rule : GetRulesForParent(augmented_grammar, key)) {
-      std::vector<std::string>::const_iterator symbol_itr;
-      for (symbol_itr = rule.GetEntities().begin(); symbol_itr != rule.GetEntities().end(); symbol_itr++) {
+      bool premature_termination = false;
+      for (const auto &symbol : rule.GetEntities()) {
         // exit loop if non-nullable symbol is encountered
-        if (!calc_recursive(*symbol_itr, path)) {
+        if (!calc_recursive(symbol, path)) {
+          premature_termination = true;
           break;
         }
       }
 
       // for production A -> X Y Z, A is nullable iff X, Y, Z all are nullable
-      if (symbol_itr == rule.GetEntities().end()) {
+      if (!premature_termination) {
         nullables[key] = true;
         path.pop_back();
         return true;
@@ -120,11 +120,11 @@ SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
        for 1 <= i <= k, FIRST(X) includes FIRST(Yi) iff FIRST(Y1 ... Yi-1) => EPSILON
        and FIRST(Y1 ... Yi-1) => EPSILON iff for all 1 <= j <= i - 1, Yj => EPSILON */
     for (const auto &rules : GetRulesForParent(augmented_grammar, key)) {
-      // symbol_itr -> iterates through all symbols in the body of a production
-      std::vector<std::string>::const_iterator symbol_itr;
-      for (symbol_itr = rules.GetEntities().begin(); symbol_itr != rules.GetEntities().end(); symbol_itr++) {
+      // iterates through all symbols in the body of a production
+      bool premature_termination = false;
+      for (const auto &symbol : rules.GetEntities()) {
         // deriving FIRST(current symbol)
-        std::vector<std::string> first = calc_recursive(*symbol_itr, path);
+        std::vector<std::string> first = calc_recursive(symbol, path);
         // der -> each terminal or EPSILON in FIRST(current symbol)
         for (const auto &der : first) {
           if (der != std::string(grammar::EPSILON) &&
@@ -136,13 +136,14 @@ SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
         }
 
         // non-nullable symbol encountered, so no need of deriving succeeding symbols
-        if (!nullables.at(*symbol_itr)) {
+        if (!nullables.at(symbol)) {
+          premature_termination = true;
           break;
         }
       }
 
       // if all symbols of the body of a production yielded to EPSILON, then FIRST(key) includes EPSILON
-      if (symbol_itr == rules.GetEntities().end() &&
+      if (!premature_termination &&
           find(firsts[key].begin(), firsts[key].end(), std::string(grammar::EPSILON)) == firsts[key].end()) {
         firsts[key].push_back(std::string(grammar::EPSILON));
       }
@@ -191,15 +192,14 @@ SymbolsMap CalcFollows(const grammar::Productions &augmented_grammar, const Symb
   // lambda function that returns nothing
   calc_recursive = [&](const std::string &key) {
     for (const auto &rule : GetRulesForParent(augmented_grammar, key)) {
-      std::vector<std::string>::const_iterator symbol_itr;
-      std::vector<std::string>::const_iterator next_itr;
-      for (symbol_itr = rule.GetEntities().begin(); symbol_itr != rule.GetEntities().end(); symbol_itr++) {
+      for (auto symbol_itr = rule.GetEntities().begin(); symbol_itr != rule.GetEntities().end(); symbol_itr++) {
         std::string mid = *symbol_itr;
         // if A -> alpha B beta is a production, where B -> non-terminal & alpha, beta -> set of symbols
         // then FOLLOW(B) contains {FIRST(beta) - EPSILON}
         // if mid aka current symbol is terminal, then ignore
         if (HasParent(augmented_grammar, mid)) {
-          for (next_itr = symbol_itr + 1; next_itr != rule.GetEntities().end(); next_itr++) {
+          auto next_itr = symbol_itr + 1;
+          for (; next_itr != rule.GetEntities().end(); next_itr++) {
             // next_itr -> iterates through every symbol in beta
             for (const auto &der : firsts.at(*next_itr)) {
               // discarding EPSILON
