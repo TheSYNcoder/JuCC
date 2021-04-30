@@ -1,8 +1,11 @@
 #ifndef JUCC_PARSING_PARSING_TABLE_H
 #define JUCC_PARSING_PARSING_TABLE_H
 
+#include <sstream>
 #include <string>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include "grammar/grammar.h"
 #include "utils/first_follow.h"
@@ -10,6 +13,10 @@
 namespace jucc {
 
 namespace parsing {
+
+const char SYNCH_TOKEN[] = "synch";
+
+const char ERROR_TOKEN[] = "error";
 
 class ParsingTable {
   using Table = std::unordered_map<std::string, std::unordered_map<std::string, std::string> >;
@@ -35,14 +42,24 @@ class ParsingTable {
    */
   grammar::Productions productions_;
 
+  /**
+   * Stores the terminals of the grammar
+   */
+  std::vector<std::string> terminals_;
+
+  /**
+   * Stores the non-termninals of the grammar.
+   */
+  std::vector<std::string> non_terminals_;
+
  public:
   /**
    * Used for setting synchronization tokens in the parsing table calculated from the
    * follow set.
    */
-  const std::string SYNCH_TOKEN{"synch"};
 
-  ParsingTable() = default;
+  ParsingTable(std::vector<std::string> terms, std::vector<std::string> non_terms)
+      : terminals_(std::move(terms)), non_terminals_(std::move(non_terms)) {}
 
   /**
    * Builds the parsing table from the firsts and follows
@@ -51,18 +68,24 @@ class ParsingTable {
 
   /**
    * Gets the entry in the parsing table corresponding to a terminal and a non-terminal
+   * Gets the production and the rule number
    */
-  void GetEntry(std::string non_terminal_, std::string terminal_);
+  std::pair<int, int> GetEntry(const std::string &non_terminal_, const std::string &terminal_);
 
   /**
    * Setter for the first set.
    */
-  void SetFirsts();
+  void SetFirsts(utils::SymbolsMap firsts);
+
+  /**
+   * Setter for the first set.
+   */
+  void SetProductions(grammar::Productions productions);
 
   /**
    * Setter for the follow set.
    */
-  void SetFollows();
+  void SetFollows(utils::SymbolsMap follows);
 };
 
 }  // namespace parsing
