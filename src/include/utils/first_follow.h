@@ -22,6 +22,14 @@ const char STRING_ENDMARKER[] = "$";
 std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions & /*augmented_grammar*/);
 
 using SymbolsMap = std::unordered_map<std::string, std::vector<std::string>>;
+using FlatProductionsMap =
+    std::unordered_map<grammar::FlatProduction, std::vector<std::string>, grammar::FlatProductionHasher>;
+
+/**
+ * typecast FlatProductionsMap to SymbolsMap
+ * This is a one way ticket as information is lost
+ */
+SymbolsMap FlatProductionsMapToSymbolsMap(const FlatProductionsMap & /*flat_productions_map*/);
 
 /**
  * For each non terminal in given set of productions computes Firsts, and in case of terminals

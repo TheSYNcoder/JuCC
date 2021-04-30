@@ -22,6 +22,8 @@ class Rule {
  public:
   Rule() = default;
   explicit Rule(std::vector<std::string> entities) : entities_(std::move(entities)) {}
+
+  /* getters and setters*/
   [[nodiscard]] const std::vector<std::string> &GetEntities() const { return entities_; }
   void SetEntities(const std::vector<std::string> &entities) { Rule::entities_ = entities; }
   [[nodiscard]] std::string ToString() const;
@@ -34,7 +36,7 @@ class Rule {
   [[nodiscard]] bool HasPrefix(const Rule & /*prefix*/) const;
 };
 
-using Rules = std::vector<grammar::Rule>;
+using Rules = std::vector<Rule>;
 
 class Production {
   /**
@@ -46,19 +48,62 @@ class Production {
    * rules = { Rule1, Rule2 }
    */
   std::string parent_;
-  std::vector<Rule> rules_;
+  Rules rules_;
 
  public:
   Production() = default;
-  Production(std::string parent, std::vector<Rule> rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
+  Production(std::string parent, Rules rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
 
+  /* getters and setters*/
   [[nodiscard]] const std::string &GetParent() const { return parent_; }
-  [[nodiscard]] const std::vector<Rule> &GetRules() const { return rules_; }
+  [[nodiscard]] const Rules &GetRules() const { return rules_; }
   void SetParent(const std::string &parent) { Production::parent_ = parent; }
-  void SetRules(const std::vector<Rule> &rules) { Production::rules_ = rules; }
+  void SetRules(const Rules &rules) { Production::rules_ = rules; }
 };
 
 using Productions = std::vector<Production>;
+
+class FlatProduction {
+  /**
+   * class FlatProduction is a limited version of class Production
+   * Maps a parent to a single Rule
+   * Example:
+   * For production: E : F + E
+   * parent = "E"
+   * rule = {"F", "+", "E"}
+   */
+  std::string parent_;
+  Rule rule_;
+
+ public:
+  FlatProduction() = default;
+  FlatProduction(std::string parent, Rule rule) : parent_(std::move(parent)), rule_(std::move(rule)) {}
+
+  /* getters and setters*/
+  [[nodiscard]] const std::string &GetParent() const { return parent_; }
+  [[nodiscard]] const Rule &GetRules() const { return rule_; }
+  void SetParent(const std::string &parent) { FlatProduction::parent_ = parent; }
+  void SetRules(const Rule &rule) { FlatProduction::rule_ = rule; }
+
+  // To create a consistent hashable object to use in unordered_map
+  bool operator==(const FlatProduction &fp) const {
+    return parent_ == fp.parent_ && rule_.ToString() == fp.rule_.ToString();
+  }
+};
+
+class FlatProductionHasher {
+ public:
+  /**
+   * We use predfined hash functions of strings
+   * and define our hash function as XOR of the
+   * hash values.
+   */
+  size_t operator()(const FlatProduction &fp) const {
+    return (std::hash<std::string>()(fp.GetParent())) ^ (std::hash<std::string>()(fp.GetRules().ToString()));
+  }
+};
+
+using FlatProductions = std::vector<FlatProduction>;
 
 /**
  * Search if a production exists for a given parent

@@ -1,6 +1,7 @@
 #include "utils/first_follow.h"
 
 #include <functional>
+#include <unordered_set>
 
 #include "utils/left_factoring.h"
 
@@ -69,6 +70,16 @@ std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &
   }
 
   return nullables;
+}
+
+SymbolsMap FlatProductionsMapToSymbolsMap(const FlatProductionsMap &flat_productions_map) {
+  SymbolsMap sm;
+  for (const auto &fp : flat_productions_map) {
+    auto &vect = sm[fp.first.GetParent()];
+    vect.insert(vect.end(), fp.second.begin(), fp.second.end());
+  }
+
+  return sm;
 }
 
 SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
@@ -177,7 +188,6 @@ SymbolsMap CalcFollows(const grammar::Productions &augmented_grammar, const Symb
                        const std::unordered_map<std::string, bool> &nullables, const std::string &start_symbol) {
   SymbolsMap follows;
   bool finished = false;
-
   for (const auto &production : augmented_grammar) {
     if (production.GetParent() == start_symbol) {
       // if production head / parent is the start_symbol, then FOLLOW(head) = {$}
