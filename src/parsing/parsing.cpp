@@ -26,7 +26,9 @@ void Parsing::SetStartSymbol(std::string start) {
 
 void Parsing::SetParsingTable(parsing_table::ParsingTable table) { table_ = std::move(table); }
 
-bool Parsing::IsComplete() { return (current_step_ == static_cast<int>(current_string_.size()) - 1) || stack_.top() == "$"; }
+bool Parsing::IsComplete() {
+  return (current_step_ == static_cast<int>(current_string_.size()) - 1) || stack_.top() == "$";
+}
 
 void Parsing::ResetParsing() {
   current_string_ = input_string_;
