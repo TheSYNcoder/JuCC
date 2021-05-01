@@ -1,9 +1,9 @@
-#include "parsing/parsing_table.h"
+#include "parsing/utils/parsing_table.h"
 
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
 
-using jucc::parsing::ParsingTable;
+using jucc::parsing_table::ParsingTable;
 namespace grammar = jucc::grammar;
 namespace utils = jucc::utils;
 

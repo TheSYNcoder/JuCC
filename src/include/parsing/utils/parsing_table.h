@@ -1,6 +1,8 @@
-#ifndef JUCC_PARSING_PARSING_TABLE_H
-#define JUCC_PARSING_PARSING_TABLE_H
+#ifndef JUCC_PARSING_UTILS_PARSING_TABLE_H
+#define JUCC_PARSING_UTILS_PARSING_TABLE_H
 
+#include <algorithm>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -12,15 +14,17 @@
 
 namespace jucc {
 
-namespace parsing {
+namespace parsing_table {
 
 const char SYNCH_TOKEN[] = "synch";
 
 const char ERROR_TOKEN[] = "error";
 
 class ParsingTable {
+ public:
   using Table = std::unordered_map<std::string, std::unordered_map<std::string, std::string> >;
 
+ private:
   /**
    * stores the parsing table, which is calculated from the productions in the grammar
    * and it's first and follow set
@@ -54,10 +58,14 @@ class ParsingTable {
 
  public:
   /**
+   * Default constructor
+   */
+  ParsingTable() = default;
+
+  /**
    * Used for setting synchronization tokens in the parsing table calculated from the
    * follow set.
    */
-
   ParsingTable(std::vector<std::string> terms, std::vector<std::string> non_terms)
       : terminals_(std::move(terms)), non_terminals_(std::move(non_terms)) {}
 
@@ -78,6 +86,21 @@ class ParsingTable {
   void SetFirsts(utils::SymbolsMap firsts);
 
   /**
+   * Pretty print firsts set
+   */
+  void PrettyPrintFirsts();
+
+  /**
+   * Pretty print follows set
+   */
+  void PrettyPrintFollows();
+
+  /**
+   * Pretty print follows set
+   */
+  void PrettyPrintTable();
+
+  /**
    * Setter for the first set.
    */
   void SetProductions(grammar::Productions productions);
@@ -86,9 +109,39 @@ class ParsingTable {
    * Setter for the follow set.
    */
   void SetFollows(utils::SymbolsMap follows);
+
+  /**
+   * Getter for the firsts set
+   */
+  [[nodiscard]] const utils::SymbolsMap &GetFirsts();
+
+  /**
+   * Getter for the follows set
+   */
+  [[nodiscard]] const utils::SymbolsMap &GetFollows();
+
+  /**
+   * Getter for the productions
+   */
+  [[nodiscard]] const grammar::Productions &GetProductions();
+
+  /**
+   * Getter for the non terminals
+   */
+  [[nodiscard]] const std::vector<std::string> &GetNonTerminals();
+
+  /**
+   * Getter for the terminals
+   */
+  [[nodiscard]] const std::vector<std::string> &GetTerminals();
+
+  /**
+   * Getter for the parsing table
+   */
+  [[nodiscard]] const Table &GetTable();
 };
 
-}  // namespace parsing
+}  // namespace parsing_table
 }  // namespace jucc
 
 #endif
