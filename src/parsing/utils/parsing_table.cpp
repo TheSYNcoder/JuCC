@@ -26,9 +26,9 @@ void ParsingTable::BuildTable() {
       std::string first_entity = rules[rule_no].GetEntities()[0];
 
       // check if first_entity is terminal
-      if (find(terminals_.begin(), terminals_.end(), first_entity) != terminals_.end()) {
+      if (std::find(terminals_.begin(), terminals_.end(), first_entity) != terminals_.end()) {
         table_[productions_[prod_no].GetParent()][first_entity] = std::to_string(prod_no * 100 + rule_no);
-      } else if (find(non_terminals_.begin(), non_terminals_.end(), first_entity) != non_terminals_.end()) {
+      } else if (std::find(non_terminals_.begin(), non_terminals_.end(), first_entity) != non_terminals_.end()) {
         // first entity is a non-terminal
         if (firsts_.count(first_entity) != 0U) {
           for (auto &symbol : firsts_[first_entity]) {
@@ -37,7 +37,7 @@ void ParsingTable::BuildTable() {
             }
           }
           // if epsilon present add production under follow(A) symbols
-          if (find(firsts_[first_entity].begin(), firsts_[first_entity].end(), std::string(grammar::EPSILON)) !=
+          if (std::find(firsts_[first_entity].begin(), firsts_[first_entity].end(), std::string(grammar::EPSILON)) !=
               firsts_[first_entity].end()) {
             if (follows_.count(productions_[prod_no].GetParent()) != 0U) {
               for (auto &symbol : follows_[productions_[prod_no].GetParent()]) {

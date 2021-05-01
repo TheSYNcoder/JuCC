@@ -26,7 +26,7 @@ void Parsing::SetStartSymbol(std::string start) {
 
 void Parsing::SetParsingTable(parsing_table::ParsingTable table) { table_ = std::move(table); }
 
-bool Parsing::IsComplete() { return (current_step_ == current_string_.size() - 1) || stack_.top() == "$"; }
+bool Parsing::IsComplete() { return (current_step_ == static_cast<int>(current_string_.size()) - 1) || stack_.top() == "$"; }
 
 void Parsing::ResetParsing() {
   current_string_ = input_string_;
@@ -64,7 +64,7 @@ void Parsing::ParseNextStep() {
         auto productions = table_.GetProductions();
         auto req_rule = productions[prod_rule.first].GetRules()[prod_rule.second];
         auto entities = req_rule.GetEntities();
-        reverse(entities.begin(), entities.end());
+        std::reverse(entities.begin(), entities.end());
         for (auto &entity : entities) {
           stack_.push(entity);
         }
