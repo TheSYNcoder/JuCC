@@ -95,8 +95,8 @@ void ParsingTable::PrettyPrintFollows() {
 
 void ParsingTable::PrettyPrintTable() {
   std::cout << "\nLL(1) PARSING TABLE\n\n";
-  for (int i = 0; i <= non_terminals_.size(); i++) {
-    for (int j = 0; j <= terminals_.size(); j++) {
+  for (int i = 0; i <= static_cast<int>(non_terminals_.size()); i++) {
+    for (int j = 0; j <= static_cast<int>(terminals_.size()); j++) {
       if ((i == 0) && (j == 0)) {
         std::cout << "\t";
       } else if (i == 0) {
@@ -106,7 +106,7 @@ void ParsingTable::PrettyPrintTable() {
       } else {
         std::cout << table_[non_terminals_[i - 1]][terminals_[j - 1]] << "\t";
       }
-      if (j == terminals_.size()) {
+      if (j == static_cast<int>(terminals_.size())) {
         std::cout << "\n";
       }
     }
