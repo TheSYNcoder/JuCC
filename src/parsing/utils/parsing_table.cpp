@@ -1,6 +1,6 @@
-#include "parsing/parsing_table.h"
+#include "parsing/utils/parsing_table.h"
 
-namespace jucc::parsing {
+namespace jucc::parsing_table {
 
 void ParsingTable::BuildTable() {
   // fill initially all errors
@@ -66,9 +66,68 @@ std::pair<int, int> ParsingTable::GetEntry(const std::string &non_terminal_, con
   return std::make_pair(value / 100, value % 100);
 }
 
+void ParsingTable::PrettyPrintFirsts() {
+  std::cout << "\nFIRSTS\n\n";
+  std::cout << "SYMBOL\tFIRST_SET\n";
+  for (auto &entry : firsts_) {
+    std::cout << entry.first << "\t";
+    std::cout << "{ ";
+    for (auto &v : entry.second) {
+      std::cout << v << " , ";
+    }
+    std::cout << " }\n";
+  }
+}
+
+void ParsingTable::PrettyPrintFollows() {
+  std::cout << "\nFOLLOWS\n\n";
+
+  std::cout << "SYMBOL\tFOLLOW_SET\n";
+  for (auto &entry : follows_) {
+    std::cout << entry.first << "\t";
+    std::cout << "{ ";
+    for (auto &v : entry.second) {
+      std::cout << v << " , ";
+    }
+    std::cout << " }\n";
+  }
+}
+
+void ParsingTable::PrettyPrintTable() {
+  std::cout << "\nLL(1) PARSING TABLE\n\n";
+  for (int i = 0; i <= non_terminals_.size(); i++) {
+    for (int j = 0; j <= terminals_.size(); j++) {
+      if ((i == 0) && (j == 0)) {
+        std::cout << "\t";
+      } else if (i == 0) {
+        std::cout << terminals_[j - 1] << "\t";
+      } else if (j == 0) {
+        std::cout << non_terminals_[i - 1] << "\t";
+      } else {
+        std::cout << table_[non_terminals_[i - 1]][terminals_[j - 1]] << "\t";
+      }
+      if (j == terminals_.size()) {
+        std::cout << "\n";
+      }
+    }
+  }
+}
+
 void ParsingTable::SetFirsts(utils::SymbolsMap firsts) { firsts_ = std::move(firsts); }
 
 void ParsingTable::SetProductions(grammar::Productions productions) { productions_ = std::move(productions); }
 
 void ParsingTable::SetFollows(utils::SymbolsMap follows) { follows_ = std::move(follows); }
-}  // namespace jucc::parsing
+
+const utils::SymbolsMap &ParsingTable::GetFirsts() { return firsts_; }
+
+const utils::SymbolsMap &ParsingTable::GetFollows() { return follows_; }
+
+const grammar::Productions &ParsingTable::GetProductions() { return productions_; }
+
+const std::vector<std::string> &ParsingTable::GetNonTerminals() { return non_terminals_; }
+
+const std::vector<std::string> &ParsingTable::GetTerminals() { return terminals_; }
+
+const ParsingTable::Table &ParsingTable::GetTable() { return table_; }
+}  // namespace jucc::parsing_table

@@ -22,7 +22,6 @@
 
 #include "main/jucc.h"
 using jucc::Hello;
-
 /*
  * jucc begins execution here.
  */
