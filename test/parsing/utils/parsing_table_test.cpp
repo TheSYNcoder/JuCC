@@ -182,23 +182,6 @@ TEST(parsing, test3) {
   p = table.GetEntry("C", "$");
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 1);
-
-  std::string ret;
-  ret = table.PrettyPrintFirsts();
-
-  std::string first;
-  first = "\nFIRSTS\n\nSYMBOL\tFIRST_SET\nc\t{ c ,  }\nEPSILON\t{ EPSILON ,  }\na\t{ a ,  }\nb\t";
-  first += "{ b ,  }\nS\t{ a , EPSILON ,  }\nB\t{ b , EPSILON ,  }\nC\t{ c , EPSILON ,  }\n";
-  ASSERT_EQ(first, ret);
-  ret = table.PrettyPrintFollows();
-  std::string follow;
-  follow = "\nFOLLOWS\n\nSYMBOL\tFOLLOW_SET\nS\t{ $ ,  }\nB\t{ $ ,  }\nC\t{ $ ,  }\n";
-  ASSERT_EQ(follow, ret);
-  ret = table.PrettyPrintTable();
-  std::string tab;
-  tab = "\nLL(1) PARSING TABLE\n\n\ta\tb\tc\t$\t\nC\terror\terror\t200\t201\t\n";
-  tab += "S\t0\terror\terror\t1\t\nB\terror\t100\terror\t101\t\n";
-  ASSERT_EQ(tab, ret);
 }
 
 TEST(parsing, test4) {

@@ -83,62 +83,47 @@ class ParsingTable {
   /**
    * Setter for the first set.
    */
-  void SetFirsts(utils::SymbolsMap firsts);
-
-  /**
-   * Pretty print firsts set
-   */
-  std::string PrettyPrintFirsts();
-
-  /**
-   * Pretty print follows set
-   */
-  std::string PrettyPrintFollows();
-
-  /**
-   * Pretty print follows set
-   */
-  std::string PrettyPrintTable();
+  void SetFirsts(utils::SymbolsMap firsts) { firsts_ = std::move(firsts); }
 
   /**
    * Setter for the first set.
    */
-  void SetProductions(grammar::Productions productions);
+  void SetProductions(grammar::Productions productions) { productions_ = std::move(productions); }
 
   /**
    * Setter for the follow set.
    */
-  void SetFollows(utils::SymbolsMap follows);
+  void SetFollows(utils::SymbolsMap follows) { follows_ = std::move(follows); }
 
   /**
    * Getter for the firsts set
    */
-  [[nodiscard]] const utils::SymbolsMap &GetFirsts();
+  [[nodiscard]] const utils::SymbolsMap &GetFirsts() { return firsts_; }
 
   /**
    * Getter for the follows set
    */
-  [[nodiscard]] const utils::SymbolsMap &GetFollows();
+  [[nodiscard]] const utils::SymbolsMap &GetFollows() { return follows_; }
 
   /**
    * Getter for the productions
    */
-  [[nodiscard]] const grammar::Productions &GetProductions();
+  [[nodiscard]] const grammar::Productions &GetProductions() { return productions_; }
 
   /**
    * Getter for the non terminals
    */
-  [[nodiscard]] const std::vector<std::string> &GetNonTerminals();
+  [[nodiscard]] const std::vector<std::string> &GetNonTerminals() { return non_terminals_; }
 
   /**
    * Getter for the terminals
    */
-  [[nodiscard]] const std::vector<std::string> &GetTerminals();
+  [[nodiscard]] const std::vector<std::string> &GetTerminals() { return terminals_; }
 
   /**
    * Getter for the parsing table
    */
-  [[nodiscard]] const Table &GetTable();
+  [[nodiscard]] const Table &GetTable() { return table_; }
 };
 
 }  // namespace parsing_table
