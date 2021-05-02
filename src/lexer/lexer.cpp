@@ -315,6 +315,10 @@ std::string Lexer::GetTokenType(int token) {
     ret_string = "integer_constant";
   } else if (token == TOK_FRACTIONAL) {
     ret_string = "float_constant";
+  } else if (token == TOK_COUT) {
+    ret_string = "cout";
+  } else if (token == TOK_CIN) {
+    ret_string = "cin";
   } else if (token == TOK_MAIN) {
     ret_string = "main";
   }

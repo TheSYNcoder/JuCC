@@ -88,17 +88,17 @@ class ParsingTable {
   /**
    * Pretty print firsts set
    */
-  void PrettyPrintFirsts();
+  std::string PrettyPrintFirsts();
 
   /**
    * Pretty print follows set
    */
-  void PrettyPrintFollows();
+  std::string PrettyPrintFollows();
 
   /**
    * Pretty print follows set
    */
-  void PrettyPrintTable();
+  std::string PrettyPrintTable();
 
   /**
    * Setter for the first set.
