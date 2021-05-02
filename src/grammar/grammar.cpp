@@ -240,7 +240,7 @@ bool Parser::Parse() {
       }
       prod.SetParent(production.first);
 
-      std::vector<Rule> rules;
+      Rules rules;
       for (const auto &rule : production.second) {
         Rule prod_rule;
         for (const auto &entity : rule) {

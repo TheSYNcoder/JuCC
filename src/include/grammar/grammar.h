@@ -46,16 +46,16 @@ class Production {
    * rules = { Rule1, Rule2 }
    */
   std::string parent_;
-  std::vector<Rule> rules_;
+  Rules rules_;
 
  public:
   Production() = default;
-  Production(std::string parent, std::vector<Rule> rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
+  Production(std::string parent, Rules rules) : parent_(std::move(parent)), rules_(std::move(rules)) {}
 
   [[nodiscard]] const std::string &GetParent() const { return parent_; }
-  [[nodiscard]] const std::vector<Rule> &GetRules() const { return rules_; }
+  [[nodiscard]] const Rules &GetRules() const { return rules_; }
   void SetParent(const std::string &parent) { Production::parent_ = parent; }
-  void SetRules(const std::vector<Rule> &rules) { Production::rules_ = rules; }
+  void SetRules(const Rules &rules) { Production::rules_ = rules; }
 };
 
 using Productions = std::vector<Production>;
