@@ -66,51 +66,57 @@ std::pair<int, int> ParsingTable::GetEntry(const std::string &non_terminal_, con
   return std::make_pair(value / 100, value % 100);
 }
 
-void ParsingTable::PrettyPrintFirsts() {
-  std::cout << "\nFIRSTS\n\n";
-  std::cout << "SYMBOL\tFIRST_SET\n";
+std::string ParsingTable::PrettyPrintFirsts() {
+  std::string ret_string;
+  ret_string += "\nFIRSTS\n\n";
+  ret_string += "SYMBOL\tFIRST_SET\n";
   for (auto &entry : firsts_) {
-    std::cout << entry.first << "\t";
-    std::cout << "{ ";
+    ret_string += std::string(entry.first) + "\t";
+    ret_string += "{ ";
     for (auto &v : entry.second) {
-      std::cout << v << " , ";
+      ret_string += std::string(v) + " , ";
     }
-    std::cout << " }\n";
+    ret_string += " }\n";
   }
+  return ret_string;
 }
 
-void ParsingTable::PrettyPrintFollows() {
-  std::cout << "\nFOLLOWS\n\n";
+std::string ParsingTable::PrettyPrintFollows() {
+  std::string ret_string;
+  ret_string += "\nFOLLOWS\n\n";
 
-  std::cout << "SYMBOL\tFOLLOW_SET\n";
+  ret_string += "SYMBOL\tFOLLOW_SET\n";
   for (auto &entry : follows_) {
-    std::cout << entry.first << "\t";
-    std::cout << "{ ";
+    ret_string += std::string(entry.first) + "\t";
+    ret_string += "{ ";
     for (auto &v : entry.second) {
-      std::cout << v << " , ";
+      ret_string += std::string(v) + " , ";
     }
-    std::cout << " }\n";
+    ret_string += " }\n";
   }
+  return ret_string;
 }
 
-void ParsingTable::PrettyPrintTable() {
-  std::cout << "\nLL(1) PARSING TABLE\n\n";
+std::string ParsingTable::PrettyPrintTable() {
+  std::string ret_string;
+  ret_string += "\nLL(1) PARSING TABLE\n\n";
   for (int i = 0; i <= static_cast<int>(non_terminals_.size()); i++) {
     for (int j = 0; j <= static_cast<int>(terminals_.size()); j++) {
       if ((i == 0) && (j == 0)) {
-        std::cout << "\t";
+        ret_string += "\t";
       } else if (i == 0) {
-        std::cout << terminals_[j - 1] << "\t";
+        ret_string += std::string(terminals_[j - 1]) + "\t";
       } else if (j == 0) {
-        std::cout << non_terminals_[i - 1] << "\t";
+        ret_string += std::string(non_terminals_[i - 1]) + "\t";
       } else {
-        std::cout << table_[non_terminals_[i - 1]][terminals_[j - 1]] << "\t";
+        ret_string += std::string(table_[non_terminals_[i - 1]][terminals_[j - 1]]) + "\t";
       }
       if (j == static_cast<int>(terminals_.size())) {
-        std::cout << "\n";
+        ret_string += "\n";
       }
     }
   }
+  return ret_string;
 }
 
 void ParsingTable::SetFirsts(utils::SymbolsMap firsts) { firsts_ = std::move(firsts); }
