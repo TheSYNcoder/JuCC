@@ -14,7 +14,7 @@ TEST(lexer, lexer1) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
   token = lex.GetToken(is);
-  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
   token = lex.GetToken(is);
@@ -69,7 +69,7 @@ TEST(lexer, lexer2) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
   token = lex.GetToken(is);
-  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
   token = lex.GetToken(is);
@@ -148,7 +148,7 @@ TEST(lexer, lexer3) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
   token = lex.GetToken(is);
-  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
   token = lex.GetToken(is);
@@ -183,7 +183,7 @@ TEST(lexer, lexer4) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
   token = lex.GetToken(is);
-  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
   token = lex.GetToken(is);
@@ -226,7 +226,7 @@ TEST(lexer, lexer5) {
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
   ASSERT_EQ(lex.GetCurrentDatatype(), "int");
   token = lex.GetToken(is);
-  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
   token = lex.GetToken(is);
@@ -323,7 +323,7 @@ TEST(lexer, lexer6) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_INT, token);
   token = lex.GetToken(is);
-  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
   token = lex.GetToken(is);
