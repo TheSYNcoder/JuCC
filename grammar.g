@@ -7,7 +7,8 @@
 else float if int void
 ( ) { } * + - / % ,
 << >> < > <= >= = == != ;
-identifier integer_constant float_constant main
+identifier integer_constant float_constant
+main cin cout
 %
 
 ## Non Terminals
@@ -48,6 +49,8 @@ identifier integer_constant float_constant main
 <additive_expression> : <additive_expression> + <multiplicative_expression>
 <additive_expression> : <additive_expression> - <multiplicative_expression>
 <shift_expression> : <additive_expression>
+<shift_expression> : cin >> <additive_expression>
+<shift_expression> : cout << <additive_expression>
 <shift_expression> : <shift_expression> << <additive_expression>
 <shift_expression> : <shift_expression> >> <additive_expression>
 <relational_expression> : <shift_expression>
