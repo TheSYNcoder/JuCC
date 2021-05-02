@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "symbol_table/symbol_table.h"
@@ -60,6 +61,8 @@ enum Token {
   TOK_LESS_THAN_OR_EQUALS = -35,     // <=
   TOK_NOT = -36,                     // !
   TOK_NOT_EQUAL_TO = -37,            // !=
+
+  TOK_MAIN = -38,  // main
 
   // cout, cin
 
@@ -140,6 +143,11 @@ class Lexer {
    * Getter for the current_datatype.
    */
   std::string GetCurrentDatatype();
+
+  /**
+   * Returns the terminal of the enum token returned by the lexer
+   */
+  static std::string GetTokenType(int token);
 
   /**
    * Getter for the current nesting level.
