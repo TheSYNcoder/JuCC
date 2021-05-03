@@ -1,6 +1,7 @@
 #ifndef JUCC_FIRST_FOLLOW_H
 #define JUCC_FIRST_FOLLOW_H
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 #include <vector>
