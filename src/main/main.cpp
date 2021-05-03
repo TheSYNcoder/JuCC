@@ -52,9 +52,9 @@ auto main(int argc, char *argv[]) -> int {
     return 0;
   }
 
-  jucc::grammar::Productions productions = grammar_parser.GetProductions();
+  jucc::grammar::Productions raw_productions = grammar_parser.GetProductions();
 
-  // TODO(bisakh,abhiskek) : Add code for removing left factors and left recursion
+  jucc::grammar::Productions productions = jucc::utils::RemoveAllPossibleAmbiguity(raw_productions);
 
   auto nullables = jucc::utils::CalcNullables(productions);
   auto firsts = jucc::utils::CalcFirsts(productions, nullables);
