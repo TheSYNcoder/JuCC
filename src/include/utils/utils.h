@@ -1,6 +1,9 @@
 #ifndef JUCC_UTILS_UTILS_H
 #define JUCC_UTILS_UTILS_H
 
+#include <string>
+#include <vector>
+
 #include "grammar/grammar.h"
 #include "utils/first_follow.h"
 #include "utils/left_factoring.h"
@@ -14,6 +17,12 @@ namespace utils {
  * @return A set of production free from left recursions and left factors.
  */
 grammar::Productions RemoveAllPossibleAmbiguity(const grammar::Productions & /*prods*/);
+
+/**
+ * @returns a list of parents from the given set of productions.
+ */
+std::vector<std::string> GetAllNonTerminals(const grammar::Productions & /*prods*/);
+
 }  // namespace utils
 }  // namespace jucc
 #endif

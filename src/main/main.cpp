@@ -1,4 +1,4 @@
-/*-------------------------------------------------------------------------
+/**-------------------------------------------------------------------------
  *
  * main.cpp
  *	  Stub main() routine for the jucc executable.
@@ -21,7 +21,7 @@
  */
 
 #include "main/jucc.h"
-/*
+/**
  * jucc begins execution here.
  */
 auto main(int argc, char *argv[]) -> int {
@@ -61,7 +61,7 @@ auto main(int argc, char *argv[]) -> int {
   auto follows = jucc::utils::CalcFollows(productions, firsts, nullables, grammar_parser.GetStartSymbol());
 
   auto terminals = grammar_parser.GetTerminals();
-  auto non_terminals = grammar_parser.GetNonTerminals();
+  auto non_terminals = jucc::utils::GetAllNonTerminals(productions);
 
   jucc::parser::ParsingTable parsing_table = jucc::parser::ParsingTable(terminals, non_terminals);
   parsing_table.SetFirsts(firsts);
