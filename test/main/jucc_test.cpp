@@ -22,3 +22,5 @@ TEST(jucc, Parser) {
   ASSERT_FALSE(parser->HasFlag("-t"));
   delete parser;
 }
+
+TEST(jucc, hello) { ASSERT_EQ(jucc::Hello().substr(0, 6), "\x1B[1;33"); }
