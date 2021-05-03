@@ -8,7 +8,7 @@ grammar::Productions RemoveDirectLeftRecursion(const grammar::Production &prod) 
     return grammar::Productions{prod};
   }
   const std::string &parent = prod.GetParent();
-  std::string parent_dash = prod.GetParent() + std::string(DASH);
+  std::string parent_dash = prod.GetParent() + std::string(DASH) + std::string(DASHAT);
 
   grammar::Productions prods(2);
   prods[0].SetParent(parent_dash);
@@ -24,6 +24,9 @@ grammar::Productions RemoveDirectLeftRecursion(const grammar::Production &prod) 
       new_entries.push_back(parent_dash);
       parent_dash_rules.emplace_back(grammar::Rule(new_entries));
     } else {
+      if (!entries.empty() && entries.back() == std::string(grammar::EPSILON)) {
+        entries.pop_back();
+      }
       entries.push_back(parent_dash);
       parent_rules.emplace_back(grammar::Rule(entries));
     }
