@@ -5,7 +5,7 @@
 namespace grammar = jucc::grammar;
 namespace utils = jucc::utils;
 
-TEST(utils, DirectLeftRecursion) {
+TEST(utils, DirectLeftRecursion0) {
   // E -> E + T | T | epsilon
   grammar::Production prod;
   prod.SetParent("E");
@@ -15,11 +15,10 @@ TEST(utils, DirectLeftRecursion) {
   auto rule3 = grammar::Rule({std::string(grammar::EPSILON)});
 
   prod.SetRules({rule1, rule2, rule3});
-
   auto prods = utils::RemoveDirectLeftRecursion(prod);
-  // output E' -> +TE' | epsilon
-  // E ->   TE' | epsilonE'
-  ASSERT_EQ(prods[0].GetParent(), "E" + std::string(utils::DASH));
+  // output E'@ -> +TE'@ | epsilon
+  // E ->   TE'@ | E'
+  ASSERT_EQ(prods[0].GetParent(), "E" + std::string(utils::DASH) + std::string(utils::DASHAT));
   ASSERT_EQ(prods[1].GetParent(), "E");
 
   auto rules_e = prods[1].GetRules();
@@ -28,11 +27,31 @@ TEST(utils, DirectLeftRecursion) {
   ASSERT_EQ(rules_e.size(), 2);
   ASSERT_EQ(rules_e_dash.size(), 2);
 
-  ASSERT_EQ(rules_e_dash[0].ToString(), "+TE" + std::string(utils::DASH));
+  ASSERT_EQ(rules_e_dash[0].ToString(), "+TE" + std::string(utils::DASH) + std::string(utils::DASHAT));
   ASSERT_EQ(rules_e_dash[1].ToString(), std::string(grammar::EPSILON));
 
-  ASSERT_EQ(rules_e[0].ToString(), "TE" + std::string(utils::DASH));
-  ASSERT_EQ(rules_e[1].ToString(), std::string(grammar::EPSILON) + "E" + std::string(utils::DASH));
+  ASSERT_EQ(rules_e[0].ToString(), "TE" + std::string(utils::DASH) + std::string(utils::DASHAT));
+  ASSERT_EQ(rules_e[1].ToString(), "E" + std::string(utils::DASH) + std::string(utils::DASHAT));
+}
+
+TEST(utils, DirectLeftRecursion1) {
+  // E -> epsilon
+  grammar::Production prod;
+  prod.SetParent("E");
+
+  auto rule1 = grammar::Rule({std::string(grammar::EPSILON)});
+
+  prod.SetRules({rule1});
+  auto prods = utils::RemoveDirectLeftRecursion(prod);
+
+  // E ->  epsilon
+  ASSERT_EQ(prods.size(), 1);
+  ASSERT_EQ(prods[0].GetParent(), "E");
+
+  auto rules_e = prods[0].GetRules();
+  ASSERT_EQ(rules_e.size(), 1);
+
+  ASSERT_EQ(rules_e[0].ToString(), std::string(grammar::EPSILON));
 }
 
 TEST(utils, MaxLenPrefix0) {
