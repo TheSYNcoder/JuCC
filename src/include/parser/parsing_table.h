@@ -14,7 +14,6 @@ namespace jucc {
 namespace parser {
 
 const char SYNCH_TOKEN[] = "synch";
-
 const char ERROR_TOKEN[] = "error";
 
 class ParsingTable {
@@ -61,10 +60,12 @@ class ParsingTable {
 
   /**
    * Used for setting synchronization tokens in the parsing table calculated from the
-   * follow set.
+   * follow set. Adds "$" to terminals_.
    */
   ParsingTable(std::vector<std::string> terms, std::vector<std::string> non_terms)
-      : terminals_(std::move(terms)), non_terminals_(std::move(non_terms)) {}
+      : terminals_(std::move(terms)), non_terminals_(std::move(non_terms)) {
+    terminals_.emplace_back(utils::STRING_ENDMARKER);
+  }
 
   /**
    * Builds the parsing table from the firsts and follows
