@@ -1,5 +1,6 @@
 #include "utils/first_follow.h"
 
+#include <algorithm>
 #include <functional>
 
 #include "utils/left_factoring.h"

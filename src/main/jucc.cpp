@@ -1,5 +1,6 @@
 #include "main/jucc.h"
-using std::cout;
+
+#include <algorithm>
 
 namespace jucc {
 
@@ -55,6 +56,12 @@ int Radd(int x, int y) {
     x++;
   }
   return x;
+}
+
+InputParser::InputParser(int argc, char *argv[]) {
+  for (int i = 0; i < argc; i++) {
+    tokens_.emplace_back(std::string(argv[i]));
+  }
 }
 
 bool InputParser::HasFlag(const std::string &flag) {

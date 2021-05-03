@@ -1,5 +1,5 @@
-#ifndef JUCC_PARSING_UTILS_PARSING_TABLE_H
-#define JUCC_PARSING_UTILS_PARSING_TABLE_H
+#ifndef JUCC_PARSING_PARSING_TABLE_H
+#define JUCC_PARSING_PARSING_TABLE_H
 
 #include <algorithm>
 #include <iostream>

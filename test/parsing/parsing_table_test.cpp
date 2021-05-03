@@ -1,4 +1,4 @@
-#include "parsing/utils/parsing_table.h"
+#include "parsing/parsing_table.h"
 
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"

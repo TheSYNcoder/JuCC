@@ -27,6 +27,7 @@ TEST(lexer, lexer1) {
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_COMMA, token);
+  ASSERT_EQ(",", lex.GetTokenType(token));
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
@@ -36,13 +37,26 @@ TEST(lexer, lexer1) {
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
   token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_CIN, token);
+  ASSERT_EQ("cin", lex.GetTokenType(token));
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_RIGHT_SHIFT, token);
+  ASSERT_EQ(">>", lex.GetTokenType(token));
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
+
+  token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_FLOAT, token);
+  ASSERT_EQ("float", lex.GetTokenType(token));
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_ASSIGNMENT, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_FRACTIONAL, token);
+  ASSERT_EQ("float_constant", lex.GetTokenType(token));
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
   token = lex.GetToken(is);
@@ -196,6 +210,7 @@ TEST(lexer, lexer4) {
   ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
   token = lex.GetToken(is);
   ASSERT_EQ(jucc::lexer::TOK_EQUAL_TO, token);
+  ASSERT_EQ("==", lex.GetTokenType(token));
   token = lex.GetToken(is);
   // Two errors first one due to 'bruh second one due to ' after h and nothing follows
   ASSERT_EQ(jucc::lexer::TOK_ERROR, token);

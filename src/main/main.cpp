@@ -21,7 +21,6 @@
  */
 
 #include "main/jucc.h"
-
 /*
  * jucc begins execution here.
  */
@@ -82,8 +81,7 @@ auto main(int argc, char *argv[]) -> int {
     input_tokens.emplace_back(jucc::lexer::Lexer::GetTokenType(token));
   }
 
-  jucc::parsing::Parsing parser = jucc::parsing::Parsing();
-  parser.Init();
+  jucc::parser::Parser parser = jucc::parser::Parser();
   parser.SetInputString(input_tokens);
   parser.SetStartSymbol(grammar_parser.GetStartSymbol());
   parser.SetParsingTable(parsing_table);

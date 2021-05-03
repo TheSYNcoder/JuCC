@@ -7,18 +7,17 @@
 #include <utility>
 #include <vector>
 
-#include "parsing/utils/parsing_table.h"
+#include "parsing/parsing_table.h"
 #include "utils/first_follow.h"
 
 namespace jucc {
 
-namespace parsing {
+namespace parser {
 
-class Parsing {
+class Parser {
   /**
    * A stack to put the symbols and perform the actual parsing
    */
-  std::stack<std::string> stack_;
 
   /**
    * The given input string to parse.
@@ -53,14 +52,10 @@ class Parsing {
 
  public:
   /**
-   * Default constructor
+   * Constructor for initializing stack and other members.
    */
-  Parsing() = default;
-
-  /**
-   * Initialization of the stack and other members
-   */
-  void Init();
+  Parser();
+  std::stack<std::string> stack_;
 
   /**
    * Used for parsing the next token of the input string
@@ -102,7 +97,7 @@ class Parsing {
    */
   [[nodiscard]] const std::vector<int> &GetProductionHistory();
 };
-}  // namespace parsing
+}  // namespace parser
 
 }  // namespace jucc
 

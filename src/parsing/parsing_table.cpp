@@ -1,4 +1,4 @@
-#include "parsing/utils/parsing_table.h"
+#include "parsing/parsing_table.h"
 
 namespace jucc::parsing_table {
 
