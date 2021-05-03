@@ -1,6 +1,9 @@
-#include "parsing/parsing_table.h"
+#include "parser/parsing_table.h"
 
-namespace jucc::parsing_table {
+#include <algorithm>
+#include <sstream>
+
+namespace jucc::parser {
 
 void ParsingTable::BuildTable() {
   // fill initially all errors
@@ -65,4 +68,4 @@ std::pair<int, int> ParsingTable::GetEntry(const std::string &non_terminal_, con
   ss >> value;
   return std::make_pair(value / 100, value % 100);
 }
-}  // namespace jucc::parsing_table
+}  // namespace jucc::parser

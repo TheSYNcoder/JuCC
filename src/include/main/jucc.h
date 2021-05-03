@@ -1,15 +1,14 @@
 #ifndef JUCC_JUCC_H
 #define JUCC_JUCC_H
 
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
 #include "grammar/grammar.h"
 #include "lexer/lexer.h"
-#include "parsing/parsing.h"
-#include "parsing/parsing_table.h"
+#include "parser/parser.h"
+#include "parser/parsing_table.h"
 #include "utils/first_follow.h"
 #include "utils/left_factoring.h"
 #include "utils/left_recursion.h"

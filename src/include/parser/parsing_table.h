@@ -1,9 +1,6 @@
-#ifndef JUCC_PARSING_PARSING_TABLE_H
-#define JUCC_PARSING_PARSING_TABLE_H
+#ifndef JUCC_PARSER_PARSING_TABLE_H
+#define JUCC_PARSER_PARSING_TABLE_H
 
-#include <algorithm>
-#include <iostream>
-#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -14,7 +11,7 @@
 
 namespace jucc {
 
-namespace parsing_table {
+namespace parser {
 
 const char SYNCH_TOKEN[] = "synch";
 
@@ -22,7 +19,7 @@ const char ERROR_TOKEN[] = "error";
 
 class ParsingTable {
  public:
-  using Table = std::unordered_map<std::string, std::unordered_map<std::string, std::string> >;
+  using Table = std::unordered_map<std::string, std::unordered_map<std::string, std::string>>;
 
  private:
   /**
@@ -80,53 +77,19 @@ class ParsingTable {
    */
   std::pair<int, int> GetEntry(const std::string &non_terminal_, const std::string &terminal_);
 
-  /**
-   * Setter for the first set.
-   */
+  /* getters and setters */
   void SetFirsts(utils::SymbolsMap firsts) { firsts_ = std::move(firsts); }
-
-  /**
-   * Setter for the first set.
-   */
   void SetProductions(grammar::Productions productions) { productions_ = std::move(productions); }
-
-  /**
-   * Setter for the follow set.
-   */
   void SetFollows(utils::SymbolsMap follows) { follows_ = std::move(follows); }
-
-  /**
-   * Getter for the firsts set
-   */
   [[nodiscard]] const utils::SymbolsMap &GetFirsts() { return firsts_; }
-
-  /**
-   * Getter for the follows set
-   */
   [[nodiscard]] const utils::SymbolsMap &GetFollows() { return follows_; }
-
-  /**
-   * Getter for the productions
-   */
   [[nodiscard]] const grammar::Productions &GetProductions() { return productions_; }
-
-  /**
-   * Getter for the non terminals
-   */
   [[nodiscard]] const std::vector<std::string> &GetNonTerminals() { return non_terminals_; }
-
-  /**
-   * Getter for the terminals
-   */
   [[nodiscard]] const std::vector<std::string> &GetTerminals() { return terminals_; }
-
-  /**
-   * Getter for the parsing table
-   */
   [[nodiscard]] const Table &GetTable() { return table_; }
 };
 
-}  // namespace parsing_table
+}  // namespace parser
 }  // namespace jucc
 
 #endif

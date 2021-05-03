@@ -1,11 +1,8 @@
 #include "main/jucc.h"
 
-#include <cstring>
-
 #include "gtest/gtest.h"
-using jucc::InputParser;
 
-TEST(jucc, dummy) { ASSERT_TRUE(true); }
+using jucc::InputParser;
 
 TEST(jucc, Radd) { ASSERT_EQ(100, jucc::Radd(0, 100)); }
 
@@ -25,5 +22,3 @@ TEST(jucc, Parser) {
   ASSERT_FALSE(parser->HasFlag("-t"));
   delete parser;
 }
-
-TEST(jucc, hello) { ASSERT_EQ(jucc::Hello().substr(0, 6), "\x1B[1;33"); }

@@ -1,18 +1,18 @@
-#include "parsing/parsing.h"
+#include "parser/parser.h"
 
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
-#include "parsing/parsing_table.h"
+#include "parser/parsing_table.h"
 
 using jucc::parser::Parser;
-using jucc::parsing_table::ParsingTable;
+using jucc::parser::ParsingTable;
 namespace grammar = jucc::grammar;
 namespace utils = jucc::utils;
 
 // Consult - for LL1 parsing
 // https://www.rose-hulman.edu/class/csse/csse404/schedule/day31/ErrorRecovery.pdf
 
-TEST(parsing, parsing1) {
+TEST(parser, parser1) {
   grammar::Production p1;
   p1.SetParent("E");
   p1.SetRules({grammar::Rule({"T", "E'"})});

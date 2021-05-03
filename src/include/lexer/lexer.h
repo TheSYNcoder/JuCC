@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "symbol_table/symbol_table.h"

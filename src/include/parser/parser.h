@@ -1,13 +1,11 @@
-#ifndef JUCC_PARSING_PARSING_H
-#define JUCC_PARSING_PARSING_H
+#ifndef JUCC_PARSER_PARSER_H
+#define JUCC_PARSER_PARSER_H
 
-#include <algorithm>
 #include <stack>
 #include <string>
-#include <utility>
 #include <vector>
 
-#include "parsing/parsing_table.h"
+#include "parser/parsing_table.h"
 #include "utils/first_follow.h"
 
 namespace jucc {
@@ -18,6 +16,7 @@ class Parser {
   /**
    * A stack to put the symbols and perform the actual parsing
    */
+  std::stack<std::string> stack_;
 
   /**
    * The given input string to parse.
@@ -37,7 +36,7 @@ class Parser {
   /**
    * Holds the build up parsing table object
    */
-  parsing_table::ParsingTable table_;
+  ParsingTable table_;
 
   /**
    * Holds the history of the productions parsed during parsing
@@ -55,7 +54,6 @@ class Parser {
    * Constructor for initializing stack and other members.
    */
   Parser();
-  std::stack<std::string> stack_;
 
   /**
    * Used for parsing the next token of the input string
@@ -68,21 +66,6 @@ class Parser {
   void ResetParsing();
 
   /**
-   * Setter for the input string
-   */
-  void SetInputString(std::vector<std::string> inps);
-
-  /**
-   * Setter for parsing table
-   */
-  void SetParsingTable(parsing_table::ParsingTable table);
-
-  /**
-   * Setter for the start symbol
-   */
-  void SetStartSymbol(std::string start);
-
-  /**
    * Function that returns true when the parsing is completed
    */
   bool IsComplete();
@@ -92,9 +75,10 @@ class Parser {
    */
   void DoNextStep();
 
-  /**
-   * Getter for production history
-   */
+  /* getters and setters*/
+  void SetInputString(std::vector<std::string> inps);
+  void SetParsingTable(ParsingTable table);
+  void SetStartSymbol(std::string start);
   [[nodiscard]] const std::vector<int> &GetProductionHistory();
 };
 }  // namespace parser

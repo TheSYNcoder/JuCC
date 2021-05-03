@@ -45,6 +45,7 @@ std::string Hello() {
   ret += "\033[1;35m";
   ret += "|____.'   `-'  `--'                                ";
   ret += "\033[0m\n";
+  ret += "\n";
   return ret;
 }
 

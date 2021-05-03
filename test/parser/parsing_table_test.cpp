@@ -1,13 +1,13 @@
-#include "parsing/parsing_table.h"
+#include "parser/parsing_table.h"
 
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
 
-using jucc::parsing_table::ParsingTable;
+using jucc::parser::ParsingTable;
 namespace grammar = jucc::grammar;
 namespace utils = jucc::utils;
 
-TEST(parsing, test1) {
+TEST(parser, test1) {
   /**
    * Test: Context Free Grammar
    * S : a A B b
@@ -66,7 +66,7 @@ TEST(parsing, test1) {
   ASSERT_EQ(p.second, 0);
 }
 
-TEST(parsing, test2) {
+TEST(parser, test2) {
   /**
    * Test: Context Free Grammar
    * S : a B | EPSILON
@@ -125,7 +125,7 @@ TEST(parsing, test2) {
   ASSERT_EQ(p.second, 1);
 }
 
-TEST(parsing, test3) {
+TEST(parser, test3) {
   /**
    * Test: Context Free Grammar
    * S : a B | EPSILON
@@ -184,7 +184,7 @@ TEST(parsing, test3) {
   ASSERT_EQ(p.second, 1);
 }
 
-TEST(parsing, test4) {
+TEST(parser, test4) {
   /**
    * Test: Context Free Grammar
    * S : A B

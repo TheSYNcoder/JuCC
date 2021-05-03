@@ -1,6 +1,7 @@
-#include "parsing/parsing.h"
+#include "parser/parser.h"
 
-#include <iostream>
+#include <algorithm>
+
 namespace jucc::parser {
 
 Parser::Parser() {
@@ -24,7 +25,7 @@ void Parser::SetStartSymbol(std::string start) {
   stack_.push(start_symbol_);
 }
 
-void Parser::SetParsingTable(parsing_table::ParsingTable table) { table_ = std::move(table); }
+void Parser::SetParsingTable(ParsingTable table) { table_ = std::move(table); }
 
 bool Parser::IsComplete() {
   return (current_step_ == static_cast<int>(current_string_.size())) ||
@@ -51,9 +52,9 @@ void Parser::DoNextStep() {
 void Parser::ParseNextStep() {
   std::string top_symbol = stack_.top();
   std::string current_token = current_string_[current_step_];
-  parsing_table::ParsingTable::Table table = table_.GetTable();
+  ParsingTable::Table table = table_.GetTable();
   // skip tokens until it is in the first or is a synch token
-  while (!IsComplete() && table[top_symbol][current_token] == std::string(parsing_table::ERROR_TOKEN)) {
+  while (!IsComplete() && table[top_symbol][current_token] == std::string(ERROR_TOKEN)) {
     DoNextStep();
     if (current_step_ < static_cast<int>(current_string_.size())) {
       current_token = current_string_[current_step_];
@@ -61,7 +62,7 @@ void Parser::ParseNextStep() {
   }
   if (!IsComplete()) {
     // if SYNCH TOKEN - We skip the current symbol on stack top
-    if (table[top_symbol][current_token] == std::string(parsing_table::SYNCH_TOKEN)) {
+    if (table[top_symbol][current_token] == std::string(SYNCH_TOKEN)) {
       stack_.pop();
     } else {
       // check if current stack top matches the current token
