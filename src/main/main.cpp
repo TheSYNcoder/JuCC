@@ -1,4 +1,4 @@
-/*-------------------------------------------------------------------------
+/**-------------------------------------------------------------------------
  *
  * main.cpp
  *	  Stub main() routine for the jucc executable.
@@ -21,7 +21,7 @@
  */
 
 #include "main/jucc.h"
-/*
+/**
  * jucc begins execution here.
  */
 auto main(int argc, char *argv[]) -> int {
@@ -52,16 +52,16 @@ auto main(int argc, char *argv[]) -> int {
     return 0;
   }
 
-  jucc::grammar::Productions productions = grammar_parser.GetProductions();
+  jucc::grammar::Productions raw_productions = grammar_parser.GetProductions();
 
-  // TODO(bisakh,abhiskek) : Add code for removing left factors and left recursion
+  jucc::grammar::Productions productions = jucc::utils::RemoveAllPossibleAmbiguity(raw_productions);
 
   auto nullables = jucc::utils::CalcNullables(productions);
   auto firsts = jucc::utils::CalcFirsts(productions, nullables);
   auto follows = jucc::utils::CalcFollows(productions, firsts, nullables, grammar_parser.GetStartSymbol());
 
   auto terminals = grammar_parser.GetTerminals();
-  auto non_terminals = grammar_parser.GetNonTerminals();
+  auto non_terminals = jucc::utils::GetAllNonTerminals(productions);
 
   jucc::parser::ParsingTable parsing_table = jucc::parser::ParsingTable(terminals, non_terminals);
   parsing_table.SetFirsts(firsts);
