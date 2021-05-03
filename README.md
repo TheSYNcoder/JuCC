@@ -1,6 +1,6 @@
 # JuCC
 
-(todo: add logo)
+[JuCC](https://user-images.githubusercontent.com/42897033/116920657-8acdf480-ac70-11eb-8d3f-46cf27fcb1a1.png)
 
 -----------------
 
