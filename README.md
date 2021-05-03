@@ -1,6 +1,6 @@
 # JuCC
 
-(todo: add logo)
+<img src="https://user-images.githubusercontent.com/42897033/116920657-8acdf480-ac70-11eb-8d3f-46cf27fcb1a1.png" alt="JuCC logo" height="200">
 
 -----------------
 
@@ -10,7 +10,11 @@
 This is the official Jadavpur University Compiler Compiler repository.
 
 ## Key Features
-* Nothing yet
+* Supports a subset of the C language for now.
+* Custom grammar files to easily extend the language.
+* LL(1) parsing with panic mode error recovery.
+* Generates .json parse tree outputs for easy visualization with [Treant.js](https://fperucic.github.io/treant-js/).
+* 100% Open Source (Apache-2.0 License)
 
 ## Quickstart
 The JuCC project is built and tested on **Ubuntu 20.04**.
