@@ -7,7 +7,7 @@ using jucc::parser::ParsingTable;
 namespace grammar = jucc::grammar;
 namespace utils = jucc::utils;
 
-TEST(parser, test1) {
+TEST(parser, ParsingTable1) {
   /**
    * Test: Context Free Grammar
    * S : a A B b
@@ -66,7 +66,7 @@ TEST(parser, test1) {
   ASSERT_EQ(p.second, 0);
 }
 
-TEST(parser, test2) {
+TEST(parser, ParsingTable2) {
   /**
    * Test: Context Free Grammar
    * S : a B | EPSILON
@@ -125,7 +125,7 @@ TEST(parser, test2) {
   ASSERT_EQ(p.second, 1);
 }
 
-TEST(parser, test3) {
+TEST(parser, ParsingTable3) {
   /**
    * Test: Context Free Grammar
    * S : a B | EPSILON
@@ -184,7 +184,7 @@ TEST(parser, test3) {
   ASSERT_EQ(p.second, 1);
 }
 
-TEST(parser, test4) {
+TEST(parser, ParsingTable4) {
   /**
    * Test: Context Free Grammar
    * S : A B

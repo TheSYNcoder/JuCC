@@ -12,7 +12,7 @@ namespace utils = jucc::utils;
 // Consult - for LL1 parsing
 // https://www.rose-hulman.edu/class/csse/csse404/schedule/day31/ErrorRecovery.pdf
 
-TEST(parser, parser1) {
+TEST(parser, Parser1) {
   grammar::Production p1;
   p1.SetParent("E");
   p1.SetRules({grammar::Rule({"T", "E'"})});
