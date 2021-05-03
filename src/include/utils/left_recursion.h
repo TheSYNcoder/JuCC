@@ -5,6 +5,7 @@
 namespace jucc::utils {
 // Standard practice.
 const char DASH[] = "'";
+const char DASHAT[] = "@";
 
 /**
  * Removes  direct left Recursion.

@@ -13,6 +13,14 @@ namespace utils = jucc::utils;
 // https://www.rose-hulman.edu/class/csse/csse404/schedule/day31/ErrorRecovery.pdf
 
 TEST(parser, Parser1) {
+  /**
+   * Grammar: 
+   * E -> TE'
+   * E' -> +TE' | EPSILON
+   * T -> FT' | 
+   * T' -> *FT | EPSILON
+   * F -> id | ( E )
+   */
   grammar::Production p1;
   p1.SetParent("E");
   p1.SetRules({grammar::Rule({"T", "E'"})});
