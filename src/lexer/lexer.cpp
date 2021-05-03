@@ -43,6 +43,9 @@ int Lexer::GetToken(std::ifstream &is) {
     } else if (identifier_string_ == "cin") {
       current_datatype_ = "";
       ret_token = TOK_CIN;
+    } else if (identifier_string_ == "main") {
+      current_datatype_ = "";
+      ret_token = TOK_MAIN;
     } else {
       ret_token = TOK_IDENTIFIER;
 
@@ -248,6 +251,79 @@ int Lexer::GetToken(std::ifstream &is) {
   last_char = ' ';
   error_string_ = "Unexpected Token\n";
   return TOK_ERROR;
+}
+
+std::string Lexer::GetTokenType(int token) {
+  std::string ret_string;
+  if (token == TOK_INT) {
+    ret_string = "int";
+  } else if (token == TOK_FLOAT) {
+    ret_string = "float";
+  } else if (token == TOK_VOID) {
+    ret_string = "void";
+  } else if (token == TOK_IF) {
+    ret_string = "if";
+  } else if (token == TOK_ELSE) {
+    ret_string = "else";
+  } else if (token == TOK_PAREN_OPEN) {
+    ret_string = "(";
+  } else if (token == TOK_PAREN_CLOSE) {
+    ret_string = ")";
+  } else if (token == TOK_CURLY_OPEN) {
+    ret_string = "{";
+  } else if (token == TOK_CURLY_CLOSE) {
+    ret_string = "}";
+  } else if (token == TOK_COMMA) {
+    ret_string = ",";
+  } else if (token == TOK_DOT) {
+    ret_string = ".";
+  } else if (token == TOK_PLUS) {
+    ret_string = "+";
+  } else if (token == TOK_MINUS) {
+    ret_string = "-";
+  } else if (token == TOK_DIVIDE) {
+    ret_string = "/";
+  } else if (token == TOK_MULTIPLY) {
+    ret_string = "*";
+  } else if (token == TOK_MODULUS) {
+    ret_string = "%";
+  } else if (token == TOK_SEMICOLON) {
+    ret_string = ";";
+  } else if (token == TOK_LEFT_SHIFT) {
+    ret_string = "<<";
+  } else if (token == TOK_RIGHT_SHIFT) {
+    ret_string = ">>";
+  } else if (token == TOK_EQUAL_TO) {
+    ret_string = "==";
+  } else if (token == TOK_ASSIGNMENT) {
+    ret_string = "=";
+  } else if (token == TOK_NOT) {
+    ret_string = "!";
+  } else if (token == TOK_NOT_EQUAL_TO) {
+    ret_string = "!=";
+  } else if (token == TOK_GREATER_THAN) {
+    ret_string = ">";
+  } else if (token == TOK_LESS_THAN) {
+    ret_string = "<";
+  } else if (token == TOK_GREATER_THAN_OR_EQUALS) {
+    ret_string = ">=";
+  } else if (token == TOK_LESS_THAN_OR_EQUALS) {
+    ret_string = "<=";
+  } else if (token == TOK_IDENTIFIER) {
+    ret_string = "identifier";
+  } else if (token == TOK_DECIMAL) {
+    ret_string = "integer_constant";
+  } else if (token == TOK_FRACTIONAL) {
+    ret_string = "float_constant";
+  } else if (token == TOK_COUT) {
+    ret_string = "cout";
+  } else if (token == TOK_CIN) {
+    ret_string = "cin";
+  } else if (token == TOK_MAIN) {
+    ret_string = "main";
+  }
+
+  return ret_string;
 }
 
 std::string Lexer::GetCurrentDatatype() { return current_datatype_; }
