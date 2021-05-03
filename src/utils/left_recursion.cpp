@@ -24,7 +24,7 @@ grammar::Productions RemoveDirectLeftRecursion(const grammar::Production &prod) 
       new_entries.push_back(parent_dash);
       parent_dash_rules.emplace_back(grammar::Rule(new_entries));
     } else {
-      if(!entries.empty() && entries.back()==std::string(grammar::EPSILON)){
+      if (!entries.empty() && entries.back() == std::string(grammar::EPSILON)) {
         entries.pop_back();
       }
       entries.push_back(parent_dash);

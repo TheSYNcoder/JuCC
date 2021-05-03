@@ -18,7 +18,7 @@ TEST(utils, DirectLeftRecursion0) {
   auto prods = utils::RemoveDirectLeftRecursion(prod);
   // output E'@ -> +TE'@ | epsilon
   // E ->   TE'@ | E'
-  ASSERT_EQ(prods[0].GetParent(), "E" + std::string(utils::DASH)+std::string(utils::DASHAT));
+  ASSERT_EQ(prods[0].GetParent(), "E" + std::string(utils::DASH) + std::string(utils::DASHAT));
   ASSERT_EQ(prods[1].GetParent(), "E");
 
   auto rules_e = prods[1].GetRules();
@@ -34,7 +34,7 @@ TEST(utils, DirectLeftRecursion0) {
   ASSERT_EQ(rules_e[1].ToString(), "E" + std::string(utils::DASH) + std::string(utils::DASHAT));
 }
 
-TEST(utils, DirectLeftRecursion1){
+TEST(utils, DirectLeftRecursion1) {
   // E -> epsilon
   grammar::Production prod;
   prod.SetParent("E");
@@ -42,17 +42,16 @@ TEST(utils, DirectLeftRecursion1){
   auto rule1 = grammar::Rule({std::string(grammar::EPSILON)});
 
   prod.SetRules({rule1});
-  using namespace std;
   auto prods = utils::RemoveDirectLeftRecursion(prod);
 
- // E ->  epsilon
+  // E ->  epsilon
   ASSERT_EQ(prods.size(), 1);
- ASSERT_EQ(prods[0].GetParent(), "E");
+  ASSERT_EQ(prods[0].GetParent(), "E");
 
- auto rules_e = prods[1].GetRules();
- ASSERT_EQ(rules_e.size(), 1);
+  auto rules_e = prods[0].GetRules();
+  ASSERT_EQ(rules_e.size(), 1);
 
- ASSERT_EQ(rules_e[0].ToString(), std::string(grammar::EPSILON));
+  ASSERT_EQ(rules_e[0].ToString(), std::string(grammar::EPSILON));
 }
 
 TEST(utils, MaxLenPrefix0) {
@@ -634,4 +633,3 @@ TEST(utils, RemoveAllAmbiguity0) {
   ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), "P");
   ASSERT_EQ(lf_removed[1].GetRules()[2].ToString(), std::string(grammar::EPSILON));
 }
-

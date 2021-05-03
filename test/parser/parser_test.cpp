@@ -14,10 +14,10 @@ namespace utils = jucc::utils;
 
 TEST(parser, Parser1) {
   /**
-   * Grammar: 
+   * Grammar:
    * E -> TE'
    * E' -> +TE' | EPSILON
-   * T -> FT' | 
+   * T -> FT'
    * T' -> *FT | EPSILON
    * F -> id | ( E )
    */
