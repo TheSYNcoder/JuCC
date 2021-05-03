@@ -35,7 +35,7 @@ TEST(parser, Parser1) {
   auto firsts = utils::CalcFirsts(grammar, nullables);
   auto follows = utils::CalcFollows(grammar, firsts, nullables, "E");
 
-  std::vector<std::string> terminals = {"id", "+", "*", "(", ")", "$"};
+  std::vector<std::string> terminals = {"id", "+", "*", "(", ")"};
   std::vector<std::string> non_terminals = {"E", "E'", "T", "T'", "F"};
 
   ParsingTable table = ParsingTable(terminals, non_terminals);

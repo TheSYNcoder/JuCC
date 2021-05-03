@@ -31,7 +31,7 @@ TEST(parser, ParsingTable1) {
   auto firsts = utils::CalcFirsts(grammar, nullables);
   auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
 
-  std::vector<std::string> terminals = {"a", "b", "c", "d", "$"};
+  std::vector<std::string> terminals = {"a", "b", "c", "d"};
   std::vector<std::string> non_terminals = {"A", "S", "B"};
 
   ParsingTable table = ParsingTable(terminals, non_terminals);
@@ -90,7 +90,7 @@ TEST(parser, ParsingTable2) {
   auto firsts = utils::CalcFirsts(grammar, nullables);
   auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
 
-  std::vector<std::string> terminals = {"a", "b", "c", "$"};
+  std::vector<std::string> terminals = {"a", "b", "c"};
   std::vector<std::string> non_terminals = {"C", "S", "B"};
 
   ParsingTable table = ParsingTable(terminals, non_terminals);
@@ -112,15 +112,15 @@ TEST(parser, ParsingTable2) {
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 0);
 
-  p = table.GetEntry("S", "$");
+  p = table.GetEntry("S", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 0);
   ASSERT_EQ(p.second, 1);
 
-  p = table.GetEntry("B", "$");
+  p = table.GetEntry("B", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 1);
   ASSERT_EQ(p.second, 1);
 
-  p = table.GetEntry("C", "$");
+  p = table.GetEntry("C", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 1);
 }
@@ -149,7 +149,7 @@ TEST(parser, ParsingTable3) {
   auto firsts = utils::CalcFirsts(grammar, nullables);
   auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
 
-  std::vector<std::string> terminals = {"a", "b", "c", "$"};
+  std::vector<std::string> terminals = {"a", "b", "c"};
   std::vector<std::string> non_terminals = {"C", "S", "B"};
 
   ParsingTable table = ParsingTable(terminals, non_terminals);
@@ -171,15 +171,15 @@ TEST(parser, ParsingTable3) {
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 0);
 
-  p = table.GetEntry("S", "$");
+  p = table.GetEntry("S", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 0);
   ASSERT_EQ(p.second, 1);
 
-  p = table.GetEntry("B", "$");
+  p = table.GetEntry("B", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 1);
   ASSERT_EQ(p.second, 1);
 
-  p = table.GetEntry("C", "$");
+  p = table.GetEntry("C", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 1);
 }
@@ -208,7 +208,7 @@ TEST(parser, ParsingTable4) {
   auto firsts = utils::CalcFirsts(grammar, nullables);
   auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
 
-  std::vector<std::string> terminals = {"a", "b", "$"};
+  std::vector<std::string> terminals = {"a", "b"};
   std::vector<std::string> non_terminals = {"A", "S", "B"};
 
   ParsingTable table = ParsingTable(terminals, non_terminals);
@@ -234,11 +234,11 @@ TEST(parser, ParsingTable4) {
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 0);
 
-  p = table.GetEntry("S", "$");
+  p = table.GetEntry("S", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 0);
   ASSERT_EQ(p.second, 0);
 
-  p = table.GetEntry("A", "$");
+  p = table.GetEntry("A", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 1);
   ASSERT_EQ(p.second, 1);
 
@@ -246,7 +246,7 @@ TEST(parser, ParsingTable4) {
   ASSERT_EQ(p.first, 1);
   ASSERT_EQ(p.second, 1);
 
-  p = table.GetEntry("B", "$");
+  p = table.GetEntry("B", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 1);
 }
