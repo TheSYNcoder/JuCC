@@ -323,7 +323,7 @@ TEST(utils, CalcFirsts0) {
     sort(elem.second.begin(), elem.second.end());
   }
 
-  ASSERT_EQ(13, res.size());
+  ASSERT_EQ(6, res.size());
   ASSERT_EQ(res.at("S"), std::vector<std::string>({"a"}));
   ASSERT_EQ(res.at("B"), std::vector<std::string>({"c"}));
   ASSERT_EQ(res.at("C"), std::vector<std::string>({grammar::EPSILON, "b"}));
@@ -369,7 +369,7 @@ TEST(utils, CalcFirsts1) {
     sort(elem.second.begin(), elem.second.end());
   }
 
-  ASSERT_EQ(10, res.size());
+  ASSERT_EQ(5, res.size());
   ASSERT_EQ(res.at("S"), std::vector<std::string>({"a"}));
   ASSERT_EQ(res.at("A"), std::vector<std::string>({"a"}));
   ASSERT_EQ(res.at("A'"), std::vector<std::string>({grammar::EPSILON, "d"}));
@@ -414,7 +414,7 @@ TEST(utils, CalcFirsts2) {
     sort(elem.second.begin(), elem.second.end());
   }
 
-  ASSERT_EQ(11, res.size());
+  ASSERT_EQ(5, res.size());
   ASSERT_EQ(res.at("E"), std::vector<std::string>({"(", "id"}));
   ASSERT_EQ(res.at("E'"), std::vector<std::string>({"+", grammar::EPSILON}));
   ASSERT_EQ(res.at("T"), std::vector<std::string>({"(", "id"}));
@@ -448,7 +448,7 @@ TEST(utils, CalcFirsts3) {
     sort(elem.second.begin(), elem.second.end());
   }
 
-  ASSERT_EQ(7, res.size());
+  ASSERT_EQ(3, res.size());
   ASSERT_EQ(res.at("A"), std::vector<std::string>({"a", "b"}));
   ASSERT_EQ(res.at("B"), std::vector<std::string>({"b"}));
   ASSERT_EQ(res.at("C"), std::vector<std::string>({grammar::EPSILON, "b"}));
