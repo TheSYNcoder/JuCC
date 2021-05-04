@@ -53,7 +53,6 @@ auto main(int argc, char *argv[]) -> int {
   }
 
   jucc::grammar::Productions raw_productions = grammar_parser.GetProductions();
-
   jucc::grammar::Productions productions = jucc::utils::RemoveAllPossibleAmbiguity(raw_productions);
 
   auto nullables = jucc::utils::CalcNullables(productions);

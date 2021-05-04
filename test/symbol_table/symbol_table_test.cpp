@@ -8,7 +8,7 @@ using jucc::symbol_table::LinkedList;
 using jucc::symbol_table::Node;
 using jucc::symbol_table::SymbolTable;
 
-TEST(symbolTable, test1) {
+TEST(symbolTable, SymbolTable1) {
   /**
    * Checks an empty linked list
    */
@@ -16,7 +16,7 @@ TEST(symbolTable, test1) {
   ASSERT_EQ(true, list.IsEmpty());
 }
 
-TEST(symbolTable, test2) {
+TEST(symbolTable, SymbolTable2) {
   /**
    * Checks adding of a node
    */
@@ -28,7 +28,7 @@ TEST(symbolTable, test2) {
   ASSERT_EQ(0, list.GetHead()->nesting_level_);
 }
 
-TEST(symbolTable, test3) {
+TEST(symbolTable, SymbolTable3) {
   /**
    * Checks the deletion of a node
    */
@@ -39,7 +39,7 @@ TEST(symbolTable, test3) {
   ASSERT_EQ(true, list.IsEmpty());
 }
 
-TEST(symbolTable, test4) {
+TEST(symbolTable, SymbolTable4) {
   /**
    * Check and add entry
    * Check duplicate symbol error

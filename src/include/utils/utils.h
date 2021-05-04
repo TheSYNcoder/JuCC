@@ -23,6 +23,11 @@ grammar::Productions RemoveAllPossibleAmbiguity(const grammar::Productions & /*p
  */
 std::vector<std::string> GetAllNonTerminals(const grammar::Productions & /*prods*/);
 
+/**
+ * @returns a list of terminal symbols from the given set of productions.
+ */
+std::vector<std::string> GetAllTerminals(const grammar::Productions & /*prods*/);
+
 }  // namespace utils
 }  // namespace jucc
 #endif

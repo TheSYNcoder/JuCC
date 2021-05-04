@@ -2,21 +2,15 @@
 
 #include <functional>
 
-#include "utils/left_factoring.h"
+#include "utils/utils.h"
 
 namespace jucc::utils {
 std::unordered_map<std::string, bool> CalcNullables(const grammar::Productions &augmented_grammar) {
   std::unordered_map<std::string, bool> nullables;
   // set all terminals to non - nullable
-  for (const auto &production : augmented_grammar) {
-    for (const auto &rule : production.GetRules()) {
-      for (const auto &symbol : rule.GetEntities()) {
-        // if symbol is not present as a parent in grammar, then it is a terminal
-        if (!HasParent(augmented_grammar, symbol)) {
-          nullables[symbol] = false;
-        }
-      }
-    }
+  auto terminals = GetAllTerminals(augmented_grammar);
+  for (const auto &term : terminals) {
+    nullables[term] = false;
   }
 
   // EPSILON is nullable by definition
@@ -77,17 +71,14 @@ SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
   // finished -> used to check if any new symbols are added to any FIRST(non-terminal) in a particular iteration
   // useful in case of cycles in productions
   bool finished = false;
-  for (const auto &production : augmented_grammar) {
-    for (const auto &rules : production.GetRules()) {
-      for (const auto &symbol : rules.GetEntities()) {
-        if (!HasParent(augmented_grammar, symbol)) {
-          // if symbol is not present as a parent in grammar, then it is a terminal
-          // if X is a terminal, then FIRST(X) = {X}
-          firsts[symbol] = {symbol};
-        }
-      }
-    }
+  // store terminals to later remove from final results
+  // terminals used as base case in recursion
+  auto terminals = GetAllTerminals(augmented_grammar);
+  for (const auto &term : terminals) {
+    firsts[term] = {term};
   }
+  // add base case for EPSILON
+  firsts[std::string(grammar::EPSILON)] = {std::string(grammar::EPSILON)};
 
   /* at this point, map of FIRST only contains terminal -> {terminal} mappings */
   std::function<std::vector<std::string>(const std::string &, std::vector<std::string> &)> calc_recursive;
@@ -96,7 +87,7 @@ SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
   // lambda function that returns vector<string>
   calc_recursive = [&](const std::string &key, std::vector<std::string> &path) {
     // FIRST(terminal) = {terminal}
-    if (!HasParent(augmented_grammar, key)) {
+    if (!grammar::HasParent(augmented_grammar, key)) {
       return firsts[key];
     }
 
@@ -170,6 +161,12 @@ SymbolsMap CalcFirsts(const grammar::Productions &augmented_grammar,
     }
   }
 
+  // remove terminals and EPSILON from final results
+  for (const auto &term : terminals) {
+    firsts.erase(term);
+  }
+  firsts.erase(std::string(grammar::EPSILON));
+
   return firsts;
 }
 
@@ -178,6 +175,15 @@ SymbolsMap CalcFollows(const grammar::Productions &augmented_grammar, const Symb
   SymbolsMap follows;
   bool finished = false;
 
+  // calculating augmented firsts with terminals and EPSILON
+  auto augmented_firsts = firsts;
+  augmented_firsts[std::string(grammar::EPSILON)] = {std::string(grammar::EPSILON)};
+  auto terminals = GetAllTerminals(augmented_grammar);
+  for (const auto &term : terminals) {
+    augmented_firsts[term] = {term};
+  }
+
+  // initialize follows
   for (const auto &production : augmented_grammar) {
     if (production.GetParent() == start_symbol) {
       // if production head / parent is the start_symbol, then FOLLOW(head) = {$}
@@ -197,11 +203,11 @@ SymbolsMap CalcFollows(const grammar::Productions &augmented_grammar, const Symb
         // if A -> alpha B beta is a production, where B -> non-terminal & alpha, beta -> set of symbols
         // then FOLLOW(B) contains {FIRST(beta) - EPSILON}
         // if mid aka current symbol is terminal, then ignore
-        if (HasParent(augmented_grammar, mid)) {
+        if (grammar::HasParent(augmented_grammar, mid)) {
           auto next_itr = symbol_itr + 1;
           for (; next_itr != rule.GetEntities().end(); next_itr++) {
             // next_itr -> iterates through every symbol in beta
-            for (const auto &der : firsts.at(*next_itr)) {
+            for (const auto &der : augmented_firsts.at(*next_itr)) {
               // discarding EPSILON
               if (der != std::string(grammar::EPSILON) &&
                   find(follows[mid].begin(), follows[mid].end(), der) == follows[mid].end()) {

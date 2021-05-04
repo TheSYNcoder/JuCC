@@ -4,7 +4,7 @@
 
 using jucc::lexer::Lexer;
 
-TEST(lexer, lexer1) {
+TEST(lexer, Lexer1) {
   std::string filename("../test/lexer/input.txt");
   Lexer lex = Lexer();
 
@@ -74,7 +74,7 @@ TEST(lexer, lexer1) {
   is.close();
 }
 
-TEST(lexer, lexer2) {
+TEST(lexer, Lexer2) {
   std::string filename("../test/lexer/input_err1.txt");
   Lexer lex = Lexer();
 
@@ -149,7 +149,7 @@ TEST(lexer, lexer2) {
   is.close();
 }
 
-TEST(lexer, lexer3) {
+TEST(lexer, Lexer3) {
   std::string filename("../test/lexer/comments.txt");
   Lexer lex = Lexer();
 
@@ -188,7 +188,7 @@ TEST(lexer, lexer3) {
   is.close();
 }
 
-TEST(lexer, lexer4) {
+TEST(lexer, Lexer4) {
   std::string filename("../test/lexer/input_err2.txt");
   Lexer lex = Lexer();
 
@@ -227,7 +227,7 @@ TEST(lexer, lexer4) {
   is.close();
 }
 
-TEST(lexer, lexer5) {
+TEST(lexer, Lexer5) {
   /**
    *  To test the symbol table implementation with lexer
    *
@@ -329,7 +329,7 @@ TEST(lexer, lexer5) {
   is.close();
 }
 
-TEST(lexer, lexer6) {
+TEST(lexer, Lexer6) {
   std::string filename("../test/lexer/arithmetic.txt");
   Lexer lex = Lexer();
 
@@ -482,7 +482,7 @@ TEST(lexer, lexer6) {
   is.close();
 }
 
-TEST(lexer, lexer7) {
+TEST(lexer, Lexer7) {
   std::string filename("../test/lexer/comments.txt");
   Lexer lex = Lexer();
 

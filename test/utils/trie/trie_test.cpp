@@ -3,7 +3,7 @@
 #include "utils/trie/memory_efficient_trie.h"
 namespace grammar = jucc::grammar;
 
-TEST(trie, trie1) {
+TEST(trie, Trie1) {
   // E -> ieStSt | a | b ieS | ieStS
   grammar::Production p;
   p.SetRules({
