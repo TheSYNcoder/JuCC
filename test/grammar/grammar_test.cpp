@@ -4,7 +4,7 @@
 
 using jucc::grammar::Parser;
 
-TEST(grammar, parser0) {
+TEST(grammar, Parser0) {
   Parser parser = Parser("../test/grammar/grammar_test_0.g");
   ASSERT_EQ(true, parser.Parse());
   ASSERT_EQ("<primary_expression>", parser.GetStartSymbol());
@@ -56,115 +56,115 @@ TEST(grammar, parser0) {
   ASSERT_EQ(rule3, parser.GetProductions()[0].GetRules()[0].GetEntities());
 }
 
-TEST(grammar, parser1) {
+TEST(grammar, Parser1) {
   Parser parser = Parser("../test/grammar/grammar_test_1.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token %terminals", parser.GetError());
 }
 
-TEST(grammar, parser2) {
+TEST(grammar, Parser2) {
   Parser parser = Parser("../test/grammar/grammar_test_2.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token %non_terminals", parser.GetError());
 }
 
-TEST(grammar, parser3) {
+TEST(grammar, Parser3) {
   Parser parser = Parser("../test/grammar/grammar_test_3.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token %rules", parser.GetError());
 }
 
-TEST(grammar, parser4) {
+TEST(grammar, Parser4) {
   Parser parser = Parser("../test/grammar/grammar_test_4.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token %start", parser.GetError());
 }
 
-TEST(grammar, parser5) {
+TEST(grammar, Parser5) {
   Parser parser = Parser("../test/grammar/grammar_test_5.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token %", parser.GetError());
 }
 
-TEST(grammar, parser6) {
+TEST(grammar, Parser6) {
   Parser parser = Parser("../test/grammar/grammar_test_6.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: invalid token outside block: bruh", parser.GetError());
 }
 
-TEST(grammar, parser7) {
+TEST(grammar, Parser7) {
   Parser parser = Parser("../test/grammar/grammar_test_7.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: EPSILON is reserved", parser.GetError());
 }
 
-TEST(grammar, parser8) {
+TEST(grammar, Parser8) {
   Parser parser = Parser("../test/grammar/grammar_test_8.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: EPSILON is reserved", parser.GetError());
 }
 
-TEST(grammar, parser9) {
+TEST(grammar, Parser9) {
   Parser parser = Parser("../test/grammar/grammar_test_9.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: ambiguous start symbol", parser.GetError());
 }
 
-TEST(grammar, parser10) {
+TEST(grammar, Parser10) {
   Parser parser = Parser("../test/grammar/grammar_test_10.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: production cannot start with EPSILON", parser.GetError());
 }
 
-TEST(grammar, parser11) {
+TEST(grammar, Parser11) {
   Parser parser = Parser("../test/grammar/grammar_test_11.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: rules syntax error ':' expected: bruh", parser.GetError());
 }
 
-TEST(grammar, parser12) {
+TEST(grammar, Parser12) {
   Parser parser = Parser("../test/grammar/grammar_test_12.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: rules syntax error ':' expected", parser.GetError());
 }
 
-TEST(grammar, parser13) {
+TEST(grammar, Parser13) {
   Parser parser = Parser("../test/grammar/grammar_test_13.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: block is incomplete '%' expected", parser.GetError());
 }
 
-TEST(grammar, parser14) {
+TEST(grammar, Parser14) {
   Parser parser = Parser("../test/grammar/grammar_test_14.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: inconsistent or duplicate terminals", parser.GetError());
 }
 
-TEST(grammar, parser15) {
+TEST(grammar, Parser15) {
   Parser parser = Parser("../test/grammar/grammar_test_15.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: inconsistent or duplicate non_terminals", parser.GetError());
 }
 
-TEST(grammar, parser16) {
+TEST(grammar, Parser16) {
   Parser parser = Parser("../test/grammar/grammar_test_16.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: terminals and non_terminals not disjoint", parser.GetError());
 }
 
-TEST(grammar, parser17) {
+TEST(grammar, Parser17) {
   Parser parser = Parser("../test/grammar/grammar_test_17.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: non_terminal not found: <bruh>", parser.GetError());
 }
 
-TEST(grammar, parser18) {
+TEST(grammar, Parser18) {
   Parser parser = Parser("../test/grammar/grammar_test_18.g");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: rule token is not defined: bruh", parser.GetError());
 }
 
-TEST(grammar, parser19) {
+TEST(grammar, Parser19) {
   Parser parser = Parser("invalid_file_path");
   ASSERT_EQ(false, parser.Parse());
   ASSERT_EQ("grammar parsing error: file not found", parser.GetError());
