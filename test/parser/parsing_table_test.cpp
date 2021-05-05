@@ -40,6 +40,8 @@ TEST(parser, ParsingTable1) {
   table.SetProductions(grammar);
   table.BuildTable();
 
+  ASSERT_EQ(table.GetErrors().size(), 0);
+
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
   ASSERT_EQ(p.first, 0);
@@ -98,6 +100,8 @@ TEST(parser, ParsingTable2) {
   table.SetFollows(follows);
   table.SetProductions(grammar);
   table.BuildTable();
+
+  ASSERT_EQ(table.GetErrors().size(), 0);
 
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
@@ -158,6 +162,8 @@ TEST(parser, ParsingTable3) {
   table.SetProductions(grammar);
   table.BuildTable();
 
+  ASSERT_EQ(table.GetErrors().size(), 0);
+
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
   ASSERT_EQ(p.first, 0);
@@ -217,6 +223,8 @@ TEST(parser, ParsingTable4) {
   table.SetProductions(grammar);
   table.BuildTable();
 
+  ASSERT_EQ(table.GetErrors().size(), 0);
+
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
   ASSERT_EQ(p.first, 0);
@@ -249,4 +257,106 @@ TEST(parser, ParsingTable4) {
   p = table.GetEntry("B", utils::STRING_ENDMARKER);
   ASSERT_EQ(p.first, 2);
   ASSERT_EQ(p.second, 1);
+}
+
+TEST(parser, ParsingTable5) {
+  /**
+   * Test: Context Free Grammar
+   * S : i E t S S' | a
+   * S': e S | EPSILON
+   * E : b
+   *
+   * Not LL1 grammar
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"i", "E", "t", "S", "S'"}), grammar::Rule({"a"})});
+  grammar::Production p2;
+  p2.SetParent("S'");
+  p2.SetRules({grammar::Rule({"e", "S"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p3;
+  p3.SetParent("E");
+  p3.SetRules({grammar::Rule({"b"})});
+  grammar::Productions grammar = {p1, p2, p3};
+
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
+
+  std::vector<std::string> terminals = {"a", "b"};
+  std::vector<std::string> non_terminals = {"A", "S", "B"};
+
+  ParsingTable table = ParsingTable(terminals, non_terminals);
+  table.SetFirsts(firsts);
+  table.SetFollows(follows);
+  table.SetProductions(grammar);
+  table.BuildTable();
+
+  ASSERT_EQ(table.GetErrors().size(), 4);
+}
+
+TEST(parser, ParsingTable6) {
+  /**
+   * Test: Context Free Grammar
+   * S : a A a | EPSILON
+   * A : a b S | EPSILON
+   *
+   * Not LL1 grammar
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"a", "A", "a"}), grammar::Rule({grammar::EPSILON})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a", "b", "S"}), grammar::Rule({grammar::EPSILON})});
+
+  grammar::Productions grammar = {p1, p2};
+
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
+
+  std::vector<std::string> terminals = {"a", "b"};
+  std::vector<std::string> non_terminals = {"A", "S", "B"};
+
+  ParsingTable table = ParsingTable(terminals, non_terminals);
+  table.SetFirsts(firsts);
+  table.SetFollows(follows);
+  table.SetProductions(grammar);
+  table.BuildTable();
+
+  ASSERT_EQ(table.GetErrors().size(), 2);
+}
+
+TEST(parser, ParsingTable7) {
+  /**
+   * Test: Context Free Grammar
+   * S : A | A
+   * A : a
+   *
+   * Not LL1 grammar
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A"}), grammar::Rule({"A"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a"})});
+
+  grammar::Productions grammar = {p1, p2};
+
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
+
+  std::vector<std::string> terminals = {"a"};
+  std::vector<std::string> non_terminals = {"A", "S"};
+
+  ParsingTable table = ParsingTable(terminals, non_terminals);
+  table.SetFirsts(firsts);
+  table.SetFollows(follows);
+  table.SetProductions(grammar);
+  table.BuildTable();
+
+  ASSERT_EQ(table.GetErrors().size(), 1);
 }

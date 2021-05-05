@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "parser/parsing_table.h"
@@ -49,6 +50,11 @@ class Parser {
    */
   std::vector<std::string> current_string_;
 
+  /**
+   * Errors incurred during the parsing of the given input file.
+   */
+  std::vector<std::string> parser_errors_;
+
  public:
   /**
    * Constructor for initializing stack and other members.
@@ -79,7 +85,8 @@ class Parser {
   void SetInputString(std::vector<std::string> inps);
   void SetParsingTable(ParsingTable table);
   void SetStartSymbol(std::string start);
-  [[nodiscard]] const std::vector<int> &GetProductionHistory();
+  [[nodiscard]] const std::vector<int> &GetProductionHistory() { return production_history_; }
+  [[nodiscard]] const std::vector<std::string> &GetParserErrors() { return parser_errors_; }
 };
 }  // namespace parser
 

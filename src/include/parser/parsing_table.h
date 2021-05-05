@@ -52,6 +52,17 @@ class ParsingTable {
    */
   std::vector<std::string> non_terminals_;
 
+  /**
+   * Stores the errors if any, in case of a non - LL(1)
+   * grammar during the construction of the parsing table.
+   */
+  std::vector<std::string> errors_;
+
+  /**
+   * A helper function to generate error message.
+   */
+  static std::string GenerateErrorMessage(const std::string &production, const std::string &symbol);
+
  public:
   /**
    * Default constructor
@@ -88,6 +99,7 @@ class ParsingTable {
   [[nodiscard]] const std::vector<std::string> &GetNonTerminals() { return non_terminals_; }
   [[nodiscard]] const std::vector<std::string> &GetTerminals() { return terminals_; }
   [[nodiscard]] const Table &GetTable() { return table_; }
+  [[nodiscard]] const std::vector<std::string> &GetErrors() { return errors_; }
 };
 
 }  // namespace parser
