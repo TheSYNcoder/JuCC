@@ -5,7 +5,7 @@
 
 namespace jucc::parser {
 
-std::string ParsingTable::GenerateMessage(std::string production, std::string symbol) {
+std::string ParsingTable::GenerateMessage(const std::string &production, const std::string &symbol) {
   std::string ret;
   ret += "error: duplicate entry in parsing table, ";
   ret += "production: ";

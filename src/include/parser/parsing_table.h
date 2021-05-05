@@ -61,7 +61,7 @@ class ParsingTable {
   /**
    * A helper function to generate error message.
    */
-  std::string GenerateMessage(std::string production, std::string symbol);
+  std::string GenerateMessage(const std::string &production, const std::string &symbol);
 
  public:
   /**
