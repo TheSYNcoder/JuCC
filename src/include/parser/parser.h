@@ -51,12 +51,6 @@ class Parser {
   std::vector<std::string> current_string_;
 
   /**
-   * Errors incurred, if any, during the construction of the
-   * LL(1) parsing table.
-   */
-  std::vector<std::string> parsing_table_errors_;
-
-  /**
    * Errors incurred during the parsing of the given input file.
    */
   std::vector<std::string> parser_errors_;
