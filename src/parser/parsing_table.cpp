@@ -17,6 +17,13 @@ void ParsingTable::BuildTable() {
   for (auto &nt : non_terminals_) {
     if (follows_.count(nt) != 0U) {
       for (const auto &symbol : follows_[nt]) {
+        if (table_[nt][symbol] != std::string(ERROR_TOKEN)) {
+          std::string ret;
+          ret += "Error duplicate entry in parsing table, ";
+          ret += "Production : " + nt;
+          ret += " Symbol : " + symbol;
+          errors_.push_back(ret);
+        }
         table_[nt][symbol] = std::string(SYNCH_TOKEN);
       }
     }
@@ -30,29 +37,47 @@ void ParsingTable::BuildTable() {
 
       // check if first_entity is terminal
       if (std::find(terminals_.begin(), terminals_.end(), first_entity) != terminals_.end()) {
+        std::string entry = table_[productions_[prod_no].GetParent()][first_entity];
+        if ((entry != std::string(ERROR_TOKEN)) && (entry != std::string(SYNCH_TOKEN))) {
+          std::string ret;
+          ret += "Error duplicate entry in parsing table, ";
+          ret += "Production : " + productions_[prod_no].GetParent();
+          ret += " Symbol : " + first_entity;
+          errors_.push_back(ret);
+        }
         table_[productions_[prod_no].GetParent()][first_entity] = std::to_string(prod_no * 100 + rule_no);
       } else if (std::find(non_terminals_.begin(), non_terminals_.end(), first_entity) != non_terminals_.end()) {
         // first entity is a non-terminal
         if (firsts_.count(first_entity) != 0U) {
           for (auto &symbol : firsts_[first_entity]) {
             if (symbol != std::string(grammar::EPSILON)) {
+              std::string entry = table_[productions_[prod_no].GetParent()][symbol];
+              if ((entry != std::string(ERROR_TOKEN)) && (entry != std::string(SYNCH_TOKEN))) {
+                std::string ret;
+                ret += "Error duplicate entry in parsing table, ";
+                ret += "Production : ";
+                ret = ret.append(productions_[prod_no].GetParent());
+                ret += " Symbol : ";
+                ret = ret.append(symbol);
+                errors_.push_back(ret);
+              }
               table_[productions_[prod_no].GetParent()][symbol] = std::to_string(prod_no * 100 + rule_no);
             }
           }
-          // if epsilon present add production under follow(A) symbols
-          if (std::find(firsts_[first_entity].begin(), firsts_[first_entity].end(), std::string(grammar::EPSILON)) !=
-              firsts_[first_entity].end()) {
-            if (follows_.count(productions_[prod_no].GetParent()) != 0U) {
-              for (auto &symbol : follows_[productions_[prod_no].GetParent()]) {
-                table_[productions_[prod_no].GetParent()][symbol] = std::to_string(prod_no * 100 + rule_no);
-              }
-            }
-          }
         }
+
       } else if (first_entity == std::string(grammar::EPSILON)) {
         // first entity is epsilon
         if (follows_.count(productions_[prod_no].GetParent()) != 0U) {
           for (auto &symbol : follows_[productions_[prod_no].GetParent()]) {
+            std::string entry = table_[productions_[prod_no].GetParent()][symbol];
+            if ((entry != std::string(ERROR_TOKEN)) && (entry != std::string(SYNCH_TOKEN))) {
+              std::string ret;
+              ret += "Error duplicate entry in parsing table, ";
+              ret += "Production : " + productions_[prod_no].GetParent();
+              ret += " Symbol : " + symbol;
+              errors_.push_back(ret);
+            }
             table_[productions_[prod_no].GetParent()][symbol] = std::to_string(prod_no * 100 + rule_no);
           }
         }

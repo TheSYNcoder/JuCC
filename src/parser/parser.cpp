@@ -50,11 +50,22 @@ void Parser::DoNextStep() {
 }
 
 void Parser::ParseNextStep() {
+  // if there are parsing table errors do not perform parsing
+  if (!parsing_table_errors_.empty()) {
+    if (!parser_errors_.empty()) {
+      return;
+    }
+    parser_errors_ = parsing_table_errors_;
+    return;
+  }
   std::string top_symbol = stack_.top();
   std::string current_token = current_string_[current_step_];
   ParsingTable::Table table = table_.GetTable();
   // skip tokens until it is in the first or is a synch token
   while (!IsComplete() && table[top_symbol][current_token] == std::string(ERROR_TOKEN)) {
+    std::string ret;
+    ret += "Parsing error at symbol : " + current_token + " \n";
+    parser_errors_.push_back(ret);
     DoNextStep();
     if (current_step_ < static_cast<int>(current_string_.size())) {
       current_token = current_string_[current_step_];
@@ -63,6 +74,9 @@ void Parser::ParseNextStep() {
   if (!IsComplete()) {
     // if SYNCH TOKEN - We skip the current symbol on stack top
     if (table[top_symbol][current_token] == std::string(SYNCH_TOKEN)) {
+      std::string ret;
+      ret += "Parsing error at symbol : " + current_token + " \n";
+      parser_errors_.push_back(ret);
       stack_.pop();
     } else {
       // check if current stack top matches the current token
@@ -89,7 +103,5 @@ void Parser::ParseNextStep() {
     }
   }
 }
-
-const std::vector<int> &Parser::GetProductionHistory() { return production_history_; }
 
 }  // namespace jucc::parser

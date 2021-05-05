@@ -62,7 +62,10 @@ TEST(parser, Parser1) {
   pars.ParseNextStep();
 
   std::vector<int> history;
+  std::vector<std::string> parser_errors;
   history = pars.GetProductionHistory();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 1);
   // Stack - T E' $
   ASSERT_EQ(history.size(), 1);
   ASSERT_EQ(history[0], 0);
@@ -98,6 +101,9 @@ TEST(parser, Parser1) {
   // Stack - F T' E' $
   pars.ParseNextStep();
   history = pars.GetProductionHistory();
+
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 2);
 
   // Stack - T' E' $
   pars.ParseNextStep();

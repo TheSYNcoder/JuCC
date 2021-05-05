@@ -20,6 +20,8 @@
  *-------------------------------------------------------------------------
  */
 
+#include <iostream>
+
 #include "main/jucc.h"
 /**
  * jucc begins execution here.
@@ -81,8 +83,21 @@ auto main(int argc, char *argv[]) -> int {
   parser.SetStartSymbol(grammar_parser.GetStartSymbol());
   parser.SetParsingTable(parsing_table);
 
+  auto err = parsing_table.GetErrors();
+  if (!err.empty()) {
+    for (auto &e : err) {
+      std::cout << e << "\n";
+      return 0;
+    }
+  }
   while (!parser.IsComplete()) {
     parser.ParseNextStep();
+  }
+  err = parser.GetParserErrors();
+  if (!err.empty()) {
+    for (auto &e : err) {
+      std::cout << e;
+    }
   }
 
   return 0;
