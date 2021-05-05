@@ -91,9 +91,7 @@ class Parser {
   void SetInputString(std::vector<std::string> inps);
   void SetParsingTable(ParsingTable table);
   void SetStartSymbol(std::string start);
-  void SetParsingTableErrors(std::vector<std::string> errs) { parsing_table_errors_ = std::move(errs); }
   [[nodiscard]] const std::vector<int> &GetProductionHistory() { return production_history_; }
-  [[nodiscard]] const std::vector<std::string> &GetParsingTableErrors() { return parsing_table_errors_; }
   [[nodiscard]] const std::vector<std::string> &GetParserErrors() { return parser_errors_; }
 };
 }  // namespace parser

@@ -42,8 +42,7 @@ TEST(parser, ParsingTable1) {
   table.SetProductions(grammar);
   table.BuildTable();
 
-  std::vector<std::string> tl;
-  ASSERT_EQ(table.GetErrors(), tl);
+  ASSERT_EQ(table.GetErrors().size(), 0);
 
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
@@ -104,8 +103,7 @@ TEST(parser, ParsingTable2) {
   table.SetProductions(grammar);
   table.BuildTable();
 
-  std::vector<std::string> tl;
-  ASSERT_EQ(table.GetErrors(), tl);
+  ASSERT_EQ(table.GetErrors().size(), 0);
 
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
@@ -166,8 +164,7 @@ TEST(parser, ParsingTable3) {
   table.SetProductions(grammar);
   table.BuildTable();
 
-  std::vector<std::string> tl;
-  ASSERT_EQ(table.GetErrors(), tl);
+  ASSERT_EQ(table.GetErrors().size(), 0);
 
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
@@ -228,8 +225,7 @@ TEST(parser, ParsingTable4) {
   table.SetProductions(grammar);
   table.BuildTable();
 
-  std::vector<std::string> tl;
-  ASSERT_EQ(table.GetErrors(), tl);
+  ASSERT_EQ(table.GetErrors().size(), 0);
 
   std::pair<int, int> p;
   p = table.GetEntry("S", "a");
@@ -331,7 +327,7 @@ TEST(parser, ParsingTable6) {
   table.SetProductions(grammar);
   table.BuildTable();
 
-  ASSERT_GT(table.GetErrors().size(), 0);
+  ASSERT_EQ(table.GetErrors().size(), 2);
 }
 
 TEST(parser, ParsingTable7) {
@@ -364,5 +360,5 @@ TEST(parser, ParsingTable7) {
   table.SetProductions(grammar);
   table.BuildTable();
 
-  ASSERT_GT(table.GetErrors().size(), 0);
+  ASSERT_EQ(table.GetErrors().size(), 1);
 }

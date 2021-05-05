@@ -58,6 +58,11 @@ class ParsingTable {
    */
   std::vector<std::string> errors_;
 
+  /**
+   * A helper function to generate error message.
+   */
+  std::string GenerateMessage(std::string production, std::string symbol);
+
  public:
   /**
    * Default constructor
