@@ -333,3 +333,36 @@ TEST(parser, ParsingTable6) {
 
   ASSERT_GT(table.GetErrors().size(), 0);
 }
+
+TEST(parser, ParsingTable7) {
+  /**
+   * Test: Context Free Grammar
+   * S : A | A
+   * A : a
+   *
+   * Not LL1 grammar
+   */
+  grammar::Production p1;
+  p1.SetParent("S");
+  p1.SetRules({grammar::Rule({"A"}), grammar::Rule({"A"})});
+  grammar::Production p2;
+  p2.SetParent("A");
+  p2.SetRules({grammar::Rule({"a"})});
+
+  grammar::Productions grammar = {p1, p2};
+
+  auto nullables = utils::CalcNullables(grammar);
+  auto firsts = utils::CalcFirsts(grammar, nullables);
+  auto follows = utils::CalcFollows(grammar, firsts, nullables, "S");
+
+  std::vector<std::string> terminals = {"a"};
+  std::vector<std::string> non_terminals = {"A", "S"};
+
+  ParsingTable table = ParsingTable(terminals, non_terminals);
+  table.SetFirsts(firsts);
+  table.SetFollows(follows);
+  table.SetProductions(grammar);
+  table.BuildTable();
+
+  ASSERT_GT(table.GetErrors().size(), 0);
+}
