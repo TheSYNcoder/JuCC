@@ -5,14 +5,13 @@
 
 namespace jucc::parser {
 
-std::string ParsingTable::GenerateMessage(const std::string &production, const std::string &symbol) {
+std::string ParsingTable::GenerateErrorMessage(const std::string &production, const std::string &symbol) {
   std::string ret;
-  ret += "error: duplicate entry in parsing table, ";
+  ret += "parsing table error: duplicate entry in parsing table, ";
   ret += "production: ";
   ret = ret.append(production);
   ret += " symbol: ";
   ret = ret.append(symbol);
-  ret += "\n";
   return ret;
 }
 
@@ -29,7 +28,7 @@ void ParsingTable::BuildTable() {
     if (follows_.count(nt) != 0U) {
       for (const auto &symbol : follows_[nt]) {
         if (table_[nt][symbol] != std::string(ERROR_TOKEN)) {
-          errors_.push_back(GenerateMessage(nt, symbol));
+          errors_.push_back(GenerateErrorMessage(nt, symbol));
         }
         table_[nt][symbol] = std::string(SYNCH_TOKEN);
       }
@@ -41,13 +40,13 @@ void ParsingTable::BuildTable() {
     auto rules = productions_[prod_no].GetRules();
     for (int rule_no = 0; rule_no < static_cast<int>(rules.size()); rule_no++) {
       std::string first_entity = rules[rule_no].GetEntities()[0];
-
       // check if first_entity is terminal
       if (std::find(terminals_.begin(), terminals_.end(), first_entity) != terminals_.end()) {
         std::string entry = table_[productions_[prod_no].GetParent()][first_entity];
         if ((entry != std::string(ERROR_TOKEN)) && (entry != std::string(SYNCH_TOKEN))) {
-          errors_.push_back(GenerateMessage(productions_[prod_no].GetParent(), first_entity));
+          errors_.push_back(GenerateErrorMessage(productions_[prod_no].GetParent(), first_entity));
         }
+
         table_[productions_[prod_no].GetParent()][first_entity] = std::to_string(prod_no * 100 + rule_no);
       } else if (std::find(non_terminals_.begin(), non_terminals_.end(), first_entity) != non_terminals_.end()) {
         // first entity is a non-terminal
@@ -56,8 +55,9 @@ void ParsingTable::BuildTable() {
             if (symbol != std::string(grammar::EPSILON)) {
               std::string entry = table_[productions_[prod_no].GetParent()][symbol];
               if ((entry != std::string(ERROR_TOKEN)) && (entry != std::string(SYNCH_TOKEN))) {
-                errors_.push_back(GenerateMessage(productions_[prod_no].GetParent(), symbol));
+                errors_.push_back(GenerateErrorMessage(productions_[prod_no].GetParent(), symbol));
               }
+
               table_[productions_[prod_no].GetParent()][symbol] = std::to_string(prod_no * 100 + rule_no);
             }
           }
@@ -69,8 +69,9 @@ void ParsingTable::BuildTable() {
           for (auto &symbol : follows_[productions_[prod_no].GetParent()]) {
             std::string entry = table_[productions_[prod_no].GetParent()][symbol];
             if ((entry != std::string(ERROR_TOKEN)) && (entry != std::string(SYNCH_TOKEN))) {
-              errors_.push_back(GenerateMessage(productions_[prod_no].GetParent(), symbol));
+              errors_.push_back(GenerateErrorMessage(productions_[prod_no].GetParent(), symbol));
             }
+
             table_[productions_[prod_no].GetParent()][symbol] = std::to_string(prod_no * 100 + rule_no);
           }
         }

@@ -56,7 +56,7 @@ void Parser::ParseNextStep() {
   // skip tokens until it is in the first or is a synch token
   while (!IsComplete() && table[top_symbol][current_token] == std::string(ERROR_TOKEN)) {
     std::string ret;
-    ret += "parser: error at symbol : " + current_token + " \n";
+    ret += "parser error: at symbol: " + current_token;
     parser_errors_.push_back(ret);
     DoNextStep();
     if (current_step_ < static_cast<int>(current_string_.size())) {
@@ -67,7 +67,7 @@ void Parser::ParseNextStep() {
     // if SYNCH TOKEN - We skip the current symbol on stack top
     if (table[top_symbol][current_token] == std::string(SYNCH_TOKEN)) {
       std::string ret;
-      ret += "parser: error at symbol : " + current_token + " \n";
+      ret += "parser error: at symbol: " + current_token;
       parser_errors_.push_back(ret);
       stack_.pop();
     } else {

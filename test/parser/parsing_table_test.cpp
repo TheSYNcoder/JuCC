@@ -1,7 +1,5 @@
 #include "parser/parsing_table.h"
 
-#include <iostream>
-
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
 
