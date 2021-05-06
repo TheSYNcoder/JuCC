@@ -21,6 +21,7 @@
  */
 
 #include "main/jucc.h"
+
 /**
  * jucc begins execution here.
  */

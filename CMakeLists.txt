@@ -50,8 +50,9 @@
 #   HEADER Project definition.
 #   HEADER Safety checks.
 #   HEADER System info.
-#   HEADER jucc libraries.
-#   HEADER jucc binary.
+#   HEADER Dependencies
+#   HEADER JuCC libraries.
+#   HEADER JuCC binary.
 #   HEADER Tests.
 #   HEADER Benchmarks.
 #   HEADER Generated file destinations.
@@ -167,6 +168,30 @@ endif ()
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 #######################################################################################################################
+# HEADER Dependencies
+#######################################################################################################################
+
+set(JUCC_DEPENDENCIES "")
+
+# nlohmann_json for json formatting
+configure_file("${PROJECT_SOURCE_DIR}/build_support/nlohmann_json_CMakeLists.txt.in" nlohmann-json-download/CMakeLists.txt)
+execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/nlohmann-json-download")
+if(result)
+        message(FATAL_ERROR "CMake step for nlohmann_json failed: ${result}")
+endif()
+execute_process(COMMAND "${CMAKE_COMMAND}" --build . --config "Release"
+        RESULT_VARIABLE result
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/nlohmann-json-download")
+if(result)
+        message(FATAL_ERROR "Build step for nlohmann_json failed: ${result}")
+endif()
+set(nlohmann_json_force_shared_crt ON CACHE BOOL "" FORCE)  # don't override our compiler/linker options when building nlohmann_json
+add_subdirectory("${CMAKE_BINARY_DIR}/nlohmann-json-src" "${CMAKE_BINARY_DIR}/nlohmann-json-build")
+list(APPEND JUCC_DEPENDENCIES nlohmann_json)
+
+#######################################################################################################################
 # HEADER JuCC libraries.
 # jucc_objlib      :   JuCC object library, built once and linked into both static and shared targets.
 # jucc_static      :   All of JuCC functionality exposed as a static library.
@@ -179,6 +204,8 @@ file(GLOB_RECURSE
         CONFIGURE_DEPENDS               # See above. Ask CMake to regenerate the build system if these files change.
         ${PROJECT_SOURCE_DIR}/src/*.cpp
         ${PROJECT_SOURCE_DIR}/src/include/*.h
+        ${PROJECT_SOURCE_DIR}/third_party/*.cpp
+        ${PROJECT_SOURCE_DIR}/third_party/*.h
     )
 
 # Remove the main program from JuCC sources.
@@ -217,7 +244,7 @@ target_link_options(jucc_objlib PUBLIC              # PUBLIC: all consumers of t
 
 # Create the jucc_static and jucc_shared libraries using the objects from jucc_objlib.
 add_library(jucc_static STATIC $<TARGET_OBJECTS:jucc_objlib>)   # Bundle up these objects into static lib.
-target_link_libraries(jucc_static PUBLIC jucc_objlib)           # Consumers will inherit this link.
+target_link_libraries(jucc_static PUBLIC jucc_objlib ${JUCC_DEPENDENCIES})           # Consumers will inherit this link.
 target_compile_options(jucc_static PUBLIC                       # PUBLIC: all consumers of the library inherit the following.
         "-fvisibility=hidden"                                   # Hide symbols by default.
         )
@@ -226,7 +253,7 @@ target_link_options(jucc_static PUBLIC              # PUBLIC: all consumers of t
         )
 
 #######################################################################################################################
-# HEADER jucc binary.
+# HEADER JuCC binary.
 # jucc             :   The main compiler binary.
 #######################################################################################################################
 
