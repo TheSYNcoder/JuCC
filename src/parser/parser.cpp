@@ -11,7 +11,7 @@ Parser::Parser() {
   current_string_.clear();
 }
 
-std::string Parser::GenerateErrorMessage(const std::string & current_token) {
+std::string Parser::GenerateErrorMessage(const std::string &current_token) {
   std::string ret_string;
   ret_string += "parser error: at symbol: " + current_token;
   return ret_string;

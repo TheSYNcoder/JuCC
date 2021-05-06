@@ -58,7 +58,7 @@ class Parser {
   /**
    * Helper function to generate error messages for parsing.
    */
-  static std::string GenerateErrorMessage(const std::string & current_token);
+  static std::string GenerateErrorMessage(const std::string &current_token);
 
  public:
   /**
