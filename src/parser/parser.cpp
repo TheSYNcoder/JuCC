@@ -71,9 +71,15 @@ void Parser::ParseNextStep() {
       parser_errors_.push_back(ret);
       stack_.pop();
     } else {
+      auto terminals = table_.GetTerminals();
       // check if current stack top matches the current token
       if (top_symbol == current_token) {
         stack_.pop();
+        DoNextStep();
+      } else if (std::find(terminals.begin(), terminals.end(), top_symbol) != terminals.end() &&
+                 std::find(terminals.begin(), terminals.end(), current_token) != terminals.end()) {
+        std::string ret = "parser error: at symbol: " + current_token;
+        parser_errors_.push_back(ret);
         DoNextStep();
       } else {
         // we expand the production
