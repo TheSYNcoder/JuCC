@@ -55,6 +55,11 @@ class Parser {
    */
   std::vector<std::string> parser_errors_;
 
+  /**
+   * Helper function to generate error messages for parsing.
+   */
+  static std::string GenerateErrorMessage(const std::string & current_token);
+
  public:
   /**
    * Constructor for initializing stack and other members.

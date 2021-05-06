@@ -11,6 +11,12 @@ Parser::Parser() {
   current_string_.clear();
 }
 
+std::string Parser::GenerateErrorMessage(const std::string & current_token) {
+  std::string ret_string;
+  ret_string += "parser error: at symbol: " + current_token;
+  return ret_string;
+}
+
 void Parser::SetInputString(std::vector<std::string> inps) {
   if (!inps.empty()) {
     input_string_ = std::move(inps);
@@ -55,9 +61,7 @@ void Parser::ParseNextStep() {
   ParsingTable::Table table = table_.GetTable();
   // skip tokens until it is in the first or is a synch token
   while (!IsComplete() && table[top_symbol][current_token] == std::string(ERROR_TOKEN)) {
-    std::string ret;
-    ret += "parser error: at symbol: " + current_token;
-    parser_errors_.push_back(ret);
+    parser_errors_.push_back(GenerateErrorMessage(current_token));
     DoNextStep();
     if (current_step_ < static_cast<int>(current_string_.size())) {
       current_token = current_string_[current_step_];
@@ -66,9 +70,7 @@ void Parser::ParseNextStep() {
   if (!IsComplete()) {
     // if SYNCH TOKEN - We skip the current symbol on stack top
     if (table[top_symbol][current_token] == std::string(SYNCH_TOKEN)) {
-      std::string ret;
-      ret += "parser error: at symbol: " + current_token;
-      parser_errors_.push_back(ret);
+      parser_errors_.push_back(GenerateErrorMessage(current_token));
       stack_.pop();
     } else {
       auto terminals = table_.GetTerminals();
@@ -78,8 +80,7 @@ void Parser::ParseNextStep() {
         DoNextStep();
       } else if (std::find(terminals.begin(), terminals.end(), top_symbol) != terminals.end() &&
                  std::find(terminals.begin(), terminals.end(), current_token) != terminals.end()) {
-        std::string ret = "parser error: at symbol: " + current_token;
-        parser_errors_.push_back(ret);
+        parser_errors_.push_back(GenerateErrorMessage(current_token));
         DoNextStep();
       } else {
         // we expand the production
