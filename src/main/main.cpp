@@ -102,8 +102,9 @@ auto main(int argc, char *argv[]) -> int {
   errors.insert(errors.end(), lexer.GetDuplicateSymbolErrors().begin(), lexer.GetDuplicateSymbolErrors().end());
 
   if (!errors.empty()) {
+    std::cout << "jucc: ";
     for (auto &e : errors) {
-      std::cout << e << "\n";
+      std::cout << e << '\n';
     }
     return 0;
   }
