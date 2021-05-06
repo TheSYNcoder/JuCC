@@ -94,8 +94,19 @@ auto main(int argc, char *argv[]) -> int {
   std::vector<std::string> input_tokens;
   jucc::lexer::Lexer lexer = jucc::lexer::Lexer();
   int token;
+
   while ((token = lexer.GetToken(ifs)) != jucc::lexer::TOK_EOF) {
     input_tokens.emplace_back(jucc::lexer::Lexer::GetTokenType(token));
+  }
+  std::vector<std::string> errors = lexer.GetUndeclaredSymbolErrors();
+  errors.insert(errors.end(), lexer.GetDuplicateSymbolErrors().begin(), lexer.GetDuplicateSymbolErrors().end());
+
+  if (!errors.empty()) {
+    std::cout << "jucc: ";
+    for (auto &e : errors) {
+      std::cout << e << '\n';
+    }
+    return 0;
   }
 
   /* Parse the input file using the parsing table and report errors */

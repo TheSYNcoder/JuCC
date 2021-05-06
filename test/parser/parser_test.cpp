@@ -3,6 +3,7 @@
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
 #include "parser/parsing_table.h"
+#include "utils/utils.h"
 
 using jucc::parser::Parser;
 using jucc::parser::ParsingTable;
@@ -159,6 +160,107 @@ TEST(parser, Parser1) {
   ASSERT_EQ(history[9], 101);
 
   // Stack - $
+
+  ASSERT_TRUE(pars.IsComplete());
+}
+
+TEST(parser, Parser2) {
+  grammar::Parser grammar_parser = grammar::Parser("../test/parser/grammar.g");
+  ASSERT_TRUE(grammar_parser.Parse());
+
+  grammar::Productions raw_productions = grammar_parser.GetProductions();
+  grammar::Productions productions = utils::RemoveAllPossibleAmbiguity(raw_productions);
+
+  /* Calculate first and follows to build the LL(1) parsing table */
+  auto nullables = utils::CalcNullables(productions);
+  auto firsts = utils::CalcFirsts(productions, nullables);
+  auto follows = utils::CalcFollows(productions, firsts, nullables, grammar_parser.GetStartSymbol());
+  auto terminals = grammar_parser.GetTerminals();
+  auto non_terminals = utils::GetAllNonTerminals(productions);
+
+  ParsingTable parsing_table = ParsingTable(terminals, non_terminals);
+  parsing_table.SetFirsts(firsts);
+  parsing_table.SetFollows(follows);
+  parsing_table.SetProductions(productions);
+  parsing_table.BuildTable();
+  ASSERT_EQ(parsing_table.GetErrors().size(), 0);
+  std::vector<std::string> input_string = {"int", "main", "(", ")", "{", "if", "integer_constant", ";", "}"};
+  Parser pars = Parser();
+
+  pars.SetInputString(input_string);
+  pars.SetStartSymbol(grammar_parser.GetStartSymbol());
+  pars.ResetParsing();
+  pars.SetParsingTable(parsing_table);
+
+  std::vector<std::string> parser_errors;
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 0);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 1);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 2);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 3);
+
+  pars.ParseNextStep();
+  parser_errors = pars.GetParserErrors();
+  ASSERT_EQ(parser_errors.size(), 4);
 
   ASSERT_TRUE(pars.IsComplete());
 }
