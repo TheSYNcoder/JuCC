@@ -13,9 +13,9 @@ main cin cout
 
 ## Non Terminals
 %non_terminals
-<primary_expression> <constant> <unary_operator> <unary_expression>
-<cast_expression> <type_specifier> <multiplicative_expression>
-<additive_expression> <shift_expression> <relational_expression>
+<primary_expression> <constant> <unary_operator> <type_specifier> 
+<unary_expression> <multiplicative_expression> <additive_expression>
+<shift_expression> <relational_expression>
 <equality_expression> <assignment_expression> <expression>
 <declaration> <init_declarator_list> <init_declarator>
 <initializer> <declarator> <direct_declarator>
@@ -40,11 +40,10 @@ main cin cout
 <unary_operator> : -
 <unary_expression> : <primary_expression>
 <unary_expression> : <unary_operator> <primary_expression>
-<cast_expression> : <unary_expression>
-<cast_expression> : ( <type_specifier> ) <cast_expression>
-<multiplicative_expression> : <multiplicative_expression> * <cast_expression>
-<multiplicative_expression> : <multiplicative_expression> / <cast_expression>
-<multiplicative_expression> : <multiplicative_expression> % <cast_expression>
+<multiplicative_expression> : <unary_expression>
+<multiplicative_expression> : <multiplicative_expression> * <unary_expression>
+<multiplicative_expression> : <multiplicative_expression> / <unary_expression>
+<multiplicative_expression> : <multiplicative_expression> % <unary_expression>
 <additive_expression> : <multiplicative_expression>
 <additive_expression> : <additive_expression> + <multiplicative_expression>
 <additive_expression> : <additive_expression> - <multiplicative_expression>
@@ -62,13 +61,12 @@ main cin cout
 <equality_expression> : <equality_expression> == <relational_expression>
 <equality_expression> : <equality_expression> != <relational_expression>
 <assignment_expression> : <equality_expression>
-<assignment_expression> : identifier = <assignment_expression>
 <expression> : <assignment_expression>
 
 ## Declarations
 <declaration> : <type_specifier> <init_declarator_list> ;
 <init_declarator_list> : <init_declarator>
-<init_declarator_list> : <init_declarator_list> , <init_declarator>
+<init_declarator_list> : <init_declarator> , <init_declarator_list>
 <init_declarator_list> : EPSILON
 <init_declarator> : <declarator>
 <init_declarator> : <declarator> = <initializer>
@@ -86,14 +84,14 @@ main cin cout
 <statement> : <selection_statement>
 <compound_statement> : { <block_item_list> }
 <block_item_list> : <block_item>
-<block_item_list> : <block_item_list> <block_item>
+<block_item_list> : <block_item> <block_item_list>
 <block_item_list> : EPSILON
 <block_item> : <declaration>
 <block_item> : <statement>
 <expression_statement> : <expression> ;
 <expression_statement> : ;
-<selection_statement> : if ( <expression> ) <statement>
-<selection_statement> : if ( <expression> ) <statement> else <statement>
+<selection_statement> : if ( <expression> ) <compound_statement>
+<selection_statement> : if ( <expression> ) <compound_statement> else <compound_statement>
 
 ## Main
 <program> : <type_specifier> main ( ) <compound_statement>
