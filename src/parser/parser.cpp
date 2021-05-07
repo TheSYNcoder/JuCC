@@ -124,8 +124,8 @@ void Parser::BuildParseTree() {
     int rule_index = prod % 100;
     auto parent = productions[production_index].GetParent();
     auto rule = productions[production_index].GetRules()[rule_index];
-
     auto entities = rule.GetEntities();
+    json *parent_node = parent_node_stack.top();
     /**
      * rename entities to handle duplicates
      * Example:
@@ -141,12 +141,9 @@ void Parser::BuildParseTree() {
         entity += "_" + std::to_string(symbol_count[entity] - 1);
       }
       default_name[entity] = p_entity;
-    }
 
-    json *parent_node = parent_node_stack.top();
-    // add entities to current parent node
-    for (const auto &entity : entities) {
-      if (std::find(terminals.begin(), terminals.end(), default_name[entity]) != terminals.end()) {
+      // add renamed entities to current parent node
+      if (std::find(terminals.begin(), terminals.end(), p_entity) != terminals.end()) {
         (*parent_node)[entity] = json();
       } else {
         (*parent_node)[entity] = json::object({});
@@ -155,10 +152,9 @@ void Parser::BuildParseTree() {
 
     // update parent_node_stack
     parent_node_stack.pop();
-    std::reverse(entities.begin(), entities.end());
-    for (const auto &entity : entities) {
-      if (std::find(non_terminals.begin(), non_terminals.end(), default_name[entity]) != non_terminals.end()) {
-        parent_node_stack.push(&((*parent_node)[entity]));
+    for (auto it = entities.rbegin(); it < entities.rend(); it++) {
+      if (std::find(non_terminals.begin(), non_terminals.end(), default_name[*it]) != non_terminals.end()) {
+        parent_node_stack.push(&((*parent_node)[*it]));
       }
     }
   }
