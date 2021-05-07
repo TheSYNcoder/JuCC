@@ -104,10 +104,66 @@ void Parser::ParseNextStep() {
   }
 }
 
+void Parser::BuildParseTree() {
+  parse_tree_ = json::object({});
+
+  // if errors cannot build tree
+  if (!parser_errors_.empty()) {
+    return;
+  }
+
+  // init parse tree state
+  parse_tree_[start_symbol_] = json::object({});
+  std::stack<json *> parent_node_stack;
+  parent_node_stack.push(&parse_tree_[start_symbol_]);
+
+  auto productions = table_.GetProductions();
+  auto terminals = table_.GetTerminals();
+  auto non_terminals = table_.GetNonTerminals();
+  // iterate over production history and build tree
+  for (const auto &prod : production_history_) {
+    int production_index = prod / 100;
+    int rule_index = prod % 100;
+    auto parent = productions[production_index].GetParent();
+    auto rule = productions[production_index].GetRules()[rule_index];
+
+    auto entities = rule.GetEntities();
+    // augment_entities to handle duplicates
+    std::unordered_map<std::string, int> symbol_count;
+    std::unordered_map<std::string, std::string> default_name;
+    for (auto &entity : entities) {
+      auto p_entity = entity;
+      if (symbol_count[entity]++ != 0) {
+        entity += "_" + std::to_string(symbol_count[entity] - 1);
+      }
+      default_name[entity] = p_entity;
+    }
+
+    json *parent_node = parent_node_stack.top();
+    // add entities to current parent node
+    for (const auto &entity : entities) {
+      if (std::find(terminals.begin(), terminals.end(), default_name[entity]) != terminals.end()) {
+        (*parent_node)[entity] = json();
+      } else {
+        (*parent_node)[entity] = json::object({});
+      }
+    }
+
+    // update parent_node_stack
+    parent_node_stack.pop();
+    std::reverse(entities.begin(), entities.end());
+    for (const auto &entity : entities) {
+      if (std::find(non_terminals.begin(), non_terminals.end(), default_name[entity]) != non_terminals.end()) {
+        parent_node_stack.push(&((*parent_node)[entity]));
+      }
+    }
+  }
+}
+
 bool Parser::WriteParseTree(const std::string &filepath) {
   std::ofstream ofs(filepath);
   if (ofs.is_open()) {
-    ofs << stack_.GetFormattedJson() << '\n';
+    ofs << parse_tree_.dump(INDENTATION) << '\n';
     return true;
   }
 
