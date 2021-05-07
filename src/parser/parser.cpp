@@ -5,7 +5,7 @@
 
 namespace jucc::parser {
 
-Parser::Parser() {
+Parser::Parser() : parse_tree_(json::object({})) {
   // initialize the stack
   stack_.push(std::string(utils::STRING_ENDMARKER));
   input_string_.clear();
@@ -105,8 +105,6 @@ void Parser::ParseNextStep() {
 }
 
 void Parser::BuildParseTree() {
-  parse_tree_ = json::object({});
-
   // if errors cannot build tree
   if (!parser_errors_.empty()) {
     return;
@@ -128,8 +126,14 @@ void Parser::BuildParseTree() {
     auto rule = productions[production_index].GetRules()[rule_index];
 
     auto entities = rule.GetEntities();
-    // augment_entities to handle duplicates
+    /**
+     * rename entities to handle duplicates
+     * Example:
+     * change entities from {"A", "A", "B", "A", "C", "B"} to
+     * {"A", "A_1", "B", "A_2", "C", "B_1"} inplace
+     */
     std::unordered_map<std::string, int> symbol_count;
+    // store an reverse map for name of entities before renaming
     std::unordered_map<std::string, std::string> default_name;
     for (auto &entity : entities) {
       auto p_entity = entity;
