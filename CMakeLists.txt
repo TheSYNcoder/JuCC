@@ -215,6 +215,7 @@ list(REMOVE_ITEM JUCC_SRCS ${PROJECT_SOURCE_DIR}/src/main/main.cpp)
 # The OBJECT library is built first so that the same .o files can be linked into static and shared libraries.
 # This allows both jucc_static and jucc_shared to be built with a single compilation of translation units.
 add_library(jucc_objlib OBJECT ${JUCC_SRCS})
+target_link_libraries(jucc_objlib PUBLIC ${JUCC_DEPENDENCIES})  # Add Dependencies required for compilation
 
 set_target_properties(jucc_objlib PROPERTIES
         POSITION_INDEPENDENT_CODE ON                # Required for static linking into other shared libraries.
@@ -244,7 +245,7 @@ target_link_options(jucc_objlib PUBLIC              # PUBLIC: all consumers of t
 
 # Create the jucc_static and jucc_shared libraries using the objects from jucc_objlib.
 add_library(jucc_static STATIC $<TARGET_OBJECTS:jucc_objlib>)   # Bundle up these objects into static lib.
-target_link_libraries(jucc_static PUBLIC jucc_objlib ${JUCC_DEPENDENCIES})           # Consumers will inherit this link.
+target_link_libraries(jucc_static PUBLIC jucc_objlib)           # Consumers will inherit this link.
 target_compile_options(jucc_static PUBLIC                       # PUBLIC: all consumers of the library inherit the following.
         "-fvisibility=hidden"                                   # Hide symbols by default.
         )

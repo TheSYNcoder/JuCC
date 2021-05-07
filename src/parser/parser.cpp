@@ -1,6 +1,7 @@
 #include "parser/parser.h"
 
 #include <algorithm>
+#include <fstream>
 
 namespace jucc::parser {
 
@@ -101,6 +102,16 @@ void Parser::ParseNextStep() {
       }
     }
   }
+}
+
+bool Parser::WriteParseTree(const std::string &filepath) {
+  std::ofstream ofs(filepath);
+  if (ofs.is_open()) {
+    ofs << stack_.GetFormattedJson() << '\n';
+    return true;
+  }
+
+  return false;
 }
 
 }  // namespace jucc::parser

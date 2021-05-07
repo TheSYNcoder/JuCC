@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 
+#include "parser/parser_stack.h"
 #include "parser/parsing_table.h"
 #include "utils/first_follow.h"
 
@@ -17,7 +18,7 @@ class Parser {
   /**
    * A stack to put the symbols and perform the actual parsing
    */
-  std::stack<std::string> stack_;
+  ParserStack stack_;
 
   /**
    * The given input string to parse.
@@ -85,6 +86,12 @@ class Parser {
    * Completes a step of parsing
    */
   void DoNextStep();
+
+  /**
+   * Dumps the parse tree in given path in json format
+   * @returns true on success
+   */
+  bool WriteParseTree(const std::string &filepath);
 
   /* getters and setters*/
   void SetInputString(std::vector<std::string> inps);
