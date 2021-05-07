@@ -1,10 +1,11 @@
 #include "parser/parser.h"
 
 #include <algorithm>
+#include <fstream>
 
 namespace jucc::parser {
 
-Parser::Parser() {
+Parser::Parser() : parse_tree_(json::object({})) {
   // initialize the stack
   stack_.push(std::string(utils::STRING_ENDMARKER));
   input_string_.clear();
@@ -101,6 +102,72 @@ void Parser::ParseNextStep() {
       }
     }
   }
+}
+
+void Parser::BuildParseTree() {
+  // if errors cannot build tree
+  if (!parser_errors_.empty()) {
+    return;
+  }
+
+  // init parse tree state
+  parse_tree_[start_symbol_] = json::object({});
+  std::stack<json *> parent_node_stack;
+  parent_node_stack.push(&parse_tree_[start_symbol_]);
+
+  auto productions = table_.GetProductions();
+  auto terminals = table_.GetTerminals();
+  auto non_terminals = table_.GetNonTerminals();
+  // iterate over production history and build tree
+  for (const auto &prod : production_history_) {
+    int production_index = prod / 100;
+    int rule_index = prod % 100;
+    auto parent = productions[production_index].GetParent();
+    auto rule = productions[production_index].GetRules()[rule_index];
+    auto entities = rule.GetEntities();
+    json *parent_node = parent_node_stack.top();
+    /**
+     * rename entities to handle duplicates
+     * Example:
+     * change entities from {"A", "A", "B", "A", "C", "B"} to
+     * {"A", "A_1", "B", "A_2", "C", "B_1"} inplace
+     */
+    std::unordered_map<std::string, int> symbol_count;
+    // store an reverse map for name of entities before renaming
+    std::unordered_map<std::string, std::string> default_name;
+    for (auto &entity : entities) {
+      auto p_entity = entity;
+      if (symbol_count[entity]++ != 0) {
+        entity += "_" + std::to_string(symbol_count[entity] - 1);
+      }
+      default_name[entity] = p_entity;
+
+      // add renamed entities to current parent node
+      if (std::find(terminals.begin(), terminals.end(), p_entity) != terminals.end()) {
+        (*parent_node)[entity] = json();
+      } else {
+        (*parent_node)[entity] = json::object({});
+      }
+    }
+
+    // update parent_node_stack
+    parent_node_stack.pop();
+    for (auto it = entities.rbegin(); it < entities.rend(); it++) {
+      if (std::find(non_terminals.begin(), non_terminals.end(), default_name[*it]) != non_terminals.end()) {
+        parent_node_stack.push(&((*parent_node)[*it]));
+      }
+    }
+  }
+}
+
+bool Parser::WriteParseTree(const std::string &filepath) {
+  std::ofstream ofs(filepath);
+  if (ofs.is_open()) {
+    ofs << parse_tree_.dump(INDENTATION) << '\n';
+    return true;
+  }
+
+  return false;
 }
 
 }  // namespace jucc::parser
