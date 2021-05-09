@@ -160,14 +160,41 @@ void Parser::BuildParseTree() {
   }
 }
 
-bool Parser::WriteParseTree(const std::string &filepath) {
+bool Parser::WriteParseTree(const std::string &filepath, bool formatted = true) {
   std::ofstream ofs(filepath);
   if (ofs.is_open()) {
-    ofs << parse_tree_.dump(INDENTATION) << '\n';
+    ofs << (formatted ? FormattedJSON(parse_tree_) : parse_tree_).dump(INDENTATION) << '\n';
     return true;
   }
-
   return false;
 }
+
+json Parser::GetTextNode(const std::string &value) {
+  json j;
+  j["text"]["name"] = value;
+  return j;
+}
+
+json Parser::RecRunner(const json &main, std::string key = "") {
+  if (main.empty()) {
+    return GetTextNode(key);
+  }
+  auto body = main;
+  if (key.empty()) {
+    for (auto it = main.begin(); it != main.end();) {
+      key = it.key();
+      body = it.value();
+      break;
+    }
+  }
+
+  json j = GetTextNode(key);
+  for (auto it = body.begin(); it != body.end(); it++) {
+    j["children"].push_back(RecRunner(it.value(), it.key()));
+  }
+  return j;
+}
+
+json Parser::FormattedJSON(const json &body) { return Parser::RecRunner(body); }
 
 }  // namespace jucc::parser
