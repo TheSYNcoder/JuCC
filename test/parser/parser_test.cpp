@@ -1,12 +1,10 @@
 #include "parser/parser.h"
 
-#include <iostream>
-#include <queue>
-
 #include "grammar/grammar.h"
 #include "gtest/gtest.h"
 #include "parser/parsing_table.h"
 #include "utils/utils.h"
+
 using jucc::parser::Parser;
 using jucc::parser::ParsingTable;
 namespace grammar = jucc::grammar;
@@ -394,4 +392,6 @@ TEST(parser, Parser4) {
             "{\"text\":{\"name\":\"S\"},\"children\":[{\"text\":{\"name\":\"A\"},\"children\":[{\"text\":{\"name\":"
             "\"a\"}}]},{\"text\":{\"name\":\"B\"},\"children\":[{\"text\":{\"name\":\"b\"}}]},{\"text\":{\"name\":\"A_"
             "1\"},\"children\":[{\"text\":{\"name\":\"a\"}}]}]}");
+  std::cout << tree.dump(4) << "\n";
+  std::cout << formatted.dump(4) << "\n";
 }
