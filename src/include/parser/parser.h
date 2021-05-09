@@ -110,6 +110,13 @@ class Parser {
    */
   bool WriteParseTree(const std::string &filepath);
 
+  /**
+   * Takes a json with no array, ideally received from parser::GetParseTree()
+   * Format is given here https://fperucic.github.io/treant-js/
+   * @returns a formatted JSON which acts as a input for Treant.js
+   */
+  [[maybe_unused]] [[nodiscard]] static json FormattedJSON(const json & /* body */);
+
   /* getters and setters*/
   void SetInputString(std::vector<std::string> inps);
   void SetParsingTable(ParsingTable table);

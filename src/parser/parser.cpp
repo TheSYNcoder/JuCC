@@ -166,8 +166,56 @@ bool Parser::WriteParseTree(const std::string &filepath) {
     ofs << parse_tree_.dump(INDENTATION) << '\n';
     return true;
   }
-
   return false;
 }
+
+/**
+ * Supportive function for Parser::FormattedJSON
+ * @param value
+ * @return { text: { name: "value" } }
+ */
+json GetTextNode(const std::string &value) {
+  json j;
+  j["text"]["name"] = value;
+  return j;
+}
+
+/**
+ * Supportive function for Parser::FormattedJSON
+ * @param value
+ * @return the current key of the JSON head
+ */
+std::string GetHeadKey(const json &j) {
+  for (auto it = j.begin(); it != j.end();) {
+    return it.key();
+  }
+  return "";
+}
+
+/**
+ * Utility recursive function for Parser::FormattedJSON
+ * @param body, a json
+ * @returns Treant.js formatted JSON
+ */
+json RecRunner(json main, std::string key = "") {
+  if (main.empty()) {
+    return GetTextNode(key);
+  }
+  if (key.empty()) {
+    for (auto it = main.begin(); it != main.end();) {
+      key = it.key();
+      main = it.value();
+      break;
+    }
+  }
+
+  json j = GetTextNode(key);
+  for (auto it = main.begin(); it != main.end(); it++) {
+    j["children"].push_back(RecRunner(it.value(), it.key()));
+  }
+  return j;
+}
+
+json Parser::FormattedJSON(const json &body) { return RecRunner(body); }
 
 }  // namespace jucc::parser
