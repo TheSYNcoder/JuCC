@@ -72,6 +72,20 @@ class Parser {
    */
   static std::string GenerateErrorMessage(const std::string &current_token);
 
+  /**
+   * Supportive function for Parser::FormattedJSON
+   * @param value
+   * @return { text: { name: "value" } }
+   */
+  static json GetTextNode(const std::string & /* value */);
+
+  /**
+   * Utility recursive function for Parser::FormattedJSON
+   * @param body, a json
+   * @returns Treant.js formatted JSON
+   */
+  static json RecRunner(const json & /*main*/, std::string /* key */);
+
  public:
   /**
    * Constructor for initializing stack and other members.
@@ -106,9 +120,11 @@ class Parser {
 
   /**
    * Dumps the parse tree in given path in json format
+   * @param filepath
+   * @param formatted (Default is in Treant.js format else raw if value is set "false")
    * @returns true on success
    */
-  bool WriteParseTree(const std::string &filepath);
+  bool WriteParseTree(const std::string &filepath, bool formatted);
 
   /**
    * Takes a json with no array, ideally received from parser::GetParseTree()
