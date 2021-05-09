@@ -392,6 +392,11 @@ TEST(parser, Parser4) {
             "{\"text\":{\"name\":\"S\"},\"children\":[{\"text\":{\"name\":\"A\"},\"children\":[{\"text\":{\"name\":"
             "\"a\"}}]},{\"text\":{\"name\":\"B\"},\"children\":[{\"text\":{\"name\":\"b\"}}]},{\"text\":{\"name\":\"A_"
             "1\"},\"children\":[{\"text\":{\"name\":\"a\"}}]}]}");
-  std::cout << tree.dump(4) << "\n";
-  std::cout << formatted.dump(4) << "\n";
+}
+
+TEST(parser, parser5) {
+  json j;
+  j["S"] = nullptr;
+  // No children case
+  ASSERT_EQ(Parser::FormattedJSON(j).dump(), "{\"text\":{\"name\":\"S\"}}");
 }
