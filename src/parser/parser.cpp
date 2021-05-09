@@ -197,20 +197,21 @@ std::string GetHeadKey(const json &j) {
  * @param body, a json
  * @returns Treant.js formatted JSON
  */
-json RecRunner(json main, std::string key = "") {
+json RecRunner(const json &main, std::string key = "") {
   if (main.empty()) {
     return GetTextNode(key);
   }
+  auto body = main;
   if (key.empty()) {
     for (auto it = main.begin(); it != main.end();) {
       key = it.key();
-      main = it.value();
+      body = it.value();
       break;
     }
   }
 
   json j = GetTextNode(key);
-  for (auto it = main.begin(); it != main.end(); it++) {
+  for (auto it = body.begin(); it != body.end(); it++) {
     j["children"].push_back(RecRunner(it.value(), it.key()));
   }
   return j;
