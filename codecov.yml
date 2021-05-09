@@ -12,7 +12,7 @@ coverage:
         threshold: 5% # allow for 5% reduction of coverage without failing
 
     # do not run coverage on patch nor changes. Check overall quality.
-    patch: false
+    patch: off
 
 parsers:
   gcov:
