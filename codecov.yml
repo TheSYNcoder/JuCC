@@ -4,16 +4,15 @@ codecov:
 coverage:
   precision: 2
   round: down
-  range: "85...95" # coverage lower than 85 is red, higher than 95 green, between color code no change.
-
+  range: "70...100"
   status:
     project:
       default:
         target: auto
-        threshold: 5% # allow for 5% reduction of coverage without failing
-
-    # do not run coverage on patch nor changes. Check overall quality.
-    patch: false
+        threshold: 5%
+    patch:
+      default:
+        target: 85%
 
 parsers:
   gcov:
