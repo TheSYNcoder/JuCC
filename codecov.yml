@@ -9,7 +9,7 @@ coverage:
     project:
       default:
         target: auto
-        threshold: 5% # allow for 5% reduction of coverage without failing
+        threshold: 5.0 # allow for 5% reduction of coverage without failing
 
     # do not run coverage on patch nor changes. Check overall quality.
     patch: off
