@@ -97,8 +97,13 @@ auto main(int argc, char *argv[]) -> int {
   }
 
   /* Check for symbol table errors and exit if errors exist */
-  std::vector<std::string> errors = lexer.GetUndeclaredSymbolErrors();
-  errors.insert(errors.end(), lexer.GetDuplicateSymbolErrors().begin(), lexer.GetDuplicateSymbolErrors().end());
+  std::vector<std::string> errors;
+  for (const auto &symbol : lexer.GetUndeclaredSymbolErrors()) {
+    errors.push_back("undeclared symbol: " + symbol);
+  }
+  for (const auto &symbol : lexer.GetDuplicateSymbolErrors()) {
+    errors.push_back("duplicate symbol: " + symbol);
+  }
   if (!errors.empty()) {
     std::cout << "jucc: ";
     for (auto &e : errors) {
@@ -127,7 +132,6 @@ auto main(int argc, char *argv[]) -> int {
   }
 
   /* If there are no parser errors then proceed to generate the parse tree */
-
   parser.BuildParseTree();
   if (!parser.WriteParseTree(output_file)) {
     std::cout << "jucc: could not write parse tree to " + output_file + '\n';
