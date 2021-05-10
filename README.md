@@ -23,11 +23,14 @@ The JuCC project is built and tested on **Ubuntu 20.04**.
 $ git clone https://github.com/TheSYNcoder/JuCC
 $ cd JuCC
 $ sudo ./script/installation/packages.sh
+$ cd server
+$ npm i
+$ cd ..
 $ mkdir build
 $ cd build
 $ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 $ ninja jucc
-$ ./bin/jucc
+$ ./bin/jucc -g <grammar_file> -f <input_file> -o <output_json_file>
 ```
 
 To run the unit tests provided, 

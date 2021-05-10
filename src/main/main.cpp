@@ -35,28 +35,25 @@ auto main(int argc, char *argv[]) -> int {
    */
   jucc::InputParser input_parser = jucc::InputParser(argc, argv);
   std::string file_grammar = input_parser.GetArgument("-g");
-  if (file_grammar.empty()) {
-    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file>\n";
-    return 0;
-  }
   std::string file_input = input_parser.GetArgument("-f");
-  if (file_input.empty()) {
-    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file>\n";
-    return 0;
+  std::string output_file = input_parser.GetArgument("-o");
+  if (output_file.empty() || file_input.empty() || file_grammar.empty()) {
+    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file> -o <output_json_file>\n";
+    return -1;
   }
 
   /* Parse the grammar file and check for formatting errors */
   jucc::grammar::Parser grammar_parser = jucc::grammar::Parser(file_grammar.c_str());
   if (!grammar_parser.Parse()) {
     std::cout << "jucc: " << grammar_parser.GetError() << '\n';
-    return 0;
+    return -1;
   }
 
   /* Check if the input file path is good */
   std::ifstream ifs(file_input);
   if (!ifs.good()) {
     std::cout << "jucc: cannot read input file, bad file!\n";
-    return 0;
+    return -1;
   }
 
   /**
@@ -88,7 +85,7 @@ auto main(int argc, char *argv[]) -> int {
     for (auto &e : err) {
       std::cout << e << '\n';
     }
-    return 0;
+    return -1;
   }
 
   /* Use Lexer to get input tokens */
@@ -107,7 +104,7 @@ auto main(int argc, char *argv[]) -> int {
     for (auto &e : errors) {
       std::cout << e << '\n';
     }
-    return 0;
+    return -1;
   }
 
   /* Parse the input file using the parsing table and report errors */
@@ -126,7 +123,18 @@ auto main(int argc, char *argv[]) -> int {
     for (auto &e : err) {
       std::cout << e << '\n';
     }
+    return -1;
   }
+
+  /* If there are no parser errors then proceed to generate the parse tree */
+
+  parser.BuildParseTree();
+  if (!parser.WriteParseTree(output_file)) {
+    std::cout << "jucc: could not write parse tree to " + output_file + '\n';
+    return -1;
+  }
+  std::string command = "cd ../server && npm start " + output_file;
+  system(command.c_str());
 
   return 0;
 }
