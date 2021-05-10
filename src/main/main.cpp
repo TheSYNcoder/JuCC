@@ -20,8 +20,9 @@
  *-------------------------------------------------------------------------
  */
 
-#include "main/jucc.h"
 #include <cstdlib>
+
+#include "main/jucc.h"
 
 /**
  * jucc begins execution here.
@@ -136,7 +137,7 @@ auto main(int argc, char *argv[]) -> int {
   }
 
   /* If there are no parser errors then proceed to generate the parse tree */
-  if ( err.empty() ){
+  if (err.empty()) {
     std::ofstream ofs(output_file, std::ofstream::out);
     parser.BuildParseTree();
     ofs << jucc::parser::Parser::FormattedJSON(parser.GetParseTree()).dump() << '\n';
