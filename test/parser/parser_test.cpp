@@ -363,4 +363,40 @@ TEST(parser, Parser4) {
   pars.BuildParseTree();
   auto tree = pars.GetParseTree();
   ASSERT_EQ(tree.dump(), "{\"S\":{\"A\":{\"a\":null},\"B\":{\"b\":null},\"A_1\":{\"a\":null}}}");
+
+  /**
+   * Output
+   * {
+   *    "text": { "name": "S" },
+   *    "children": [ {
+   *        "text": { "name": "A" },
+   *        "children": [
+   *                { "text": { "name": "a" } }
+   *            ] },
+   *        {
+   *        "text": {"name": "B"},
+   *        "children": [
+   *                { "text": {"name": "b"} }
+   *             ] },
+   *         {
+   *         "text": { "name": "A_1" },
+   *         "children": [
+   *                { "text": { "name": "a" }
+   *                } ]
+   *          }
+   *     ]
+   * }
+   */
+  json formatted = Parser::FormattedJSON(tree);
+  ASSERT_EQ(formatted.dump(),
+            "{\"text\":{\"name\":\"S\"},\"children\":[{\"text\":{\"name\":\"A\"},\"children\":[{\"text\":{\"name\":"
+            "\"a\"}}]},{\"text\":{\"name\":\"B\"},\"children\":[{\"text\":{\"name\":\"b\"}}]},{\"text\":{\"name\":\"A_"
+            "1\"},\"children\":[{\"text\":{\"name\":\"a\"}}]}]}");
+}
+
+TEST(parser, parser5) {
+  json j;
+  j["S"] = nullptr;
+  // No children case
+  ASSERT_EQ(Parser::FormattedJSON(j).dump(), "{\"text\":{\"name\":\"S\"}}");
 }
