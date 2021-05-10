@@ -129,7 +129,7 @@ auto main(int argc, char *argv[]) -> int {
   if (err.empty()) {
     parser.BuildParseTree();
     if (!parser.WriteParseTree(output_file)) {
-      std::cout << "jucc: Could not write parse tree to " + output_file + '\n';
+      std::cout << "jucc: could not write parse tree to " + output_file + '\n';
       return 0;
     }
     std::string command = "cd ../server && npm start " + output_file;
