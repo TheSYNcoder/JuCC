@@ -1,6 +1,7 @@
 #ifndef JUCC_JUCC_H
 #define JUCC_JUCC_H
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
