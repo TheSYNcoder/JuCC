@@ -529,3 +529,62 @@ TEST(lexer, Lexer7) {
   ASSERT_EQ(jucc::lexer::TOK_EOF, token);
   is.close();
 }
+
+TEST(lexer, Lexer8) {
+  std::string filename("../test/lexer/input2.txt");
+  Lexer lex = Lexer();
+
+  std::ifstream is(filename);
+  int token;
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_INT, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_MAIN, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PAREN_CLOSE, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_CURLY_OPEN, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_INT, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_COMMA, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_ASSIGNMENT, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PAREN_OPEN, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_DECIMAL, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PLUS, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_DECIMAL, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_PAREN_CLOSE, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_COMMA, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_COUT, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_LEFT_SHIFT, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_IDENTIFIER, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_SEMICOLON, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_CURLY_CLOSE, token);
+  token = lex.GetToken(is);
+  ASSERT_EQ(jucc::lexer::TOK_EOF, token);
+
+  ASSERT_EQ(lex.GetDuplicateSymbolErrors().size(), 0);
+  ASSERT_EQ(lex.GetUndeclaredSymbolErrors().size(), 0);
+}

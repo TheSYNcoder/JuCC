@@ -61,7 +61,6 @@ int Lexer::GetToken(std::ifstream &is) {
       if (!symbol_table_.GetUndeclaredSymbols().empty()) {
         undeclared_symbol_errors_ = symbol_table_.GetUndeclaredSymbols();
       }
-      current_datatype_ = "";
     }
     if (is.eof()) {
       last_char = ' ';
@@ -88,6 +87,7 @@ int Lexer::GetToken(std::ifstream &is) {
         num_string += last_char;
         is.get(last_char);
       }
+      current_datatype_ = "";
       error_string_ = "Wrong fractional number format : " + num_string + "\n";
       return TOK_ERROR;
     }
@@ -105,9 +105,9 @@ int Lexer::GetToken(std::ifstream &is) {
       ret_token = TOK_ERROR;
     }
     if (is.eof()) {
+      current_datatype_ = "";
       last_char = ' ';
     }
-    current_datatype_ = "";
     return ret_token;
   }
 
@@ -115,6 +115,7 @@ int Lexer::GetToken(std::ifstream &is) {
   if (ispunct(last_char) != 0) {
     int ret_token = TOK_ERROR;
     if (last_char == ';') {
+      current_datatype_ = "";
       is.get(last_char);
       ret_token = TOK_SEMICOLON;
     } else if (last_char == ',') {
@@ -136,10 +137,12 @@ int Lexer::GetToken(std::ifstream &is) {
       is.get(last_char);
       ret_token = TOK_MODULUS;
     } else if (last_char == '{') {
+      current_datatype_ = "";
       current_nesting_level_++;
       is.get(last_char);
       ret_token = TOK_CURLY_OPEN;
     } else if (last_char == '}') {
+      current_datatype_ = "";
       symbol_table_.RemoveNodesOnScopeEnd(current_nesting_level_);
       current_nesting_level_--;
       is.get(last_char);
@@ -169,6 +172,7 @@ int Lexer::GetToken(std::ifstream &is) {
     } else if (last_char == '<') {
       is.get(last_char);
       if (last_char == '<') {
+        current_datatype_ = "";
         is.get(last_char);
         ret_token = TOK_LEFT_SHIFT;
       } else if (last_char == '=') {
@@ -180,6 +184,7 @@ int Lexer::GetToken(std::ifstream &is) {
     } else if (last_char == '>') {
       is.get(last_char);
       if (last_char == '>') {
+        current_datatype_ = "";
         is.get(last_char);
         ret_token = TOK_RIGHT_SHIFT;
       } else if (last_char == '=') {
@@ -244,7 +249,6 @@ int Lexer::GetToken(std::ifstream &is) {
     if (is.eof()) {
       last_char = ' ';
     }
-    current_datatype_ = "";
     return ret_token;
   }
 
