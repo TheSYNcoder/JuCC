@@ -128,7 +128,10 @@ auto main(int argc, char *argv[]) -> int {
   /* If there are no parser errors then proceed to generate the parse tree */
   if (err.empty()) {
     parser.BuildParseTree();
-    parser.WriteParseTree(output_file, true);
+    if (!parser.WriteParseTree(output_file)) {
+      std::cout << "jucc: Couldn't write parse tree to " + output_file + '\n';
+      return 0;
+    }
     std::string command = "cd ../server && npm start " + output_file;
     system(command.c_str());
   }

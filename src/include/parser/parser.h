@@ -124,7 +124,7 @@ class Parser {
    * @param formatted (Default is in Treant.js format else raw if value is set "false")
    * @returns true on success
    */
-  bool WriteParseTree(const std::string &filepath, bool formatted);
+  bool WriteParseTree(const std::string &filepath, bool formatted = true);
 
   /**
    * Takes a json with no array, ideally received from parser::GetParseTree()

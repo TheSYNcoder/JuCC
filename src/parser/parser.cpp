@@ -160,7 +160,7 @@ void Parser::BuildParseTree() {
   }
 }
 
-bool Parser::WriteParseTree(const std::string &filepath, bool formatted = true) {
+bool Parser::WriteParseTree(const std::string &filepath, bool formatted) {
   std::ofstream ofs(filepath);
   if (ofs.is_open()) {
     ofs << (formatted ? FormattedJSON(parse_tree_) : parse_tree_).dump(INDENTATION) << '\n';
