@@ -1,6 +1,7 @@
 # build dir
 build
 cmake-build-debug/
+node_modules/
 
 # configs
 .idea

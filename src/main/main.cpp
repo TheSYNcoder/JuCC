@@ -21,6 +21,7 @@
  */
 
 #include "main/jucc.h"
+#include <cstdlib>
 
 /**
  * jucc begins execution here.
@@ -36,12 +37,18 @@ auto main(int argc, char *argv[]) -> int {
   jucc::InputParser input_parser = jucc::InputParser(argc, argv);
   std::string file_grammar = input_parser.GetArgument("-g");
   if (file_grammar.empty()) {
-    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file>\n";
+    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file> -o <output_json_file>\n";
     return 0;
   }
   std::string file_input = input_parser.GetArgument("-f");
   if (file_input.empty()) {
-    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file>\n";
+    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file> -o <output_json_file>\n";
+    return 0;
+  }
+
+  std::string output_file = input_parser.GetArgument("-o");
+  if (output_file.empty()) {
+    std::cout << "jucc: usage: jucc -g <grammar_file> -f <input_file> -o <output_json_file>\n";
     return 0;
   }
 
@@ -126,6 +133,16 @@ auto main(int argc, char *argv[]) -> int {
     for (auto &e : err) {
       std::cout << e << '\n';
     }
+  }
+
+  /* If there are no parser errors then proceed to generate the parse tree */
+  if ( err.empty() ){
+    std::ofstream ofs(output_file, std::ofstream::out);
+    parser.BuildParseTree();
+    ofs << jucc::parser::Parser::FormattedJSON(parser.GetParseTree()).dump() << '\n';
+    ofs.close();
+    std::string command = "cd ../server && npm start " + output_file;
+    system(command.c_str());
   }
 
   return 0;
