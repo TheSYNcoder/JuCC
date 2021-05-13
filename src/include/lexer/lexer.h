@@ -129,6 +129,25 @@ class Lexer {
    */
   symbol_table::SymbolTable symbol_table_;
 
+  /**
+   * checks if a variable is directly present
+   * after a declared datatype
+   *
+   * Use case 1
+   * int a = 5; for token 'a' direct_before_datatype = true
+   * else false
+   *
+   * Use case 2
+   *
+   * int z = 5 + y , t = 5 , r = 5 + s;
+   * for token z, direct_before_datatype = true
+   * for token y, direct_before_datatype = false
+   * for token t, direct_before_datatype = true
+   * for token r, direct_before_datatype = true
+   * for token s, direct_before_datatype = false
+   */
+  bool direct_before_datatype_{false};
+
  public:
   Lexer() = default;
 
@@ -162,6 +181,11 @@ class Lexer {
    * Getter for duplicate symbol errors.
    */
   std::vector<std::string> GetDuplicateSymbolErrors();
+
+  /**
+   * Getter for direct_before_datatype flag
+   */
+  [[nodiscard]] const bool &GetDirectBeforeDatatypeFlag() const { return direct_before_datatype_; }
 };  // class Lexer
 
 }  // namespace lexer

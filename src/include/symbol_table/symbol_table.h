@@ -113,8 +113,11 @@ class SymbolTable {
    * Checks if the current identifier is present in the same nesting level
    * int the hash_table. If present reports a duplicate symbol error, that is,
    * inserts into the duplicate_symbols vector.
+   * @Params : Node * node , bool direct_before_datatype
+   * Node is the struct encapsulating the information about an identifier
+   * direct_before_datatype is an boolean flag describing whether the identifier is declared.
    */
-  void CheckAndAddEntry(Node *node_);
+  void CheckAndAddEntry(Node *node_, bool direct_before_datatype_);
 
   /**
    * On scope end - sc_

@@ -26,11 +26,11 @@ void LinkedList::DeleteStartingNode() {
 
 Node *LinkedList::GetHead() { return this->head_; }
 
-void SymbolTable::CheckAndAddEntry(Node *node_) {
+void SymbolTable::CheckAndAddEntry(Node *node_, bool direct_before_datatype_) {
   // if present check if in common scope
   if (hash_table_.count(node_->identifier_) != 0U) {
     // check if using a previously declared variable.
-    if (node_->data_type_.empty()) {
+    if (!direct_before_datatype_) {
       return;
     }
     // declaring a variable

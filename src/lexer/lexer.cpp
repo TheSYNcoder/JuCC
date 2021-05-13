@@ -24,27 +24,35 @@ int Lexer::GetToken(std::ifstream &is) {
     }
     if (identifier_string_ == "int") {
       current_datatype_ = identifier_string_;
+      direct_before_datatype_ = true;
       ret_token = TOK_INT;
     } else if (identifier_string_ == "float") {
       current_datatype_ = identifier_string_;
+      direct_before_datatype_ = true;
       ret_token = TOK_FLOAT;
     } else if (identifier_string_ == "void") {
       current_datatype_ = identifier_string_;
+      direct_before_datatype_ = true;
       ret_token = TOK_VOID;
     } else if (identifier_string_ == "if") {
       current_datatype_ = "";
+      direct_before_datatype_ = false;
       ret_token = TOK_IF;
     } else if (identifier_string_ == "else") {
       current_datatype_ = "";
+      direct_before_datatype_ = false;
       ret_token = TOK_ELSE;
     } else if (identifier_string_ == "cout") {
       current_datatype_ = "";
+      direct_before_datatype_ = false;
       ret_token = TOK_COUT;
     } else if (identifier_string_ == "cin") {
       current_datatype_ = "";
+      direct_before_datatype_ = false;
       ret_token = TOK_CIN;
     } else if (identifier_string_ == "main") {
       current_datatype_ = "";
+      direct_before_datatype_ = false;
       ret_token = TOK_MAIN;
     } else {
       ret_token = TOK_IDENTIFIER;
@@ -53,7 +61,7 @@ int Lexer::GetToken(std::ifstream &is) {
        *  if identifier insert into symbol_table
        */
       auto *node = new symbol_table::Node(identifier_string_, current_datatype_, current_nesting_level_);
-      symbol_table_.CheckAndAddEntry(node);
+      symbol_table_.CheckAndAddEntry(node, direct_before_datatype_);
       delete node;
       if (!symbol_table_.GetDuplicateSymbols().empty()) {
         duplicate_symbol_errors_ = symbol_table_.GetDuplicateSymbols();
@@ -71,6 +79,7 @@ int Lexer::GetToken(std::ifstream &is) {
   // RE : [0-9]+.?[0-9]*
   if (isdigit(last_char) != 0) {
     std::string num_string;
+    direct_before_datatype_ = false;
     num_string += last_char;
     // to check if fractional
     int dot_count = 0;
@@ -249,6 +258,7 @@ int Lexer::GetToken(std::ifstream &is) {
     if (is.eof()) {
       last_char = ' ';
     }
+    direct_before_datatype_ = ret_token == TOK_COMMA;
     return ret_token;
   }
 
