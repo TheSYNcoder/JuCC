@@ -35,7 +35,11 @@ static void BenchmarkJuCC(benchmark::State &state) {
     jucc::lexer::Lexer lexer = jucc::lexer::Lexer();
     int token;
     while ((token = lexer.GetToken(ifs)) != jucc::lexer::TOK_EOF) {
-      input_tokens.emplace_back(jucc::lexer::Lexer::GetTokenType(token));
+      std::string ret_string = jucc::lexer::Lexer::GetTokenType(token);
+      if (ret_string == "ignore") {
+        continue;
+      }
+      input_tokens.emplace_back(ret_string);
     }
 
     jucc::parser::Parser parser = jucc::parser::Parser();
@@ -67,7 +71,11 @@ static void BenchmarkJuCCCompute(benchmark::State &state) {
   jucc::lexer::Lexer lexer = jucc::lexer::Lexer();
   int token;
   while ((token = lexer.GetToken(ifs)) != jucc::lexer::TOK_EOF) {
-    input_tokens.emplace_back(jucc::lexer::Lexer::GetTokenType(token));
+    std::string ret_string = jucc::lexer::Lexer::GetTokenType(token);
+    if (ret_string == "ignore") {
+      continue;
+    }
+    input_tokens.emplace_back(ret_string);
   }
 
   for (const auto &_ : state) {
