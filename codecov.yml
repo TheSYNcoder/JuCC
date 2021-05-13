@@ -28,5 +28,5 @@ comment:
   require_changes: no
 
 ignore:
-  # ignore the benchmark directory
-  - "benchmark"
+  # ignore the third_party directory
+  - "third_party"
