@@ -325,6 +325,10 @@ std::string Lexer::GetTokenType(int token) {
     ret_string = "cin";
   } else if (token == TOK_MAIN) {
     ret_string = "main";
+  } else if (token == TOK_COMMENT) {
+    ret_string = "ignore";
+  } else {
+    ret_string = "error";
   }
 
   return ret_string;
