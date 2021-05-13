@@ -11,7 +11,9 @@ int main() {
         }
     }
     float z = 1 + 2 + 3 + 1000/ 50 * 23.2 * (x * y * 10);
-    // cout << x << y << z;
+    cout << x << y << z;
+
+    // other stuff for benchmarking
     float z0 = 1 + 2 + 3 + 1000/ 50 * 23.2 * (x * y * 10);
     float z1 = 1 + 2 - 3 + 1000/ 50 * 23.2 * (x * y * 10);
     float z2 = 1 + 2 / 3 + 1000/ 50 * 23.2 * (x * y * 10);

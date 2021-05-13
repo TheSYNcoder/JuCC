@@ -43,6 +43,17 @@ $ ninja
 $ ./bin/jucc_test
 ```
 
+To run the benchmarks,
+Note: `-DCMAKE_BUILD_TYPE=Release` is needed
+
+```
+$ mkdir build
+$ cd build
+$ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
+$ ninja
+$ ./bin/jucc_benchmark
+```
+
 Before pushing or making a pull request  ( The tests must pass, compulsory !! )
 
 ```
