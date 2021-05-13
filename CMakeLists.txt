@@ -330,6 +330,8 @@ file(GLOB_RECURSE
 
 add_executable(jucc_benchmark ${JUCC_BENCHMARK_SOURCES})
 
+add_test(NAME jucc_benchmark COMMAND jucc_benchmark)
+
 target_link_libraries(jucc_benchmark PUBLIC jucc_objlib benchmark --coverage)
 
 #######################################################################################################################
