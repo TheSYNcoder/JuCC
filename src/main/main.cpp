@@ -93,7 +93,15 @@ auto main(int argc, char *argv[]) -> int {
   jucc::lexer::Lexer lexer = jucc::lexer::Lexer();
   int token;
   while ((token = lexer.GetToken(ifs)) != jucc::lexer::TOK_EOF) {
-    input_tokens.emplace_back(jucc::lexer::Lexer::GetTokenType(token));
+    std::string ret_string = jucc::lexer::Lexer::GetTokenType(token);
+    if (ret_string == "ignore") {
+      continue;
+    }
+    if (ret_string == "error") {
+      std::cout << "jucc: error illegal term found in input file\n";
+      return -1;
+    }
+    input_tokens.emplace_back(ret_string);
   }
 
   /* Check for symbol table errors and exit if errors exist */
