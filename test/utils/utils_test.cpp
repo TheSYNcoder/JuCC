@@ -108,12 +108,12 @@ TEST(utils, LeftFactoring0) {
   ASSERT_EQ(lf_removed.size(), 2);
   // output
   //  E -> ieStE' | a | b |
-  //  E' -> St | P | epsilon
+  //  E' -> St | P
   ASSERT_EQ(lf_removed[0].GetParent(), "E");
   ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(utils::DASH));
 
   ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
-  ASSERT_EQ(lf_removed[1].GetRules().size(), 3);
+  ASSERT_EQ(lf_removed[1].GetRules().size(), 2);
 
   ASSERT_EQ(lf_removed[0].GetRules()[0].ToString(), "ieStE'");
   ASSERT_EQ(lf_removed[0].GetRules()[1].ToString(), "a");
@@ -121,10 +121,36 @@ TEST(utils, LeftFactoring0) {
 
   ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "St");
   ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), "P");
-  ASSERT_EQ(lf_removed[1].GetRules()[2].ToString(), std::string(grammar::EPSILON));
 }
 
 TEST(utils, LeftFactoring1) {
+  // E -> ieStSt | a | b | ieSt
+  grammar::Production p;
+  p.SetParent("E");
+  p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
+              grammar::Rule({"i", "e", "S", "t"})});
+
+  auto lf_removed = utils::RemoveLeftFactors(p);
+
+  ASSERT_EQ(lf_removed.size(), 2);
+  // output
+  //  E -> ieStE' | a | b |
+  //  E' -> St | epsilon
+  ASSERT_EQ(lf_removed[0].GetParent(), "E");
+  ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(utils::DASH));
+
+  ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
+  ASSERT_EQ(lf_removed[1].GetRules().size(), 2);
+
+  ASSERT_EQ(lf_removed[0].GetRules()[0].ToString(), "ieStE'");
+  ASSERT_EQ(lf_removed[0].GetRules()[1].ToString(), "a");
+  ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "b");
+
+  ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "St");
+  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), std::string(grammar::EPSILON));
+}
+
+TEST(utils, LeftFactoring2) {
   // E -> ieStSt | a | b
   grammar::Production p;
   p.SetParent("E");
@@ -603,11 +629,11 @@ TEST(utils, CalcFollows2) {
 }
 
 TEST(utils, RemoveAllAmbiguity0) {
-  // E -> ieStSt | a | b | ieStP
+  // E -> ieStSt | a | b | ieSt
   grammar::Production p;
   p.SetParent("E");
   p.SetRules({grammar::Rule({"i", "e", "S", "t", "S", "t"}), grammar::Rule({"a"}), grammar::Rule({"b"}),
-              grammar::Rule({"i", "e", "S", "t", "P"})});
+              grammar::Rule({"i", "e", "S", "t"})});
 
   auto lf_removed = utils::RemoveAllPossibleAmbiguity({p});
   auto non_terminals = utils::GetAllNonTerminals(lf_removed);
@@ -615,7 +641,7 @@ TEST(utils, RemoveAllAmbiguity0) {
   ASSERT_EQ(lf_removed.size(), 2);
   // output
   //  E -> ieStE' | a | b |
-  //  E' -> St | P | epsilon
+  //  E' -> St | epsilon
   ASSERT_EQ(non_terminals.size(), 2);
   ASSERT_EQ(non_terminals[0], "E");
   ASSERT_EQ(non_terminals[1], "E'");
@@ -623,13 +649,12 @@ TEST(utils, RemoveAllAmbiguity0) {
   ASSERT_EQ(lf_removed[1].GetParent(), "E" + std::string(utils::DASH));
 
   ASSERT_EQ(lf_removed[0].GetRules().size(), 3);
-  ASSERT_EQ(lf_removed[1].GetRules().size(), 3);
+  ASSERT_EQ(lf_removed[1].GetRules().size(), 2);
 
   ASSERT_EQ(lf_removed[0].GetRules()[0].ToString(), "ieStE'");
   ASSERT_EQ(lf_removed[0].GetRules()[1].ToString(), "a");
   ASSERT_EQ(lf_removed[0].GetRules()[2].ToString(), "b");
 
   ASSERT_EQ(lf_removed[1].GetRules()[0].ToString(), "St");
-  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), "P");
-  ASSERT_EQ(lf_removed[1].GetRules()[2].ToString(), std::string(grammar::EPSILON));
+  ASSERT_EQ(lf_removed[1].GetRules()[1].ToString(), std::string(grammar::EPSILON));
 }

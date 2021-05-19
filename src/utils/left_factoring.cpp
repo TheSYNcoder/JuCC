@@ -31,7 +31,6 @@ grammar::Productions RemoveLeftFactors(const grammar::Production &prod) {
     common_factor_with_dash.emplace_back(parent_dash);
     parent_rules.emplace_back(grammar::Rule(common_factor_with_dash));
 
-    bool has_epsilon_inserted = false;
     // produce two production after matching
     for (const auto &rule : current_prod.GetRules()) {
       if (!rule.HasPrefix(grammar::Rule(max_common_prefix))) {
@@ -40,15 +39,10 @@ grammar::Productions RemoveLeftFactors(const grammar::Production &prod) {
         auto new_entities = std::vector<std::string>(
             rule.GetEntities().begin() + static_cast<int>(max_common_prefix.size()), rule.GetEntities().end());
         if (new_entities.empty()) {
-          has_epsilon_inserted = true;
           new_entities.emplace_back(std::string(grammar::EPSILON));
         }
         parent_dash_rules.emplace_back(new_entities);
       }
-    }
-
-    if (!has_epsilon_inserted) {
-      parent_dash_rules.emplace_back(std::vector<std::string>{std::string(grammar::EPSILON)});
     }
 
     // do this recursive
