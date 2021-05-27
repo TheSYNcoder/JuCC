@@ -40,7 +40,8 @@ LINUX_TEST_PACKAGES=(\
 )
 
 # Packages to be installed through pip3.
-PYTHON_BUILD_PACKAGES=(
+PYTHON_BUILD_PACKAGES=(\
+  "cpplint" \
 )
 
 PYTHON_TEST_PACKAGES=(
@@ -147,7 +148,11 @@ install_linux() {
 
   if [ "$INSTALL_TYPE" == "build" ] || [ "$INSTALL_TYPE" = "all" ]; then
     for pkg in "${PYTHON_BUILD_PACKAGES[@]}"; do
-      python3 -m pip show $pkg || python3 -m pip install $pkg
+      if [ "$pkg" == "cpplint" ]; then
+        sudo python3 -m pip show $pkg || sudo python3 -m pip install $pkg
+      else
+        python3 -m pip show $pkg || python3 -m pip install $pkg
+      fi
     done
   fi
   if [ "$INSTALL_TYPE" == "test" ] || [ "$INSTALL_TYPE" = "all" ]; then
@@ -158,7 +163,6 @@ install_linux() {
 }
 
 install_darwin(){
-
   echo "Starting install on darwin, this may take some time ..."
   # Check for Homebrew, install if we don't have it
   if test ! $(which brew); then
@@ -177,9 +181,6 @@ install_darwin(){
       python3 get-pip.py
       rm get-pip.py
   fi
-  
-
-
 
   # Update homebrew recipes
   brew update
@@ -209,10 +210,6 @@ install_darwin(){
       python3 -m pip show $pkg || python3 -m pip install $pkg
     done
   fi
-
-
-
-
 }
 
 main "$@"
