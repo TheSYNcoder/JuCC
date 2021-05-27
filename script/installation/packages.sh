@@ -157,7 +157,11 @@ install_linux() {
   fi
   if [ "$INSTALL_TYPE" == "test" ] || [ "$INSTALL_TYPE" = "all" ]; then
     for pkg in "${PYTHON_TEST_PACKAGES[@]}"; do
-      python3 -m pip show $pkg || python3 -m pip install $pkg
+      if [ "$pkg" == "cpplint" ]; then
+        sudo python3 -m pip show $pkg || sudo python3 -m pip install $pkg
+      else
+        python3 -m pip show $pkg || python3 -m pip install $pkg
+      fi
     done
   fi
 }
@@ -202,12 +206,20 @@ install_darwin(){
 
   if [ "$INSTALL_TYPE" == "build" ] || [ "$INSTALL_TYPE" = "all" ]; then
     for pkg in "${PYTHON_BUILD_PACKAGES[@]}"; do
-      python3 -m pip show $pkg || python3 -m pip install $pkg
+      if [ "$pkg" == "cpplint" ]; then
+        sudo python3 -m pip show $pkg || sudo python3 -m pip install $pkg
+      else
+        python3 -m pip show $pkg || python3 -m pip install $pkg
+      fi
     done
   fi
   if [ "$INSTALL_TYPE" == "test" ] || [ "$INSTALL_TYPE" = "all" ]; then
     for pkg in "${PYTHON_TEST_PACKAGES[@]}"; do
-      python3 -m pip show $pkg || python3 -m pip install $pkg
+      if [ "$pkg" == "cpplint" ]; then
+        sudo python3 -m pip show $pkg || sudo python3 -m pip install $pkg
+      else
+        python3 -m pip show $pkg || python3 -m pip install $pkg
+      fi
     done
   fi
 }
